@@ -1,1 +1,1 @@
-gmake.exe -f make.win
+gmake.exe -f Makefile_win
