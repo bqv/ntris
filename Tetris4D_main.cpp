@@ -491,6 +491,21 @@ static void key(unsigned char key, int x, int y)
       // step down the solid.   
       lowerSolid();
     break;
+    
+    case '1':
+      // Set game difficulty to easy.
+      in_game_opts.diff = 1;
+    break;
+    
+    case '2':
+      // Set game difficulty to medium.
+      in_game_opts.diff = 1;
+    break;
+    
+    case '3':
+      // Set game difficulty to hard.
+      in_game_opts.diff = 1;
+    break;
   }
 
   // Refresh the display.

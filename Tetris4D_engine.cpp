@@ -39,52 +39,51 @@ HE[h]: 10
 
 // defined solids
 static TSolid solids[SOLIDTYPES] =
-/* 1 cube */  {0x0001, 
-/* 2 cube */   0x0003,
-/* 3 cube L */ 0x0007,
-/* 4 cube */   0x000f, 
-/* 4 cube */   0x0027,
-/* 4 cube */   0x0017};
+/* 1 cube */  {0x0001, // 00 00 00 00  00 00 00 01
+/* 2 cube */   0x0003, // 00 00 00 00  00 00 00 11
+/* 3 cube L */ 0x0007, // 00 00 00 00  00 00 01 11
+/* 4 cube */   0x000f, // 00 00 00 00  00 00 11 11
+/* 4 cube */   0x0027, // 00 00 00 00  00 10 11 11 
+/* 4 cube */   0x0017};// 00 00 00 00  00 01 01 11 
 
 // probabilities of solids in different
 // difficulty levels (easy, medium, hard)
 static int probs[DIFFLEVELS][SOLIDTYPES] =
-{{1, 1, 1, 0, 0, 0},
- {1, 2, 2, 0, 0, 0},
- {1, 2, 2, 1, 1, 1}};
-
+{{10, 5, 5, 1, 1, 1},
+ {4, 2, 2, 1, 1, 1},
+ {2, 1, 1, 1, 1, 1}};
+  
 static int scoreStep[DIFFLEVELS] = { 100, 200, 400};
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
-// the game space
-TLevel space[SPACELENGTH];
-// actual solid
-TSolid solid;
-// position of actual solid
-// 0 if reached the floor
-char pos;
-// score collected in the actual game
-int score;
+  // the game space 
+  TLevel space[SPACELENGTH];
+  // actual solid
+  TSolid solid;
+  // position of actual solid
+  // 0 if reached the floor
+  char pos;
+  // indicator of 
+  bool isnewsolid;
+  // score collected in the actual game
+  int score;
 
-t_game_opts game_opts;
+  t_game_opts game_opts;
 
-/*------------------------------------------------------------------------------
-   GLOBAL FUNCTIONS
-------------------------------------------------------------------------------*/
-
-// initialize the game variables
-extern void initGame(void);
-
-// lower the solid with one level
-// result indicates that it invalid (end of game)
-extern bool lowerSolid(void);
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
+
+// initialize the game variables
+extern void initGame(t_game_opts in_game_opts);
+
+// lower the solid with one level
+// result indicates that it invalid (end of game)
+extern bool lowerSolid(void);
 
 // get a new random solid
 extern void NewSolid(void);
@@ -121,7 +120,7 @@ void initGame(t_game_opts in_game_opts)
 }
 
 // get a new random solid
-void NewSolid()
+void NewSolid(void)
 {
    // probability
    int prob; 
@@ -152,6 +151,9 @@ void NewSolid()
    // position the new solid to the
    // top 2 level of the space
    pos = SPACELENGTH - 2;
+   
+   // set the indicator of new solid true
+   isnewsolid = 1;
 }
 
 // check overlap between solid and gamespace
@@ -192,6 +194,9 @@ void killFullLevels(void)
 // result> false if invalid (end of game)
 bool lowerSolid(void)
 {
+   // set the new solid indicator false
+   isnewsolid = 1;
+
    // solid reached the floor flag
    bool onFloor = (pos <= 0) || 
                   ( (pos-- || 1) &&
