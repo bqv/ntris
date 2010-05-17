@@ -7,7 +7,7 @@
  Header of the Tetris 4D game engine
 
  Change Log:
- 1.1 - Initial revision - 2008 jan 05
+ 1.1 - Initial revision - simonl - 2008 jan 05
 
  ToDo:
 
@@ -17,7 +17,9 @@
 
 #define TETRIS4D_ENGINE_H
 
-// MACROS
+/*------------------------------------------------------------------------------
+   MACROS
+------------------------------------------------------------------------------*/
 
 // boolean type
 #define bool unsigned char
@@ -42,7 +44,9 @@
 #define getSolidCell(l,x,y,z) \
   ((solid) & (0x01 << ((x)+(y)*2+(z)*4+(l)*8)))
 
-// TYPEDEFS
+/*------------------------------------------------------------------------------
+   TYPE DEFINITIONS
+------------------------------------------------------------------------------*/
 
 // game options
 typedef struct
@@ -52,7 +56,9 @@ typedef struct
 
 } t_game_opts;
 
-// GLOBAL FUNCTIONS
+/*------------------------------------------------------------------------------
+   PROTOTYPES
+------------------------------------------------------------------------------*/
 
 // initialize the game variables
 extern void initGame(t_game_opts in_game_opts);

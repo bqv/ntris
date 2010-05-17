@@ -8,7 +8,7 @@
  Game space and element storage and handling.
 
  Change Log:
- 1.1 - Initial revision - 2008 jan 05
+ 1.1 - Initial revision - simonl - 2008 jan 05
 
  ToDo:
 
@@ -17,13 +17,17 @@
 HE[h]: 10
 */
 
-// interface
+/*------------------------------------------------------------------------------
+   INCLUDE FILES
+------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
 
 #include "Tetris4D_engine.h"
 
-// TYPE DEFINITIONS
+/*------------------------------------------------------------------------------
+   TYPE DEFINITIONS
+------------------------------------------------------------------------------*/
 
 // number of type of solids
 #define SOLIDTYPES (6)
@@ -49,7 +53,11 @@ static int probs[DIFFLEVELS][SOLIDTYPES] =
  {1, 2, 2, 0, 0, 0},
  {1, 2, 2, 1, 1, 1}};
 
-// GLOBAL VARIABLES
+static int scoreStep[DIFFLEVELS] = { 100, 200, 400};
+
+/*------------------------------------------------------------------------------
+   GLOBAL VARIABLES
+------------------------------------------------------------------------------*/
 
 // the game space
 TLevel space[SPACELENGTH];
@@ -63,7 +71,9 @@ int score;
 
 t_game_opts game_opts;
 
-// GLOBAL FUNCTIONS
+/*------------------------------------------------------------------------------
+   GLOBAL FUNCTIONS
+------------------------------------------------------------------------------*/
 
 // initialize the game variables
 extern void initGame(void);
@@ -72,7 +82,9 @@ extern void initGame(void);
 // result indicates that it invalid (end of game)
 extern bool lowerSolid(void);
 
-// LOCAL FUNCTIONS
+/*------------------------------------------------------------------------------
+   PROTOTYPES
+------------------------------------------------------------------------------*/
 
 // get a new random solid
 extern void NewSolid(void);
@@ -87,8 +99,9 @@ extern void killFullLevels(void);
 // returns indicator of turn availability
 extern bool turn(char ax1, char ax2);
 
-// implementation
-
+/*------------------------------------------------------------------------------
+   FUNCTIONS
+------------------------------------------------------------------------------*/
 
 // initialize the game variables
 void initGame(t_game_opts in_game_opts)
@@ -157,6 +170,9 @@ void killFullLevels(void)
       // if full level found
       if (space[t] == 0xff)
       {
+         // increase score
+         score += scoreStep[game_opts.diff];
+
          // step down every higher level
          for (int tn = t+1; tn <= SPACELENGTH; tn++)
          {
