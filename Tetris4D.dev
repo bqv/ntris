@@ -1,7 +1,7 @@
 [Project]
 FileName=Tetris4D.dev
 Name=Tetris4D
-UnitCount=3
+UnitCount=4
 Type=0
 Ver=1
 ObjFiles=
@@ -71,6 +71,16 @@ BuildCmd=
 FileName=Tetris4D_engine.h
 CompileCpp=1
 Folder=Tetris4D
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
+FileName=Tetris4D_AI.cpp
+CompileCpp=1
+Folder=
 Compile=1
 Link=1
 Priority=1000
