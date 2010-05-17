@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <title>
+      4DTris Software Structure
+    </title>
+  </head>
+  <body bgcolor="#3F3F6F" text="#FFFFFF" style="{font-family:sans;}">
+    <h2>
+      4DTris Software Structure
+    </h2>
+    <h3>
+      Overview
+    </h3>
+    <p>
+      This document is a draft description of the main SW components of 4DTris.
+    </p>
+    <p>
+      <img src="4dtris-sw-struct.svg" widht="85%" height="85%">
+    </p>
+    <p>
+      Main - main modul - contains init functions, window ~, event handling. Triggers other moduls.
+    </p>
+    <p>
+      Menu - State machine for on screen menu. (Main menu, About, Scores, Options, ...)
+    </p>
+    <p>
+      UI-handling - user interface handling - contains corresponding functions for user interactions
+      which links them to operations in the game model and drawing modul.
+    </p>
+    <p>
+      4D-draw-modul - Reads the 4D vertex datas from model modul, projects them to 3D and draws them by
+      calling 3D-draw-modul.
+    </p>
+    <p>
+      3D-draw-modul - wrapper layer to openGL, buffers the facet drawing request, computes z-buffer,
+      and draws with openGL rutines triggered by main modul.
+    </p>
+    <p>
+      computer-gamer - computes steps for computer player using a template game field.
+    </p>
+    <p>
+      model-dynamics - queue object movements requested by UI-handling/computer-player. Check movement
+      validity, time/animate movements.
+    </p>
+    <p>
+      4D-model - stores positions of blocks, objects (set of blocks), checks collisions.
+      Provide functions to move/rotate objects to model dynamics.
+    </p>
+    <p>
+      tetris-modul - checks the 4D model for filled spaces, reached top space and landed blocks.
+      Erases filled spaces and indicates game over. Assigns isolevel blocks to object.
+    </p>
+    <p>
+      4D-library - 4D geometry functions: Rotation, Perspective projection to 3D,
+    </p>
+    <!---------------------------------------------------------------------------------------------------------->
+    <h3>
+      Main
+    </h3>
+    <p>
+      Functionality:
+      <ul>
+      <li>Window initialisation</li>
+      <li>OpenGL initialisation</li>
+      <li>Game Initialisation</li>
+      <li>Event Handling</li>
+      <li>Trigger tetris modul</li>
+      <li>Trigger model-dynamics modul</li>
+      <li>Trigger 3D-draw modul</li>
+      <li>Trigger computer player</li>
+      </ul>
+    </p>
+<!---------------------------------------------------------------------------------------------------------->
+    <h3>
+      UI-handling
+    </h3>
+    <p>
+      Functionality:
+      <ul>
+      <li>track mouse moving for camera movement, move camera.</li>
+      <li>request object rotation from model-dynamics modul on keyboard events</li>
+      <li>activate menu - navigate in menu</li>
+      </ul>
+    </p>
+<!---------------------------------------------------------------------------------------------------------->
+    <h3>
+      model-dynamics modul
+    </h3>
+    <p>
+      Functionality:
+      <ul>
+      <li>Provide functions of falling object 90 deg rotation for UI handling</li>
+      <li>Queue movements</li>
+      <li>Animates movements by slice rotations/movements to short angled/lengthed.
+          Calls rotation/move function of the mode</li>
+      <li>Undo and delete actual movement from queue if invalid based on model collosion check.</li>
+      <li>Indicate end of movement to main modul to trigger tetris modul.</li>
+      </ul>
+    </p>
+<!---------------------------------------------------------------------------------------------------------->    <h3>
+      4D-model
+    </h3>
+    <p>
+      4D-model modul is a very simple physical model of the 4D game-hyperspace. It contains hypercube
+      blocks which are components of 4D objects. The blocks of an object are moving together.
+      Blocks in the space are:
+      actual falling object and each levels containing any blocks. Tetris modul creates level objects
+      from iso-level blocks for each level, which can fall together later,
+      when filled level erased below them.
+    </p>
+    <p>
+      Stored datas:
+      <ul>
+      <li>Objects - set of blocks.
+          <ul><li>center positions</li>
+              <li>directions</li>
+              <li>block IDs</li></ul></li>
+      <li>Blocks - hypercubes fills the gamespace
+          <ul><li>relative positions</li>
+              <il>relative directions</li>
+              <il>coords of vertices</li></ul></li>
+      </ul>
+      Provided functions:
+      <ul>
+      <li>Collosion check</li>
+      <li>Rotate object (angle)</li>
+      <li>Move object</li>
+      <li>Remove object</li>
+      <li>Create object</li>
+      <li>Add block to object</li>
+      <li>Explode object (blocks remain)</li>
+      </ul>
+    </p>
+    <p>
+      Collosion check - first simple model: each block contains a sphere with same diameter as hypercube
+      edge length. These spheres are solid, can no section each other. Sphere collosion calculation:
+      distance between blocks center points can not be lower than edge length.
+    </p>
+    <p>
+      <img src="sphere-collosion.png" widht="25%" height="25%">
+    </p>
+<!---------------------------------------------------------------------------------------------------------->
+    <h3>
+      tetris modul
+    </h3>
+    <p>
+      Functionality:
+      <ul>
+      <li>Requests falling object move down on time</li>
+      <li>Checks if object landed.</li>
+      <li>Explodes landed object and merge/forms its blocks to level objects.<li>
+      <li>Checks if level filled, erase filled levels, request falling for levels above.</li>
+      <li>Checks is landed object reached the top level. Indicates game over.</li>
+      </ul>
+    </p>
+    <p>
+      <img src="tetris-modul-flowchart.svg" widht="75%" height="75%">
+    </p>
+<!---------------------------------------------------------------------------------------------------------->
+    <h3>
+      4D geometry library
+    </h3>
+    <p>
+      Rotation matrix for plane defined by a1-a3 axles :
+      <table border=1 color="#ffffff">
+      <tr><td>cos x</td><td>    0</td><td>- sin x</td><td>    0</td></tr>
+      <tr><td>    0</td><td>    1</td><td>      0</td><td>    0</td></tr>
+      <tr><td>sin x</td><td>    0</td><td>  cos x</td><td>    0</td></tr>
+      <tr><td>    0</td><td>    0</td><td>      0</td><td>    1</td></tr>
+      </table>
+    </p>
+<!---------------------------------------------------------------------------------------------------------->
+    <h3>
+      menu modul
+    </h3>
+    <p>
+      Menu items:
+      <ul>
+      <li> [back to game]    </li>
+      <li> New game          </li>
+      <li> Options           </li><ul>
+        <li> Audio options   </li>
+        <li> Video options   </li>
+        <li> Game options    </li>
+        <li> Control options </li></ul>
+      <li> Help              </li><ul>
+        <li> Description     </li>
+        <li> Help            </li>
+        <li> High scores     </li>
+        <li> About           </li></ul>
+      <li> Quit              </li>
+      </ul>
+    </p>
+  </body>
+</html>

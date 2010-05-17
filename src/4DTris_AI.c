@@ -1,22 +1,6 @@
 /*
-
- Project: 4D-TRIS
- Author: Simon, Laszlo
-
  Short Description:
  This file is the Computer gamer's logic.
-
- Change Log:
- 1.4 - bugfix. zero div. - simonl - 2008 jan 17.
-       Zero division at CoG computing prevented.
-
- 1.3 - C compatible - simonl - 2008 jan 14.
-       Code converted to c from c++.
-
- 1.2 - Fixed - simonl - 2008 jan 13
-       Code fixed and file renamed.
-
- 1.1 - Initial revision - simonl - 2008 jan 08
 
  ToDo:
  - Improve AI with considering overlap:
@@ -24,7 +8,6 @@
     |**  | | ** | |  **|
     |XX X| |XX X| |XX X|
    Now these are equivalent.
-
 
  */
 
