@@ -7,6 +7,9 @@
  This file is the Computer gamer's logic.
 
  Change Log:
+ 1.4 - bugfix. zero div. - simonl - 2008 jan 17.
+       Zero division at CoG computing prevented.
+
  1.3 - C compatible - simonl - 2008 jan 14.
        Code converted to c from c++.
 
@@ -22,8 +25,6 @@
     |XX X| |XX X| |XX X|
    Now these are equivalent.
 
- Known Bugs:
- Dont find the best solution when 1 block only and 0,0,0,0 coord empty.
  
  */
 
@@ -221,7 +222,14 @@ double ProcessSitu(void)
   }  
 
   // 'Normalise' CoG.
-  return ( (double)cog / sum);
+  if (sum == 0)
+  { 
+    return 0.0;
+  } 
+  else
+  {
+    return ( (double)cog / sum);
+  }
 
 }  // End of function.
 
