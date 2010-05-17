@@ -8,6 +8,9 @@
  Game space and element storage and handling.
 
  Change Log:
+ 1.3 - C compatible - simonl - 2008 jan 14.
+       Code converted to c from c++.
+
  1.2 - Copy, intf added - simonl - 2008 jan 13
        Interface structure for global variables,
        Copy game engine function added.
@@ -121,9 +124,13 @@ t_game_Engine copyGameEngine(t_game_Engine in_game_Engine)
 // initialize the game variables
 void initGame(t_game_opts in_game_opts)
 {
+   char t; // Loop counter.
+
    // for the every part of the space
-   for (char t = 0; t < SPACELENGTH; t++)
+   for (t = 0; t < SPACELENGTH; t++)
+   {
       ge.space[t] = 0x00;
+   }
 
    // initialise the number of solids dropped
    ge.solidnum = 0;
@@ -145,15 +152,19 @@ void NewSolid(void)
    int prob; 
    // sum of probabilities
    int sum = 0;  
+   // loop counter
+   int i;
 
    // for every solid type
-   for (int i = 0; i < SOLIDTYPES; i++)
+   for (i = 0; i < SOLIDTYPES; i++)
    {
       // summarize the probability
       sum += probs[ge.game_opts.diff][i];
    }
    
-   int i = 0; 
+   // initialize loop counter
+   i = 0; 
+   
    // get a random probability
    prob = (long int) rand() * sum / RAND_MAX;
    
@@ -188,8 +199,11 @@ bool checkOverlap(void)
 // deletes the full levels
 void killFullLevels(void)
 {
+   // loop counter
+   int t, tn;
+
    // for every level
-   for(int t = 0; t < SPACELENGTH; t++)
+   for(t = 0; t < SPACELENGTH; t++)
    {
       // if full level found
       if (ge.space[t] == 0xff) 
@@ -198,7 +212,7 @@ void killFullLevels(void)
          ge.score += scoreStep[ge.game_opts.diff];
                    
          // step down every higher level
-         for (int tn = t+1; tn <= SPACELENGTH; tn++)
+         for (tn = t+1; tn <= SPACELENGTH; tn++)
          {
             // get the next level or 0 on the top level
             ge.space[tn-1] = ge.space[tn] * 

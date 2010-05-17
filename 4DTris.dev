@@ -49,13 +49,13 @@ AutoIncBuildNr=0
 
 [Unit4]
 FileName=4DTris_draw4dCube.c
-CompileCpp=1
+CompileCpp=0
 Folder=4D-TRIS
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=
+BuildCmd=$(CC) -c 4DTris_draw4dCube.c -o 4DTris_draw4dCube.o $(CFLAGS)
 
 [Unit5]
 FileName=4DTris_draw4dCube.h
@@ -69,13 +69,13 @@ BuildCmd=
 
 [Unit6]
 FileName=4DTris_engine.c
-CompileCpp=1
+CompileCpp=0
 Folder=4D-TRIS
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=
+BuildCmd=$(CC) -c 4DTris_engine.c -o 4DTris_engine.o $(CFLAGS)
 
 [Unit7]
 FileName=4DTris_engine.h
@@ -89,23 +89,23 @@ BuildCmd=
 
 [Unit1]
 FileName=4DTris_main.c
-CompileCpp=1
+CompileCpp=0
 Folder=4D-TRIS
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=
+BuildCmd=$(CC) -c 4DTris_main.c -o 4DTris_main.o $(CFLAGS)
 
 [Unit2]
 FileName=4DTris_AI.c
-CompileCpp=1
+CompileCpp=0
 Folder=4D-TRIS
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=
+BuildCmd=$(CC) -c 4DTris_AI.c -o 4DTris_AI.o $(CFLAGS)
 
 [Unit3]
 FileName=4DTris_AI.h
