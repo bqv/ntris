@@ -8,6 +8,10 @@
  This file is the main unit of the application.
 
  Change Log:
+ 1.5 - iota changed - simonl - 2008 jan 15.
+       iota changed to sprintf in score display
+       for sake of portability
+
  1.4 - C compatible - simonl - 2008 jan 14.
        Code converted to c from c++.
 
@@ -193,22 +197,16 @@ void renderString(double x, double y, double z, void *font, char *string)
 static void writeScore(void)
 {
   // Local variables:
-  char text[20];     // buffer for the full text;
-  char textbuff[10]; // buffer for the score value;
+  char text[30];     // buffer for the full text;
   int i;             // loop counter;
   int score;         // score value.
 
   // Set color for the text.
   glColor4d(0.2, 0.2, 0.4, 0.8);
-  // Convert the score value to character array.
-  itoa(ge.score, textbuff, 10);
 
-  // Set the buffer's each character to zero.
-  for (i = 0; i < 20; i++) { text[i] = 0; }
-  // Add the string to the text buffer.
-  strcat(text, "Score: ");
-  // Add the score value to the buffer.
-  strcat(text, textbuff);
+  // Create the score character array.
+  sprintf(text, "Score: %i", ge.score);
+
   // Render the text.
   renderString(-3.5, -2.5, -6.0, GLUT_BITMAP_9_BY_15, text);
 }
