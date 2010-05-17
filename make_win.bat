@@ -1,1 +1,0 @@
-gmake.exe -f Makefile_win

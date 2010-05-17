@@ -35,11 +35,16 @@
 --------------------------------------------------------------------------------
 */
 
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 // Include Glut library.
 #include <GL/glut.h>
 
 // Include standard library.
 #include <stdlib.h>
+
+#include <stdio.h>
 
 // Include math library.
 #include <math.h>
@@ -105,6 +110,7 @@ const GLfloat wire4d_color[] = {0.4, 0.4, 0.6, 0.6};
 
 // Color of the 4D cube.
 const GLfloat cube4d_color[] = {0.4, 0.4, 0.6, 0.15};
+
 
 /*
 --------------------------------------------------------------------------------
@@ -273,8 +279,8 @@ static void cube4D(double x, double y, double z, double l)
   for (i = 0; i < 24; i++)
   {
     // for each point do:
-    for (j = 0; j < 4; j++)
-    {
+//    for (j = 0; j < 4; j++)
+//    {
       // For each coordinate
       for (k = 0; k < 3; k++)
       {
@@ -296,12 +302,12 @@ static void cube4D(double x, double y, double z, double l)
 
         // For each point of the facet
         for (k = 0; k < 4; k++)
-        // set the points of the quad.
-		glVertex3d(points[faces[i][k]][0],
+          // set the points of the quad.
+          glVertex3d(points[faces[i][k]][0],
                    points[faces[i][k]][1],
                    points[faces[i][k]][2]);
       // Finish drawing.
-	  glEnd();
+      glEnd();
 
       // Set the color of the facet's wireframe.
       glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
@@ -316,7 +322,7 @@ static void cube4D(double x, double y, double z, double l)
                    points[faces[i][k]][2]);
       // Finish drawing.
 	  glEnd();
-    }
+//    }
   }
 
 }

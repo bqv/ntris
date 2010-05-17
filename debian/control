@@ -1,0 +1,13 @@
+Source: 4dtris
+Section: Games
+Priority: extra
+Maintainer: Simon Laszlo <laszlo.simon@gmail.com>
+Build-Depends: debhelper (>= 7), autotools-dev
+Standards-Version: 3.8.0
+Homepage: dtris.sourceforge.net
+
+Package: 4dtris
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Tetris like game in 4D
+ This Application is a Tetris game extended to 4 dimension using OpenGL and GLUT.

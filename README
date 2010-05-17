@@ -14,8 +14,7 @@ README
  This Application is a Tetris game extended to 4 dimension. The
  visulaization uses OpenGL and GLUT.
 
- Project web page: 4dtris.illusions.hu or
-                   www.illusions.hu/4dtris
+ Project web page: dtris.sourceforge.net
 
  ---
 
@@ -26,66 +25,3 @@ README
  - 1, 2, 3    - difficulty level (easy, medium, hard)
  - a          - auto player on/off
 
-___________________________________________________________________
-
-INSTALL
-
- From source on linux, type:
-
-  1) ./make_linux
-     to compile the source
-
-  2) ./4DTRIS
-     to start the software.
-
-___________________________________________________________________
-
-AUTHORS
-
- Simon, Laszlo <laszlo.simon@gmail.com>
-
-
-___________________________________________________________________
-
-THANKS
-
-
-___________________________________________________________________
-
-NEWS
-
-  0.1.1 - 2008 jan 06 - Simon, Laszlo
-
-  This is the first release of the Game in very earlyer development
-  state. Only the main functionalities and a simple visualisation
-  had implemented. There are a lot of issues has to be implemented
-  in the future (see todo) to get the first official release.
-  Since I'm very beginner in openGL, every help would be welcome.
-
-  Thanks for using!
-
-___________________________________________________________________
-
-ChangeLog
-
- version 0.2.0 - 2007 jan 13.
- Added score indication, auto player mode,
- difficulty levels tunned.
-
- version 0.1.0 - initial release - 2007 jan 06.
- Main functionalities implemented
-
-___________________________________________________________________
-
-COPYING
-
- Copyright (C) 2008 Simon, Laszlo
- License GPLv3+: GNU GPL version 3 or later
- <http://gnu.org/licenses/gpl.html>
- This is free software: you are free to change and redistribute it.
- There is NO WARRANTY, to the extent permitted by law.
-
-
-___________________________________________________________________
-
-BUGS
