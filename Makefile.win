@@ -27,13 +27,13 @@ $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o "4DTRIS.exe" $(LIBS)
 
 4DTris_main.o: 4DTris_main.c
-	$(CPP) -c 4DTris_main.c -o 4DTris_main.o $(CXXFLAGS)
+	$(CC) -c 4DTris_main.c -o 4DTris_main.o $(CFLAGS)
 
 4DTris_AI.o: 4DTris_AI.c
-	$(CPP) -c 4DTris_AI.c -o 4DTris_AI.o $(CXXFLAGS)
+	$(CC) -c 4DTris_AI.c -o 4DTris_AI.o $(CFLAGS)
 
 4DTris_draw4dCube.o: 4DTris_draw4dCube.c
-	$(CPP) -c 4DTris_draw4dCube.c -o 4DTris_draw4dCube.o $(CXXFLAGS)
+	$(CC) -c 4DTris_draw4dCube.c -o 4DTris_draw4dCube.o $(CFLAGS)
 
 4DTris_engine.o: 4DTris_engine.c
-	$(CPP) -c 4DTris_engine.c -o 4DTris_engine.o $(CXXFLAGS)
+	$(CC) -c 4DTris_engine.c -o 4DTris_engine.o $(CFLAGS)

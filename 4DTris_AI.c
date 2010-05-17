@@ -7,6 +7,9 @@
  This file is the Computer gamer's logic.
 
  Change Log:
+ 1.3 - C compatible - simonl - 2008 jan 14.
+       Code converted to c from c++.
+
  1.2 - Fixed - simonl - 2008 jan 13
        Code fixed and file renamed.
 
@@ -28,8 +31,6 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
-#include <cstdlib>
-#include <iostream>
 
 #include <stdlib.h>
 #include "4DTris_engine.h"
@@ -84,9 +85,9 @@ void dostep(void)
 {
   // Local variables:
   char stepMade = 0; // inditcator of turn already made;
-  int i, ax1, ax2;   // loop counters.
+  int i, ax1, ax2;   // loop counters;
 
-  static int solidnum = ge.solidnum;
+  static int solidnum = -1;
 
   // If got a new solid,
   if (solidnum != ge.solidnum)
@@ -132,8 +133,7 @@ int findBestSolution(void)
   int x[4];                // loop counters;
   int bestSitu;            // number of the best situation
   t_game_Engine backup_ge; // backup game engine;
-
-int pos;
+  int pos;
 
   // For each turn number variation:
   for (x[3] = 0; x[3] < 4; x[3]++)

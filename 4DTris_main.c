@@ -8,6 +8,9 @@
  This file is the main unit of the application.
 
  Change Log:
+ 1.4 - C compatible - simonl - 2008 jan 14.
+       Code converted to c from c++.
+
  1.3 - Autoplayer added - simonl - 2008 jan 13
        Auto player connected.
        Some Global variable moved to the begining.
@@ -146,13 +149,14 @@ void crossProduct(double *n, double v1[3], double v2[3])
 void normalise(double *v)
 {
   // Local variables:
+  int i; // loop counter;
   double l; // length of the vector.
 
   // Calculate length of the vector.
   l = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 
   // For each coordinate
-  for (int i = 0; i < 3; i++)
+  for (i = 0; i < 3; i++)
   {
     // normalise the coordinate.
     v[i] /= l;
@@ -200,7 +204,7 @@ static void writeScore(void)
   itoa(ge.score, textbuff, 10);
 
   // Set the buffer's each character to zero.
-  for (int i = 0; i < 20; i++) { text[i] = 0; }
+  for (i = 0; i < 20; i++) { text[i] = 0; }
   // Add the string to the text buffer.
   strcat(text, "Score: ");
   // Add the score value to the buffer.
@@ -254,8 +258,11 @@ static void cube4D(double x, double y, double z, double l)
   double v1[3];
   double v2[3];
 
+  // Loop counter.
+  int n, i, j, k;
+
   // For each point of the hypercube
-  for (int n = 0; n < 16; n++)
+  for (n = 0; n < 16; n++)
   {
       // correct the coordinates with the perspective torsion to
       // the direction of the 4th axis.
@@ -265,13 +272,13 @@ static void cube4D(double x, double y, double z, double l)
   }
 
   // For each facet and
-  for (int i = 0; i < 24; i++)
+  for (i = 0; i < 24; i++)
   {
     // for each point do:
-    for (int j = 0; j < 4; j++)
+    for (j = 0; j < 4; j++)
     {
       // For each coordinate
-      for (int k = 0; k < 3; k++)
+      for (k = 0; k < 3; k++)
       {
         // calculate two vector of two edge from the points.
         v1[k] = points[faces[i][1]][k] - points[faces[i][0]][k];
@@ -290,7 +297,7 @@ static void cube4D(double x, double y, double z, double l)
         glNormal3d(norm[0], norm[1], norm[2]);
 
         // For each point of the facet
-        for (int k = 0; k < 4; k++)
+        for (k = 0; k < 4; k++)
         // set the points of the quad.
 		glVertex3d(points[faces[i][k]][0],
                    points[faces[i][k]][1],
@@ -304,7 +311,7 @@ static void cube4D(double x, double y, double z, double l)
       // Start draw a line strip.
       glBegin(GL_LINE_STRIP);
         // For each point of the facet
-        for (int k = 0; k < 4; k++)
+        for (k = 0; k < 4; k++)
         // set the points of the strip.
 		glVertex3d(points[faces[i][k]][0],
                    points[faces[i][k]][1],
@@ -339,13 +346,14 @@ static void resize(int width, int height)
 static void display(void)
 {
   // Local variables:
+  int l, x, y, z;        // loop counter;
   double size,  // actual size of a cube;
          shift; // actual shift of a cube.
 
   // Time storage for lower down the solid and AI step
   // initialised with ellapsed time since program started.
-  static double timeLower = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-  static double timeAI = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+  static double timeLower = 0.0;
+  static double timeAI = 0.0;
 
   // Time ellapsed since program started.
   const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
@@ -388,9 +396,9 @@ static void display(void)
     glTranslated(-0.5 * size, -0.5 * size, -0.5 * size);
 
     // For each cell of the level do:
-    for (int x = 0; x <= 1; x++)
-    for (int y = 0; y <= 1; y++)
-    for (int z = 0; z <= 1; z++)
+    for (x = 0; x <= 1; x++)
+    for (y = 0; y <= 1; y++)
+    for (z = 0; z <= 1; z++)
     {
       glTranslated(x * size, y * size, z * size);
 
@@ -412,7 +420,7 @@ static void display(void)
     // Draw the gamespace.
 
     // For each level
-    for (int l = 0; l < SPACELENGTH; l++)
+    for (l = 0; l < SPACELENGTH; l++)
     {
       // Get perspective ratio of the actual level.
       size = perspFact(l);
@@ -428,9 +436,9 @@ static void display(void)
       glTranslated(-shift, -shift, -shift);
 
       // For each cell of the level
-      for (int x = 0; x <= 1; x++)
-      for (int y = 0; y <= 1; y++)
-      for (int z = 0; z <= 1; z++)
+      for (x = 0; x <= 1; x++)
+      for (y = 0; y <= 1; y++)
+      for (z = 0; z <= 1; z++)
       {
         // if the cell is not empty then
         if (!!getSpaceCell(l, x, y, z))
@@ -454,11 +462,11 @@ static void display(void)
     glColor4d(0.4, 0.4, 0.6, 0.2);
 
     // For each cell
-    for (int l = 0; l < 2; l++)
+    for (l = 0; l < 2; l++)
     {
-      for (int x = 0; x <= 1; x++)
-      for (int y = 0; y <= 1; y++)
-      for (int z = 0; z <= 1; z++)
+      for (x = 0; x <= 1; x++)
+      for (y = 0; y <= 1; y++)
+      for (z = 0; z <= 1; z++)
       {
         // if the cell is not empty then
         if (!!getSolidCell(l, x, y, z))
@@ -603,14 +611,17 @@ static void idle(void)
 // Main function of the software
 int main(int argc, char *argv[])
 {
+  // Loop counters.
+  int i, j;
+
   // Game option structure for initialize game engine.
   t_game_opts in_game_opts;
 
   // For each level of the game space,
-  for (int i = 0; i < SPACELENGTH; i++)
+  for (i = 0; i < SPACELENGTH; i++)
   {
     // for each color component
-    for (int j = 0; j < 3; j++)
+    for (j = 0; j < 3; j++)
     {
       // create a random value.
       level_colors[i][j] = (double)rand() / RAND_MAX;

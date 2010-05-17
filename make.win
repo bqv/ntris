@@ -1,0 +1,29 @@
+CC   = C:\Dev-Cpp\bin\gcc.exe
+
+OBJ  = 4DTris_main.o \
+       4DTris_AI.o \
+       4DTris_engine.o
+
+LIBS =  -lglut32 \
+        -lglu32 \
+        -lopengl32 \
+        -lwinmm \
+        -lgdi32
+
+CXXINCS = -I"C:/Dev-Cpp/include"
+
+BIN  = 4DTRIS.exe
+
+CXXFLAGS = $(CXXINCS) -g3
+
+$(BIN): $(OBJ)
+	$(CC) $(OBJ) -o "$(BIN)" $(LIBS)
+
+4DTris_main.o: 4DTris_main.c
+	$(CC) -c 4DTris_main.c -o 4DTris_main.o $(CXXFLAGS)
+
+4DTris_AI.o: 4DTris_AI.c
+	$(CC) -c 4DTris_AI.c -o 4DTris_AI.o $(CXXFLAGS)
+
+4DTris_engine.o: 4DTris_engine.c
+	$(CC) -c 4DTris_engine.c -o 4DTris_engine.o $(CXXFLAGS)
