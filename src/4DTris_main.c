@@ -1,33 +1,27 @@
 /*
+4D-TRIS - Tetris like game in four dimension
+Copyright (C) 2008 Simon, Laszlo
 
- Project: 4D-TRIS
- Author: Simon, Laszlo
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*//*
+ Author: Simon, Laszlo <laszlo.simon@gmail.com>
 
  Short Description:
  This program is a tetris game uses 4D hypercubes.
  This file is the main unit of the application.
 
- Change Log:
- 1.5 - iota changed - simonl - 2008 jan 15.
-       iota changed to sprintf in score display
-       for sake of portability
-
- 1.4 - C compatible - simonl - 2008 jan 14.
-       Code converted to c from c++.
-
- 1.3 - Autoplayer added - simonl - 2008 jan 13
-       Auto player connected.
-       Some Global variable moved to the begining.
-
- 1.2 - Functions added - simonl - 2008 jan 06
-       Added score print out.
-       Added comments.
-
- 1.1 - Initial revision - simonl - 2008 jan 04
-
  ToDo:
-
- */
+*/
 
 /*
 --------------------------------------------------------------------------------
@@ -387,100 +381,100 @@ static void display(void)
 
   glPushMatrix();
 
-    // Write out the game score.
-    writeScore();
+  // Write out the game score.
+  writeScore();
 
-    // Place and orient the viewport.
-    glTranslated(0, 0, -6);
-    glRotated(angleX, 1, 0, 0);
-    glRotated(angleZ, 0, 0, 1);
+  // Place and orient the viewport.
+  glTranslated(0, 0, -6);
+  glRotated(angleX, 1, 0, 0);
+  glRotated(angleZ, 0, 0, 1);
 
-    // Draw the lower level.
+  // Draw the lower level.
 
-    glTranslated(-0.5 * size, -0.5 * size, -0.5 * size);
+  glTranslated(-0.5 * size, -0.5 * size, -0.5 * size);
 
-    // For each cell of the level do:
+  // For each cell of the level do:
+  for (x = 0; x <= 1; x++)
+  for (y = 0; y <= 1; y++)
+  for (z = 0; z <= 1; z++)
+  {
+    glTranslated(x * size, y * size, z * size);
+
+    // Set the color of the lower level,
+    glColor4d(cube4d_color[0], cube4d_color[1], cube4d_color[2], cube4d_color[3]);
+    // Draw the cube.
+    glutSolidCube(size);
+
+    // Set the color of the lower level's wireframe.
+    glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
+    // Draw the cube's wireframe.
+    glutWireCube(size * 1.01);
+
+    glTranslated(-x * size, -y * size, -z * size);
+  }
+
+  glTranslated(0.5 * size, 0.5 * size, 0.5 * size);
+
+  // Draw the gamespace.
+
+  // For each level
+  for (l = 0; l < SPACELENGTH; l++)
+  {
+    // Get perspective ratio of the actual level.
+    size = perspFact(l);
+
+    // Set the color of the actual level.
+    glColor4d(level_colors[l][0],
+              level_colors[l][1],
+              level_colors[l][2],
+              level_colors[l][3]);
+
+    shift = (0.5 - 0.01 * size) * size;
+
+    glTranslated(-shift, -shift, -shift);
+
+    // For each cell of the level
     for (x = 0; x <= 1; x++)
     for (y = 0; y <= 1; y++)
     for (z = 0; z <= 1; z++)
     {
-      glTranslated(x * size, y * size, z * size);
-
-      // Set the color of the lower level,
-      glColor4d(cube4d_color[0], cube4d_color[1], cube4d_color[2], cube4d_color[3]);
-      // Draw the cube.
-      glutSolidCube(size);
-
-      // Set the color of the lower level's wireframe.
-      glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
-      // Draw the cube's wireframe.
-      glutWireCube(size * 1.01);
-
-      glTranslated(-x * size, -y * size, -z * size);
-    }
-
-    glTranslated(0.5 * size, 0.5 * size, 0.5 * size);
-
-    // Draw the gamespace.
-
-    // For each level
-    for (l = 0; l < SPACELENGTH; l++)
-    {
-      // Get perspective ratio of the actual level.
-      size = perspFact(l);
-
-      // Set the color of the actual level.
-      glColor4d(level_colors[l][0],
-                level_colors[l][1],
-                level_colors[l][2],
-                level_colors[l][3]);
-
-      shift = (0.5 - 0.01 * size) * size;
-
-      glTranslated(-shift, -shift, -shift);
-
-      // For each cell of the level
-      for (x = 0; x <= 1; x++)
-      for (y = 0; y <= 1; y++)
-      for (z = 0; z <= 1; z++)
+      // if the cell is not empty then
+      if (!!getSpaceCell(l, x, y, z))
       {
-        // if the cell is not empty then
-        if (!!getSpaceCell(l, x, y, z))
-        {
-          // draw the cube.
-          glTranslated(x * 2 * shift, y * 2 * shift, z * 2 * shift);
-          glutSolidCube(size);
-          glTranslated(-x * 2 * shift, -y * 2 * shift, -z * 2 * shift);
-        }
+        // draw the cube.
+        glTranslated(x * 2 * shift, y * 2 * shift, z * 2 * shift);
+        glutSolidCube(size);
+        glTranslated(-x * 2 * shift, -y * 2 * shift, -z * 2 * shift);
       }
-
-      glTranslated(shift, shift, shift);
     }
 
-    // Draw the actual solid.
+    glTranslated(shift, shift, shift);
+  }
 
-    // Set actual size to base value.
-    size = baseSize;
+  // Draw the actual solid.
 
-    // Set the color of the solid.
-    glColor4d(0.4, 0.4, 0.6, 0.2);
+  // Set actual size to base value.
+  size = baseSize;
 
-    // For each cell
-    for (l = 0; l < 2; l++)
+  // Set the color of the solid.
+  glColor4d(0.4, 0.4, 0.6, 0.2);
+
+  // For each cell
+  for (l = 0; l < 2; l++)
+  {
+    for (x = 0; x <= 1; x++)
+    for (y = 0; y <= 1; y++)
+    for (z = 0; z <= 1; z++)
     {
-      for (x = 0; x <= 1; x++)
-      for (y = 0; y <= 1; y++)
-      for (z = 0; z <= 1; z++)
+      // if the cell is not empty then
+      if (!!getSolidCell(l, x, y, z))
       {
-        // if the cell is not empty then
-        if (!!getSolidCell(l, x, y, z))
-        {
-          // draw the hypercube.
-          cube4D(x - 1, y - 1, z - 1, ge.pos + l);
-        }
+        // draw the hypercube.
+        cube4D(x - 1, y - 1, z - 1, ge.pos + l);
       }
-
     }
+
+  }
 
   glPopMatrix();
 

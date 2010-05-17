@@ -1,25 +1,14 @@
 /*
-
- Project: 4D-TRIS
- Author: Simon, Laszlo 
-
  Short Description:
  Header of the 4D-TRIS game engine
-
- Change Log:
- 1.2 - Copy, intf added - simonl - 2008 jan 13
-       Interface structure for global variables,
-       Copy game engine function added.
-
- 1.1 - Initial revision - simonl - 2008 jan 05
 
  ToDo: 
  
  */
 
-#ifndef TRIS_ENGINE_H
+#ifndef _4DTRIS_ENGINE_H
 
-#define TRIS_ENGINE_H
+#define _4DTRIS_ENGINE_H
 
 /*------------------------------------------------------------------------------
    MACROS

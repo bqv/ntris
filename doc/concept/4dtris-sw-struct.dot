@@ -1,0 +1,51 @@
+digraph
+{
+  bgcolor = "#3F3F6F";
+  align = "LR";
+
+  node 
+  [
+    shape = "box",
+    color = "white",
+    fontcolor = "white",
+    fontname = "sans",
+    fontsize = "10"
+  ];
+	
+  edge 
+  [
+    color = "white"
+    fontcolor = "white",
+    fontname = "sans",
+    fontsize = "10"
+  ];
+
+  menu;
+  main;
+  ui  [label = "UI-handling"];
+  dm4 [label = "4D-draw-modul"];
+  dm3 [label = "3D-draw-modul"];
+  ai  [label = "computer-gamer"]
+  mdm [label = "model-dynamics"];
+  m4d [label = "4D-model"];
+  tr  [label = "tetris-modul"];
+  l4d [label = "4D-library"];
+  GL  [label = "OpenGL", shape = "ellipse"];
+  
+  main -> ai;
+          ai -> dm4;
+                m4d -> l4d;
+          ai -> mdm -> l4d;
+  main -> ui;
+          ui -> dm4 [label = "camera move"];
+          ui -> mdm [label = "90 deg rotations"];
+                mdm -> m4d [label = "small angle rotations"];
+                       m4d -> dm4  [label = "vertices, faces of blocks in 4D"];
+                              dm4 -> dm3  [label = "faces in 3D"];
+                                     dm3 -> GL;
+  main -> tr [label = "trigger"];
+          tr -> m4d [label = "check/do tetris rules"];
+          ui -> menu;
+                menu -> dm3 [label = "menu text"];
+  main -> GL;
+}

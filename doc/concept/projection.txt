@@ -1,0 +1,43 @@
+
+  Picture of point on W axis             Known: 
+  --------------------------             O' - picture of the origo [0,0,0,0]
+               \                         Q' - picture of the end of W axis
+                \W axis                       [0,0,0,oo]
+                 \                       W  - point on W axis [0,0,0,Ww]
+                  \ W         
+                   o----+                Question:
+          \        .\   |                W' - picture of the W point
+           \        .\  | Picture of     
+            \       . \ | origo (O')     
+             \       .t\|/               (1) O'Q'CQ" - parallelogram
+     <---//---o<-----o--O--- Projection  
+             / \    /.  |\     plane     (2) WW'O' ~ WCQ"
+   picture of   \  / .  | \              
+   end of W axis \/   . |  \                 WO'    WQ"    WQ"
+   (Q')          /\   . |   =            (3) ---- = ---- = ---- 
+                /  \  . |    \               O'W'    Q"C   O'Q'
+      picture of    =  .|     \                           ___         ___
+      W point        \ .|      \             ___          O'Q'   Ww * O'Q'
+      (W')            \.|       \        (4) O'W' = WO' * ---- = ---------
+                       \|        \                        WQ"    Ww + O'Q"
+                        o---//----+                         ___
+                       /           Q"        _    _    Ww * O'Q'
+                  view                   (5) W' = O' + ---------
+                 point (C)                             Ww + Q'C
+
+  Picture of any point at w = Ww space
+  ------------------------------------
+   ^ W axis
+   |                 P[Px,Py,Pz,Pw] = P[Px,Py,Pz,Ww]
+   +---------+---    
+   |W'      / P'     _    _    __   W'C   _    _   W'C
+   |       /         P' = W' + WP * --- = W' + P * ---
+   |      /                         WC             Pw
+   |     /                          ___
+   +----+            _    _    Ww * O'Q'   _   W'C
+   |W  / P           P' = O' + --------- + P * ---
+   |  /                        Ww + Q'C        Ww
+   | /              
+   |/
+   o
+    C

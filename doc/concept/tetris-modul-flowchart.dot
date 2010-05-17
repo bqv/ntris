@@ -1,0 +1,35 @@
+digraph
+{
+  align = "LR";
+
+  node 
+  [
+    shape = "box",
+    fontname = "sans",
+    fontsize = "10"
+  ];
+	
+  edge 
+  [
+    fontname = "sans",
+    fontsize = "10"
+  ];
+
+  Start ->
+  New_block -> 
+  Fall_down -> 
+  Wait -> 
+  Check_lending -> 
+  Remove_filled_levels ->
+  Check_game_over ->
+  Stop;
+
+  Check_game_over -> New_block;
+  Check_lending -> Fall_down;
+
+  Start [shape = "ellipse"];
+  Stop [shape = "ellipse"];
+  Check_lending [shape = "diamond"]; 
+  Check_game_over [shape = "diamond"];
+  
+}

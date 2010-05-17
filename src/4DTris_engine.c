@@ -1,28 +1,11 @@
 /*
-
- Project: 4D-TRIS
- Author: Simon, Laszlo 
-
  Short Description:
  This file is the game engine of the 4D Tetris.
  Game space and element storage and handling.
 
- Change Log:
- 1.3 - C compatible - simonl - 2008 jan 14.
-       Code converted to c from c++.
-
- 1.2 - Copy, intf added - simonl - 2008 jan 13
-       Interface structure for global variables,
-       Copy game engine function added.
-
- 1.1 - Initial revision - simonl - 2008 jan 05
-
  ToDo: 
  
  */
- /*
-HE[h]: 10
-*/
  
 /*------------------------------------------------------------------------------
    INCLUDE FILES
