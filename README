@@ -1,0 +1,78 @@
+   ________  _____  ________  ___     __   _____    __      ___
+  /__   __/\/ ___/\/__   __/\/ _ \   /_/\ / ___/\  / /__   / _ \
+  \_/  / _\/  _/\\/\_/  / _\/ _  /\ / /\/_\__ \\/ /_  _/\ / // /\
+   /__/ / /____/\   /__/ / /_//_/\//_/ //_____/\  \/_/\\//____/ /
+   \__\/  \____\/   \__\/  \_\\_\/ \_\/ \_____\/   \_\/  \____\/
+
+___________________________________________________________________
+
+README
+
+ Tetris 4D (working name)
+ Created by Simon, Laszlo
+
+ This Application is a Tetris game extended to 4 dimension. The
+ visulaization uses OpenGL and GLUT.
+
+ Project web page: tetris4D.illusions.hu
+
+ ---
+
+ Game Controls:
+ - arrow keys - rotate the view port
+ - z, x, c, v - turn the blocks around the 4 axis
+ - q, esc     - exit
+
+___________________________________________________________________
+
+INSTALL
+
+
+___________________________________________________________________
+
+AUTHORS
+
+ Simon, Laszlo (laszlo.simon@gmail.com)
+
+
+___________________________________________________________________
+
+THANKS
+
+
+___________________________________________________________________
+
+NEWS
+
+  Simon, Laszlo - 2008 jan 06
+
+  This is the first release of the Game in very earlyer development
+  state. Only the main functionalities and a simple visualisation
+  had implemented. There are a lot of issues has to be implemented
+  in the future (see todo) to get the first official release.
+  Since I'm very beginner in openGL, every help would be welcome.
+
+  Thanks for using!
+
+___________________________________________________________________
+
+ChangeLog
+
+ version 0.1.0 Alpha - initial release - 2007 jan 05.
+                        Main functionalities implemented
+
+
+___________________________________________________________________
+
+COPYING
+
+ Copyright (C) 2008 Simon, Laszlo
+ License GPLv3+: GNU GPL version 3 or later
+ <http://gnu.org/licenses/gpl.html>
+ This is free software: you are free to change and redistribute it.
+ There is NO WARRANTY, to the extent permitted by law.
+
+
+___________________________________________________________________
+
+BUGS

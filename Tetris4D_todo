@@ -1,0 +1,46 @@
+
+ ToDo List for Tetris 4D
+
+------------------------------------------------------
+ Project: Tetris 4D
+ Author:  Laszlo Simon
+
+ Change Log
+ 1.1 - Initial Revision - SimonL - 2008.01.05
+------------------------------------------------------
+ Legend: H, M, L - high, medium, low prio
+         B, M, S - Big, medium, small effort
+------------------------------------------------------
+
+Required Functions
+
+- M B - AutoPlay
+- H B - Menu
+        End Game
+        New Game
+        Pause Game
+        Difficulty Level set
+- H M - Score
+- M M - mouse rotation
+- L S - correct rotation
+- L B - mouse solid turn
+- M M - correct z buffer or ?
+- M M - Top ranks
+- M S - random init orientation for solid
+- H B - Improve graphic
+
+Code Issues
+
+- L M - Drop the idiotically optimised game engine
+        and implement a clear one
+- L S - Add missing comments to the code
+- M M - Organise the main unit
+- M S - Separated modul for 4d cube drawing
+- M M - Separated drawing modul
+- M B - Installer, icon
+
+Documentation Issues
+
+- H M - Help
+- M B - Dev. Docs
+- H B - Home page
