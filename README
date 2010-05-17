@@ -1,20 +1,20 @@
-   ________  _____  ________  ___     __   _____    __      ___
-  /__   __/\/ ___/\/__   __/\/ _ \   /_/\ / ___/\  / /__   / _ \
-  \_/  / _\/  _/\\/\_/  / _\/ _  /\ / /\/_\__ \\/ /_  _/\ / // /\
-   /__/ / /____/\   /__/ / /_//_/\//_/ //_____/\  \/_/\\//____/ /
-   \__\/  \____\/   \__\/  \_\\_\/ \_\/ \_____\/   \_\/  \____\/
+  __      ___         ________  ___     __   _____  
+ / /__   / _ \  ____ /__   __/\/ _ \   /_/\ / ___/\ 
+/_  _/\ / // /\/___/\\_/  /\_\/ _  /\ / /\/_\__ \\/ 
+\/_/\\//____/ /\___\/ /__/ / /_//_/\//_/ //_____/\
+ \_\/  \____\/        \__\/  \_\\_\/ \_\/ \_____\/  
 
 ___________________________________________________________________
 
 README
 
- Tetris 4D (working name)
+ 4D-TRIS
  Created by Simon, Laszlo 
 
  This Application is a Tetris game extended to 4 dimension. The 
  visulaization uses OpenGL and GLUT. 
 
- Project web page: tetris4D.illusions.hu
+ Project web page: 4dtris.illusions.hu
 
  ---
 
@@ -22,6 +22,8 @@ README
  - arrow keys - rotate the view port
  - z, x, c, v - turn the blocks around the 4 axis
  - q, esc     - exit 
+ - 1, 2, 3    - difficulty level (easy, medium, hard)
+ - a          - auto player on/off
 
 ___________________________________________________________________
 
@@ -44,7 +46,7 @@ ___________________________________________________________________
 
 NEWS
 
-  Simon, Laszlo - 2008 jan 06
+  0.1.0 - 2008 jan 06 - Simon, Laszlo 
   
   This is the first release of the Game in very earlyer development 
   state. Only the main functionalities and a simple visualisation 
@@ -58,9 +60,12 @@ ___________________________________________________________________
   
 ChangeLog
 
- version 0.1.0 Alpha - initial release - 2007 jan 05.
-                        Main functionalities implemented
+ version 0.2.0 - 2007 jan 13.
+ Added score indication, auto player mode, 
+ difficulty levels tunned.
 
+ version 0.1.0 - initial release - 2007 jan 06.
+ Main functionalities implemented
 
 ___________________________________________________________________
 
@@ -76,3 +81,5 @@ COPYING
 ___________________________________________________________________
 
 BUGS
+
+

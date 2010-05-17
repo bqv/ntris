@@ -1,36 +1,39 @@
-# Project: Tetris4D
+# Project: 4D-TRIS
 # Makefile created by Dev-C++ 4.9.9.2
 
-CPP  = g++.exe
-CC   = gcc.exe
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
 WINDRES = windres.exe
 RES  = 
-OBJ  = Tetris4D_main.o Tetris4D_engine.o Tetris4D_AI.o $(RES)
-LINKOBJ  = Tetris4D_main.o Tetris4D_engine.o Tetris4D_AI.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32 
+OBJ  = 4DTris_main.o 4DTris_AI.o 4DTris_draw4dCube.o 4DTris_engine.o $(RES)
+LINKOBJ  = 4DTris_main.o 4DTris_AI.o 4DTris_draw4dCube.o 4DTris_engine.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32  -g3 
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
-BIN  = Tetris4D.exe
-CXXFLAGS = $(CXXINCS)  
-CFLAGS = $(INCS)  
+BIN  = 4DTRIS.exe
+CXXFLAGS = $(CXXINCS)   -g3
+CFLAGS = $(INCS)   -g3
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
-all: all-before Tetris4D.exe all-after
+all: all-before 4DTRIS.exe all-after
 
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
-	$(CPP) $(LINKOBJ) -o "Tetris4D.exe" $(LIBS)
+	$(CPP) $(LINKOBJ) -o "4DTRIS.exe" $(LIBS)
 
-Tetris4D_main.o: Tetris4D_main.cpp
-	$(CPP) -c Tetris4D_main.cpp -o Tetris4D_main.o $(CXXFLAGS)
+4DTris_main.o: 4DTris_main.c
+	$(CPP) -c 4DTris_main.c -o 4DTris_main.o $(CXXFLAGS)
 
-Tetris4D_engine.o: Tetris4D_engine.cpp
-	$(CPP) -c Tetris4D_engine.cpp -o Tetris4D_engine.o $(CXXFLAGS)
+4DTris_AI.o: 4DTris_AI.c
+	$(CPP) -c 4DTris_AI.c -o 4DTris_AI.o $(CXXFLAGS)
 
-Tetris4D_AI.o: Tetris4D_AI.cpp
-	$(CPP) -c Tetris4D_AI.cpp -o Tetris4D_AI.o $(CXXFLAGS)
+4DTris_draw4dCube.o: 4DTris_draw4dCube.c
+	$(CPP) -c 4DTris_draw4dCube.c -o 4DTris_draw4dCube.o $(CXXFLAGS)
+
+4DTris_engine.o: 4DTris_engine.c
+	$(CPP) -c 4DTris_engine.c -o 4DTris_engine.o $(CXXFLAGS)

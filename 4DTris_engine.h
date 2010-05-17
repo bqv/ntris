@@ -1,21 +1,25 @@
 /*
 
- Project: Tetris4D
+ Project: 4D-TRIS
  Author: Simon, Laszlo 
 
  Short Description:
- Header of the Tetris 4D game engine
+ Header of the 4D-TRIS game engine
 
  Change Log:
+ 1.2 - Copy, intf added - simonl - 2008 jan 13
+       Interface structure for global variables,
+       Copy game engine function added.
+
  1.1 - Initial revision - simonl - 2008 jan 05
 
  ToDo: 
  
  */
 
-#ifndef TETRIS4D_ENGINE_H
+#ifndef TRIS_ENGINE_H
 
-#define TETRIS4D_ENGINE_H
+#define TRIS_ENGINE_H
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -37,12 +41,12 @@
 // get the cell of the level at x, y, z from 
 // the game space empty or full
 #define getSpaceCell(l,x,y,z) \
-  ((space[l]) & (0x01 << ((x)+(y)*2+(z)*4)))
+  ((ge.space[l]) & (0x01 << ((x)+(y)*2+(z)*4)))
 
 // get the cell of the level at x, y, z from 
 // the game space empty or full
 #define getSolidCell(l,x,y,z) \
-  ((solid) & (0x01 << ((x)+(y)*2+(z)*4+(l)*8)))
+  ((ge.solid) & (0x01 << ((x)+(y)*2+(z)*4+(l)*8)))
 
 /*------------------------------------------------------------------------------
    TYPE DEFINITIONS
@@ -55,6 +59,29 @@ typedef struct
       char diff;
 
 } t_game_opts;
+
+
+// sturct of the game variables
+typedef struct 
+{
+  // the game space 
+  TLevel space[SPACELENGTH];
+  // actual solid
+  TSolid solid;
+  // position of actual solid
+  // 0 if reached the floor
+  char pos;
+  // indicator of 
+  bool isnewsolid;
+  // score collected in the actual game
+  int score;
+  // num of the solid
+  int solidnum;
+
+  // struct of game options
+  t_game_opts game_opts;
+
+} t_game_Engine;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
@@ -71,6 +98,8 @@ extern bool lowerSolid(void);
 // returns indicator of turn availability
 extern bool turn(char ax1, char ax2);
 
+// duplicates the game engine
+extern t_game_Engine copyGameEngine(t_game_Engine in_game_Engine);
 
 
 #endif
