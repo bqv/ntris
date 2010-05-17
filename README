@@ -14,7 +14,8 @@ README
  This Application is a Tetris game extended to 4 dimension. The 
  visulaization uses OpenGL and GLUT. 
 
- Project web page: 4dtris.illusions.hu
+ Project web page: 4dtris.illusions.hu or
+                   www.illusions.hu/4dtris  
 
  ---
 
@@ -29,12 +30,19 @@ ___________________________________________________________________
 
 INSTALL
 
+ From source on linux, type:
+
+  1) ./make_linux
+     to compile the source
+
+  2) ./4DTRIS
+     to start the software.
 
 ___________________________________________________________________
 
 AUTHORS
 
- Simon, Laszlo (laszlo.simon@gmail.com)
+ Simon, Laszlo <laszlo.simon@gmail.com>
 
 
 ___________________________________________________________________
@@ -46,7 +54,7 @@ ___________________________________________________________________
 
 NEWS
 
-  0.1.0 - 2008 jan 06 - Simon, Laszlo 
+  0.1.1 - 2008 jan 06 - Simon, Laszlo 
   
   This is the first release of the Game in very earlyer development 
   state. Only the main functionalities and a simple visualisation 
