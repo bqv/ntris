@@ -166,7 +166,7 @@ void NewSolid(void)
    i = 0; 
    
    // get a random probability
-   prob = (long int) rand() * sum / RAND_MAX;
+   prob = (long int) (sum * (rand() / (RAND_MAX + 1.0) ));
    
    int prb = probs[ge.game_opts.diff][i];
    
