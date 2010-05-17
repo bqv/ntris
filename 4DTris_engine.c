@@ -1,13 +1,17 @@
 /*
 
- Project: Tetris4D
+ Project: 4D-TRIS
  Author: Simon, Laszlo
 
  Short Description:
- This file is the game engine of the Tetris 4D.
+ This file is the game engine of the 4D Tetris.
  Game space and element storage and handling.
 
  Change Log:
+ 1.2 - Copy, intf added - simonl - 2008 jan 13
+       Interface structure for global variables,
+       Copy game engine function added.
+
  1.1 - Initial revision - simonl - 2008 jan 05
 
  ToDo:
@@ -23,10 +27,10 @@ HE[h]: 10
 
 #include <stdlib.h>
 
-#include "Tetris4D_engine.h"
+#include "4DTris_engine.h"
 
 /*------------------------------------------------------------------------------
-   TYPE DEFINITIONS
+   MACROS
 ------------------------------------------------------------------------------*/
 
 // number of type of solids
@@ -35,7 +39,9 @@ HE[h]: 10
 // number of difficulty levels
 #define DIFFLEVELS (3)
 
+/*------------------------------------------------------------------------------
 // CONSTANTS
+------------------------------------------------------------------------------*/
 
 // defined solids
 static TSolid solids[SOLIDTYPES] =
@@ -50,7 +56,7 @@ static TSolid solids[SOLIDTYPES] =
 // difficulty levels (easy, medium, hard)
 static int probs[DIFFLEVELS][SOLIDTYPES] =
 {{10, 5, 5, 1, 1, 1},
- {4, 2, 2, 1, 1, 1},
+ {5, 3, 2, 1, 1, 1},
  {2, 1, 1, 1, 1, 1}};
 
 static int scoreStep[DIFFLEVELS] = { 100, 200, 400};
@@ -59,24 +65,14 @@ static int scoreStep[DIFFLEVELS] = { 100, 200, 400};
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
-  // the game space
-  TLevel space[SPACELENGTH];
-  // actual solid
-  TSolid solid;
-  // position of actual solid
-  // 0 if reached the floor
-  char pos;
-  // indicator of
-  bool isnewsolid;
-  // score collected in the actual game
-  int score;
-
-  t_game_opts game_opts;
-
+t_game_Engine ge;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
+
+// duplicates the game engine
+extern t_game_Engine copyGameEngine(t_game_Engine in_game_Engine);
 
 // initialize the game variables
 extern void initGame(t_game_opts in_game_opts);
@@ -102,21 +98,44 @@ extern bool turn(char ax1, char ax2);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+// duplicates the game engine
+t_game_Engine copyGameEngine(t_game_Engine in_game_Engine)
+{
+  // Local variables:
+  t_game_Engine result; // duplicated game engine;
+  int i;                // loop counter.
+
+  // Copy the input game engine to the result one.
+  result = in_game_Engine;
+
+  // Copy the gamespace to the result.
+  for (i = 0; i < SPACELENGTH; i++)
+  {
+    result.space[i] = in_game_Engine.space[i];
+  }
+
+  // return with the result gamespace
+  return result;
+}
+
 // initialize the game variables
 void initGame(t_game_opts in_game_opts)
 {
    // for the every part of the space
    for (char t = 0; t < SPACELENGTH; t++)
-      space[t] = 0x00;
+      ge.space[t] = 0x00;
+
+   // initialise the number of solids dropped
+   ge.solidnum = 0;
 
    // get new solid
    NewSolid();
 
    // set options
-   game_opts = in_game_opts;
+   ge.game_opts = in_game_opts;
 
    // init score value
-   score = 0;
+   ge.score = 0;
 }
 
 // get a new random solid
@@ -131,35 +150,38 @@ void NewSolid(void)
    for (int i = 0; i < SOLIDTYPES; i++)
    {
       // summarize the probability
-      sum += probs[game_opts.diff][i];
+      sum += probs[ge.game_opts.diff][i];
    }
 
    int i = 0;
    // get a random probability
    prob = (long int) rand() * sum / RAND_MAX;
 
-   int prb = probs[game_opts.diff][i];
+   int prb = probs[ge.game_opts.diff][i];
 
    while (!(prob < prb))
    {
      i++;
-     prb += probs[game_opts.diff][i];
+     prb += probs[ge.game_opts.diff][i];
    }
 
-   solid = solids[i];
+   ge.solid = solids[i];
 
    // position the new solid to the
    // top 2 level of the space
-   pos = SPACELENGTH - 2;
+   ge.pos = SPACELENGTH - 2;
 
    // set the indicator of new solid true
-   isnewsolid = 1;
+   ge.isnewsolid = 1;
+
+   // increase the number of the solid
+   ge.solidnum++;
 }
 
 // check overlap between solid and gamespace
 bool checkOverlap(void)
 {
-   return !!( ( (TSolid)space[pos+1] << 8 | space[pos]) & solid);
+   return !!( ( (TSolid)ge.space[ge.pos+1] << 8 | ge.space[ge.pos]) & ge.solid);
 
 }//end of checkOverlap
 
@@ -170,16 +192,16 @@ void killFullLevels(void)
    for(int t = 0; t < SPACELENGTH; t++)
    {
       // if full level found
-      if (space[t] == 0xff)
+      if (ge.space[t] == 0xff)
       {
          // increase score
-         score += scoreStep[game_opts.diff];
+         ge.score += scoreStep[ge.game_opts.diff];
 
          // step down every higher level
          for (int tn = t+1; tn <= SPACELENGTH; tn++)
          {
             // get the next level or 0 on the top level
-            space[tn-1] = space[tn] *
+            ge.space[tn-1] = ge.space[tn] *
                          (tn < SPACELENGTH);
 
          } // end of every level
@@ -195,20 +217,20 @@ void killFullLevels(void)
 bool lowerSolid(void)
 {
    // set the new solid indicator false
-   isnewsolid = 1;
+   ge.isnewsolid = 0;
 
    // solid reached the floor flag
-   bool onFloor = (pos <= 0) ||
-                  ( (pos-- || 1) &&
+   bool onFloor = (ge.pos <= 0) ||
+                  ( (ge.pos-- || 1) &&
                     checkOverlap() &&
-                    (pos++ || 1) );
+                    (ge.pos++ || 1) );
 
    // if reached the floor,
    if (onFloor)
    {
       // put the solid to the space
-      space[pos]   |= solid;
-      space[pos+1] |= solid >> 8;
+      ge.space[ge.pos]   |= ge.solid;
+      ge.space[ge.pos+1] |= ge.solid >> 8;
 
       // delete the full levels
       killFullLevels();
@@ -230,8 +252,8 @@ bool turn(char ax1, char ax2)
    int p[4];
 
    // remove the solid to a temp solid
-   TSolid tempSolid = solid;
-   solid = 0x0000;
+   TSolid tempSolid = ge.solid;
+   ge.solid = 0x0000;
 
  // turn it
 
@@ -249,17 +271,17 @@ bool turn(char ax1, char ax2)
             | ( (!((n >> ax2) & 0x01)) << ax1);
 
       // get the element to the new turned place
-      solid |= ((tempSolid >> n) & 0x01) << n2;
+      ge.solid |= ((tempSolid >> n) & 0x01) << n2;
    }
 
    // put to the lower level of the solid
    // if lower level empty then
-   if (solid && 0x00ff == 0x00)
+   if (ge.solid && 0x00ff == 0x00)
       // move from the higher level to the lower
-      solid = solid >> 8;
+      ge.solid = ge.solid >> 8;
 
    // if overlapped, invalid turn
    // get back the original
-   return !(checkOverlap() && (solid = tempSolid));
+   return !(checkOverlap() && (ge.solid = tempSolid));
 
 }

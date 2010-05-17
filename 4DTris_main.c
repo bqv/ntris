@@ -1,6 +1,6 @@
 /*
 
- Project: Tetris4D
+ Project: 4D-TRIS
  Author: Simon, Laszlo
 
  Short Description:
@@ -8,6 +8,10 @@
  This file is the main unit of the application.
 
  Change Log:
+ 1.3 - Autoplayer added - simonl - 2008 jan 13
+       Auto player connected.
+       Some Global variable moved to the begining.
+
  1.2 - Functions added - simonl - 2008 jan 06
        Added score print out.
        Added comments.
@@ -33,31 +37,31 @@
 // Include math library.
 #include <math.h>
 
+// Include the computer gamer header.
+#include "4DTris_AI.h"
+
 // Include the game engine.
-#include "Tetris4D_engine.h"
+#include "4DTris_engine.h"
 
 /*
 --------------------------------------------------------------------------------
-   DECLARATIONS
+   GLOBAL VARIABLES
 --------------------------------------------------------------------------------
 */
 
-// Variables from game engine:
-
-// the game space;
-extern TLevel space[SPACELENGTH];
-// actual solid;
-extern TSolid solid;
-// position of actual solid
-// (0 if reached the floor);
-extern char pos;
-// score collected in the actual game.
-extern int score;
+// Struct of game engine:
+extern t_game_Engine ge;
 
 // Variables:
 
+// flag for auto gamer
+static int autoGamer_ON = 0;
+
 // time ellapsed while the the solid steps one level down;
-static double timestep = 1.0;
+static double timestep = 1.5;
+
+// time ellapsed while the AI steps the next turn;
+static double timestepAI = 0.15;
 
 // size of cube represent the lowest level;
 static double baseSize = 0.75;
@@ -86,12 +90,25 @@ const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
 const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat high_shininess[] = { 100.0f };
 
+// Background color.
+const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+// Color of the wireframe 4D cube.
+const GLfloat wire4d_color[] = {0.4, 0.4, 0.6, 0.6};
+
+// Color of the 4D cube.
+const GLfloat cube4d_color[] = {0.4, 0.4, 0.6, 0.15};
+
 /*
 --------------------------------------------------------------------------------
    FUNCTIONS
 --------------------------------------------------------------------------------
 */
 
+
+/*------------------------------------------------------------------------------
+    VISUALISATION
+*/
 // Calculates perspective projection factor of the 'level'
 // (game space 4th axis).
 double perspFact(double level)
@@ -173,12 +190,14 @@ static void writeScore(void)
 {
   // Local variables:
   char text[20];     // buffer for the full text;
-  char textbuff[10]; // buffer for the score value.
+  char textbuff[10]; // buffer for the score value;
+  int i;             // loop counter;
+  int score;         // score value.
 
   // Set color for the text.
   glColor4d(0.2, 0.2, 0.4, 0.8);
   // Convert the score value to character array.
-  itoa(score, textbuff, 10);
+  itoa(ge.score, textbuff, 10);
 
   // Set the buffer's each character to zero.
   for (int i = 0; i < 20; i++) { text[i] = 0; }
@@ -263,7 +282,7 @@ static void cube4D(double x, double y, double z, double l)
       calcNormal(norm, v1, v2);
 
       // Set the color of the facet.
-      glColor4d(0.4, 0.4, 0.6, 0.15);
+      glColor4d(cube4d_color[0], cube4d_color[1], cube4d_color[2], cube4d_color[3]);
 
       // Start draw a quad.
       glBegin(GL_QUADS);
@@ -280,7 +299,7 @@ static void cube4D(double x, double y, double z, double l)
 	  glEnd();
 
       // Set the color of the facet's wireframe.
-      glColor4d(0.4, 0.4, 0.6, 0.6);
+      glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
 
       // Start draw a line strip.
       glBegin(GL_LINE_STRIP);
@@ -323,18 +342,29 @@ static void display(void)
   double size,  // actual size of a cube;
          shift; // actual shift of a cube.
 
-  // Time storage initialised with ellapsed time since program started.
-  static double time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+  // Time storage for lower down the solid and AI step
+  // initialised with ellapsed time since program started.
+  static double timeLower = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+  static double timeAI = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 
   // Time ellapsed since program started.
   const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 
-  // If time ellapsed since last storage larger the time of step down
-  if (t - time > timestep) {
+  // If time ellapsed since last storage larger the time of step down,
+  if (t - timeLower > timestep) {
     // lower the solid and
     lowerSolid();
     // store the actual time.
-    time = t;
+    timeLower = t;
+  }
+
+  // If time ellapsed since last storage larger the time of AI step,
+  // and auto player is switched on,
+  if ((t - timeAI > timestepAI) && (autoGamer_ON)) {
+    // make the AI step and
+    dostep();
+    // store the actual time.
+    timeAI = t;
   }
 
   // Get perspective ratio of the -1st level.
@@ -365,14 +395,15 @@ static void display(void)
       glTranslated(x * size, y * size, z * size);
 
       // Set the color of the lower level,
-      glColor4d(0.4, 0.4, 0.6, 0.2);
+      glColor4d(cube4d_color[0], cube4d_color[1], cube4d_color[2], cube4d_color[3]);
       // Draw the cube.
       glutSolidCube(size);
 
-      glColor4d(0.4, 0.4, 0.6, 0.6);
       // Set the color of the lower level's wireframe.
-      glutWireCube(size * 1.01);
+      glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
       // Draw the cube's wireframe.
+      glutWireCube(size * 1.01);
+
       glTranslated(-x * size, -y * size, -z * size);
     }
 
@@ -433,7 +464,7 @@ static void display(void)
         if (!!getSolidCell(l, x, y, z))
         {
           // draw the hypercube.
-          cube4D(x - 1, y - 1, z - 1, pos + l);
+          cube4D(x - 1, y - 1, z - 1, ge.pos + l);
         }
       }
 
@@ -445,6 +476,10 @@ static void display(void)
   glutSwapBuffers();
 }
 
+
+/*------------------------------------------------------------------------------
+    EVENT HANDLING
+*/
 // Eventhandler of key pressing.
 static void key(unsigned char key, int x, int y)
 {
@@ -494,19 +529,26 @@ static void key(unsigned char key, int x, int y)
 
     case '1':
       // Set game difficulty to easy.
-      in_game_opts.diff = 1;
+      ge.game_opts.diff = 0;
     break;
 
     case '2':
       // Set game difficulty to medium.
-      in_game_opts.diff = 1;
+      ge.game_opts.diff = 1;
     break;
 
     case '3':
       // Set game difficulty to hard.
-      in_game_opts.diff = 1;
+      ge.game_opts.diff = 2;
     break;
+
+    case 'a':
+      // Switch the autoplayer on.
+      autoGamer_ON = !autoGamer_ON;
+    break;
+
   }
+
 
   // Refresh the display.
   glutPostRedisplay();
@@ -555,6 +597,9 @@ static void idle(void)
   glutPostRedisplay();
 }
 
+/*------------------------------------------------------------------------------
+    INITIALISATION
+*/
 // Main function of the software
 int main(int argc, char *argv[])
 {
@@ -575,7 +620,7 @@ int main(int argc, char *argv[])
   }
 
   // Set game difficulty parameter.
-  in_game_opts.diff = 1;
+  in_game_opts.diff = 2;
 
   // Initialize the game engine.
   initGame(in_game_opts);
@@ -590,7 +635,7 @@ int main(int argc, char *argv[])
   glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
   // Create the window with the specified title.
-  glutCreateWindow("Tetris 4D");
+  glutCreateWindow("4D-TRIS");
 
   // Set the reshape function.
   glutReshapeFunc(resize);
@@ -604,7 +649,7 @@ int main(int argc, char *argv[])
   glutIdleFunc(idle);
 
   // Set background color.
-  glClearColor(1.0,1.0,1.0,1.0);
+  glClearColor(bg_color[0],bg_color[1],bg_color[2],bg_color[3]);
 
   // Enable cull face.
   glEnable(GL_CULL_FACE);

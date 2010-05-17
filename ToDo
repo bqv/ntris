@@ -1,8 +1,8 @@
 
- ToDo List for Tetris 4D
+ ToDo List for 4D-TRIS
 
 ------------------------------------------------------
- Project: Tetris 4D
+ Project: 4D-TRIS
  Author:  Laszlo Simon
 
 ------------------------------------------------------
@@ -17,15 +17,21 @@
         New Game
         Pause Game
         Difficulty Level set
-- H M - Score
 - H B - Improve graphic
-- M B - AutoPlay
 - M M - mouse rotation
 - M M - correct z buffer or ?
 - M M - Top ranks
 - M S - random init orientation for solid
 - L S - correct rotation
 - L B - mouse solid turn
+- L M - Improve auto player && bugfix
+- L M - sound effects
+- L M - animated turn, move
+- M M - indicate next 1 or 2 block turning
+        on thumbnails at the corner
+- L B - autorotate to best view
+        (where lowest)
+- M M - key for 180deg rotation
 
 Code Issues
 
@@ -35,13 +41,10 @@ Code Issues
 - M S - Parameter(speed, solid probs) tunning for diff
 - L M - Drop the idiotically optimised game engine
         and implement a clear one
-- L S - Add missing comments to the code
-        levels
 
 Documentation Issues
 
-- H M - Help
-- H B - Home page
 - M B - Dev. Docs
 - M M - make Installer
 - L M - make logo, icon
+- M L - Support Home Page, Help
