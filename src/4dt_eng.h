@@ -6,9 +6,9 @@
 
  */
 
-#ifndef _4DTRIS_ENGINE_H
+#ifndef _4DT_ENG_H
 
-#define _4DTRIS_ENGINE_H
+#define _4DT_ENG_H
 
 /*------------------------------------------------------------------------------
    MACROS
