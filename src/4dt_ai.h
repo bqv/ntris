@@ -6,9 +6,9 @@
  
  */
 
-#ifndef _4DTRIS_AI_H
+#ifndef _4DT_AI_H
 
-#define _4DTRIS_AI_H
+#define _4DT_AI_H
 
 /*------------------------------------------------------------------------------
    PROTOTYPES

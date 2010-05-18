@@ -44,10 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 // Include the computer gamer header.
-#include "4DTris_AI.h"
+#include "4dt_ai.h"
 
 // Include the game engine.
-#include "4DTris_engine.h"
+#include "4dt_eng.h"
 
 /*
 --------------------------------------------------------------------------------

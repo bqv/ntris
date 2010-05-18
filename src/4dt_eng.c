@@ -13,7 +13,7 @@
 
 #include <stdlib.h>
 
-#include "4DTris_engine.h"
+#include "4dt_eng.h"
 
 /*------------------------------------------------------------------------------
    MACROS
