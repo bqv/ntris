@@ -3,7 +3,10 @@ cc=gcc
 
 bin = 4dtris
 
-sources = 4dt_ai.c 4dt_eng.c 4dt_main.c
+sources = 4dt_ai.c \
+          4dt_eng.c \
+          4dt_main.c \
+          4dt_g3d.c
 
 objects = $(sources:.c=.o) 
 
