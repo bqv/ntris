@@ -236,14 +236,14 @@ static void cube4D(double x, double y, double z, double l)
 
   // Array contains the faces (specified with num. of the points)
   // of a 4D hypercube.
-  char faces[24][4] =
+  const char faces[24][4] =
   {
+// inner cube
+{   8,  12,  14,  10}, {   9,  11,  15,  13}, {   8,   9,  13,  12},
+{  10,  14,  15,  11}, {   8,  10,  11,   9}, {  12,  13 ,  15,  14},
 // outer cube
 {   0,   4,   6,   2}, {   1,   3,   7,   5}, {   0,   1,   5,   4},
 {   2,   6,   7,   3}, {   0,   2,   3,   1}, {   4,   5,   7,   6},
-// inner cube
-{   8, 0xA, 0xE, 0xC}, {   9, 0xD, 0xF, 0xB}, {   8, 0xC, 0xD,   9},
-{   9, 0xB, 0xF, 0xD}, {   8, 0xA, 0xB,   9}, { 0xC, 0xE, 0xF, 0xD},
 // intermediate faces
 {   0,   8, 0xC,   4}, {   0,   8, 0xA,   2}, { 0xA,   2,   6, 0xE}, { 0xE,   6,   4, 0xC},
 {   1,   9, 0xB,   3}, { 0xB,   3,   7, 0xF}, {   7, 0xF, 0xD,   5}, { 0xD,   5,   1,   9},
