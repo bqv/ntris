@@ -18,6 +18,13 @@ README
 
  ---
 
+ Install:
+ $ cd src
+ $ make all
+ $ ./4dtris
+
+ ---
+
  Game Controls:
  - arrow keys - rotate the view port
  - z, x, c, v - turn the blocks around the 4 axis

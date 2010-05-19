@@ -31,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-// Include Glut library.
 #include <GL/glut.h>
 
 // Include standard library.
@@ -49,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include the game engine.
 #include "4dt_eng.h"
 
+#include "4dt_g3d.h"
 /*
 --------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -81,29 +80,14 @@ static double angleZ = 10.0;
 // changes of the viewPort direction by one keypress (deg);
 static double dangle = 10.0;
 
-// array of the colors of game space levels.
-GLfloat level_colors[SPACELENGTH][4];
-
-// Constant light parameters
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
-
-// Constant material parameters
-const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
-const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat high_shininess[] = { 100.0f };
-
-// Background color.
-const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-
 // Color of the wireframe 4D cube.
-const GLfloat wire4d_color[] = {0.4, 0.4, 0.6, 0.6};
+const GLfloat wire4d_color[4] = {0.4, 0.4, 0.6, 0.15};
 
 // Color of the 4D cube.
-const GLfloat cube4d_color[] = {0.4, 0.4, 0.6, 0.15};
+float cube4d_color[4] = {0.4, 0.4, 0.6, 0.15};
+
+// array of the colors of game space levels.
+static GLfloat level_colors[SPACELENGTH][4];
 
 
 /*
@@ -212,10 +196,13 @@ static void writeScore(void)
 }
 
 // Draw a 4D cube to the specified place of the game space.
-static void cube4D(double x, double y, double z, double l)
+static void cube4D(double x, double y, double z, double l,
+                   float color[4],
+                   int dimension,
+                   int enable_wire)
 {
   // Array contains the points of a 4D hypercube.
-  double points[16][4] =
+  float points[16][4] =
   /*  x,   y,   z,   l */
   {{0.0, 0.0, 0.0, 0.0},
    {1.0, 0.0, 0.0, 0.0},
@@ -258,6 +245,7 @@ static void cube4D(double x, double y, double z, double l)
 
   // Loop counter.
   int n, i, j, k;
+  int facenum;
 
   // For each point of the hypercube
   for (n = 0; n < 16; n++)
@@ -269,75 +257,68 @@ static void cube4D(double x, double y, double z, double l)
       points[n][2] = (points[n][2] + z) * perspFact(l - (n < 8));
   }
 
+  facenum = (dimension == 3) ? 6 : 24;
+
   // For each facet and
-  for (i = 0; i < 24; i++)
+  for (i = 0; i < facenum; i++)
   {
-    // for each point do:
-//    for (j = 0; j < 4; j++)
-//    {
-      // For each coordinate
-      for (k = 0; k < 3; k++)
-      {
-        // calculate two vector of two edge from the points.
-        v1[k] = points[faces[i][1]][k] - points[faces[i][0]][k];
-        v2[k] = points[faces[i][3]][k] - points[faces[i][0]][k];
-      }
+    float pointlist[4][4];
 
-      // Calculate normal vector.
-      calcNormal(norm, v1, v2);
+    for (k = 0; k < 4; k++)
+    for (j = 0; j < 4; j++)
+    {
+      pointlist[k][j] = points[faces[i][k]][j];
+    }
 
-      // Set the color of the facet.
-      glColor4d(cube4d_color[0], cube4d_color[1], cube4d_color[2], cube4d_color[3]);
+    // For each coordinate
+    for (k = 0; k < 3; k++)
+    {
+      // calculate two vector of two edge from the points.
+      v1[k] = points[faces[i][1]][k] - points[faces[i][0]][k];
+      v2[k] = points[faces[i][3]][k] - points[faces[i][0]][k];
+    }
 
-      // Start draw a quad.
-      glBegin(GL_QUADS);
-        // Set the normal vector.
-        glNormal3d(norm[0], norm[1], norm[2]);
+    // Calculate normal vector.
+    calcNormal(norm, v1, v2);
 
-        // For each point of the facet
-        for (k = 0; k < 4; k++)
-          // set the points of the quad.
-          glVertex3d(points[faces[i][k]][0],
-                   points[faces[i][k]][1],
-                   points[faces[i][k]][2]);
-      // Finish drawing.
-      glEnd();
+    // Set the color of the facet.
+    glColor4d(color[0], color[1], color[2], color[3]);
 
+    // Start draw a quad.
+    glBegin(GL_QUADS);
+    // Set the normal vector.
+    glNormal3d(norm[0], norm[1], norm[2]);
+
+    // For each point of the facet
+    for (k = 0; k < 4; k++)
+      // set the points of the quad.
+      glVertex3d(points[faces[i][k]][0],
+                 points[faces[i][k]][1],
+                 points[faces[i][k]][2]);
+    // Finish drawing.
+    glEnd();
+
+    if (enable_wire)
+    {
       // Set the color of the facet's wireframe.
       glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
 
       // Start draw a line strip.
       glBegin(GL_LINE_STRIP);
         // For each point of the facet
-        for (k = 0; k < 4; k++)
+      for (k = 0; k < 4; k++)
         // set the points of the strip.
-		glVertex3d(points[faces[i][k]][0],
+        glVertex3d(points[faces[i][k]][0],
                    points[faces[i][k]][1],
                    points[faces[i][k]][2]);
+
+      glVertex3d(points[faces[i][0]][0],
+                 points[faces[i][0]][1],
+                 points[faces[i][0]][2]);
       // Finish drawing.
-	  glEnd();
-//    }
+      glEnd();
+    }
   }
-
-}
-
-// Resize function.
-static void resize(int width, int height)
-{
-  // Calculate the factor of the window edges.
-  const float ar = (float) width / (float) height;
-
-  // Set the viewPort.
-  glViewport(0, 0, width, height);
-  // Select perspective projection.
-  glMatrixMode(GL_PROJECTION);
-
-  glLoadIdentity();
-  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 100.0);
-
-  // Set Matrixmode.
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity() ;
 }
 
 // Main drawing function.
@@ -345,8 +326,6 @@ static void display(void)
 {
   // Local variables:
   int l, x, y, z;        // loop counter;
-  double size,  // actual size of a cube;
-         shift; // actual shift of a cube.
 
   // Time storage for lower down the solid and AI step
   // initialised with ellapsed time since program started.
@@ -373,9 +352,6 @@ static void display(void)
     timeAI = t;
   }
 
-  // Get perspective ratio of the -1st level.
-  size = perspFact(-1);
-
   // Clear the display buffer.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -389,50 +365,15 @@ static void display(void)
   glRotated(angleX, 1, 0, 0);
   glRotated(angleZ, 0, 0, 1);
 
-  // Draw the lower level.
-
-  glTranslated(-0.5 * size, -0.5 * size, -0.5 * size);
-
-  // For each cell of the level do:
-  for (x = 0; x <= 1; x++)
-  for (y = 0; y <= 1; y++)
-  for (z = 0; z <= 1; z++)
-  {
-    glTranslated(x * size, y * size, z * size);
-
-    // Set the color of the lower level,
-    glColor4d(cube4d_color[0], cube4d_color[1], cube4d_color[2], cube4d_color[3]);
-    // Draw the cube.
-    glutSolidCube(size);
-
-    // Set the color of the lower level's wireframe.
-    glColor4d(wire4d_color[0], wire4d_color[1], wire4d_color[2], wire4d_color[3]);
-    // Draw the cube's wireframe.
-    glutWireCube(size * 1.01);
-
-    glTranslated(-x * size, -y * size, -z * size);
-  }
-
-  glTranslated(0.5 * size, 0.5 * size, 0.5 * size);
+  glDepthMask(GL_TRUE);
+//  glEnable(GL_LIGHTING);
+  glDisable(GL_BLEND);
 
   // Draw the gamespace.
 
   // For each level
   for (l = 0; l < SPACELENGTH; l++)
   {
-    // Get perspective ratio of the actual level.
-    size = perspFact(l);
-
-    // Set the color of the actual level.
-    glColor4d(level_colors[l][0],
-              level_colors[l][1],
-              level_colors[l][2],
-              level_colors[l][3]);
-
-    shift = (0.5 - 0.01 * size) * size;
-
-    glTranslated(-shift, -shift, -shift);
-
     // For each cell of the level
     for (x = 0; x <= 1; x++)
     for (y = 0; y <= 1; y++)
@@ -442,22 +383,26 @@ static void display(void)
       if (!!getSpaceCell(l, x, y, z))
       {
         // draw the cube.
-        glTranslated(x * 2 * shift, y * 2 * shift, z * 2 * shift);
-        glutSolidCube(size);
-        glTranslated(-x * 2 * shift, -y * 2 * shift, -z * 2 * shift);
+        cube4D(x - 1, y - 1, z - 1, 1 + l, level_colors[l], 4, 0);
       }
     }
+  }
 
-    glTranslated(shift, shift, shift);
+  glDepthMask(GL_FALSE);
+//  glDisable(GL_LIGHTING);
+  glEnable(GL_BLEND);
+
+  // Draw the bottom level.
+
+  // For each cell of the level do:
+  for (x = 0; x <= 1; x++)
+  for (y = 0; y <= 1; y++)
+  for (z = 0; z <= 1; z++)
+  {
+    cube4D(x - 1, y - 1, z - 1, 0, cube4d_color, 3, 1);
   }
 
   // Draw the actual solid.
-
-  // Set actual size to base value.
-  size = baseSize;
-
-  // Set the color of the solid.
-  glColor4d(0.4, 0.4, 0.6, 0.2);
 
   // For each cell
   for (l = 0; l < 2; l++)
@@ -470,11 +415,14 @@ static void display(void)
       if (!!getSolidCell(l, x, y, z))
       {
         // draw the hypercube.
-        cube4D(x - 1, y - 1, z - 1, ge.pos + l);
+        cube4D(x - 1, y - 1, z - 1, ge.pos + l, cube4d_color, 4, 1);
       }
     }
-
   }
+
+  glDepthMask(GL_TRUE);
+  glEnable(GL_LIGHTING);
+  glDisable(GL_BLEND);
 
   glPopMatrix();
 
@@ -606,14 +554,12 @@ static void idle(void)
 /*------------------------------------------------------------------------------
     INITIALISATION
 */
-// Main function of the software
-int main(int argc, char *argv[])
+
+/** \brief Set random colors for game levels */
+static void initLevelColors(void)
 {
   // Loop counters.
   int i, j;
-
-  // Game option structure for initialize game engine.
-  t_game_opts in_game_opts;
 
   // For each level of the game space,
   for (i = 0; i < SPACELENGTH; i++)
@@ -625,8 +571,15 @@ int main(int argc, char *argv[])
       level_colors[i][j] = (double)rand() / RAND_MAX;
     }
     // Set the color's alpha component.
-    level_colors[i][3] = 0.95;
+    level_colors[i][3] = 1.0;
   }
+}
+
+// Main function of the software
+int main(int argc, char *argv[])
+{
+  // Game option structure for initialize game engine.
+  t_game_opts in_game_opts;
 
   // Set game difficulty parameter.
   in_game_opts.diff = 2;
@@ -634,20 +587,11 @@ int main(int argc, char *argv[])
   // Initialize the game engine.
   initGame(in_game_opts);
 
-  // Initialise Glut.
-  glutInit(&argc, argv);
-  // Set the size of the window.
-  glutInitWindowSize(640,480);
-  // Set the position of the window's top left corner.
-  glutInitWindowPosition(50,50);
-  // Set Glut display mode.
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  // Set random colors for game levels
+  initLevelColors();
 
-  // Create the window with the specified title.
-  glutCreateWindow("4D-TRIS");
+  g3dInit(argc, argv);
 
-  // Set the reshape function.
-  glutReshapeFunc(resize);
   // Set the display function.
   glutDisplayFunc(display);
   // Set the keypress event handler function.
@@ -656,41 +600,6 @@ int main(int argc, char *argv[])
   glutSpecialFunc(special);
   // Set the idle function.
   glutIdleFunc(idle);
-
-  // Set background color.
-  glClearColor(bg_color[0],bg_color[1],bg_color[2],bg_color[3]);
-
-  // Enable cull face.
-  glEnable(GL_CULL_FACE);
-  // Set Cull face.
-  glCullFace(GL_BACK);
-
-  // Enable z buffer.
-  glEnable(GL_DEPTH_TEST);
-  // Set depth function.
-  glDepthFunc(GL_LESS);
-
-  // Enable various openGL features.
-  glEnable(GL_LIGHT0);
-  glEnable(GL_NORMALIZE);
-  glEnable(GL_COLOR_MATERIAL);
-  glEnable(GL_LIGHTING);
-
-  // Set up the light.
-  glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-  // Set up the material.
-  glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
-  // Enable alpha blend.
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
 
   // Start glut's main loop.
   glutMainLoop();
