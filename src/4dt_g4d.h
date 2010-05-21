@@ -5,8 +5,8 @@
  
 ------------------------------------------------------------------------------*/
  
-#ifndef _4DT_G3D_H_
-#define _4DT_G3D_H_
+#ifndef _4DT_G4D_H_
+#define _4DT_G4D_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -20,9 +20,15 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern void g3dInit(int argc, char *argv[]);
-extern void g3dDrawPoly(float point[4][4],
+extern void g4dCalibrate(double w_maximum);
+
+extern void g4dDrawPoly(float points[4][4],
                         float color[4],
                         int enableWire);
 
-#endif /* _4DT_G3D_H_ */
+extern void g4dDraw4DCube(double x, double y, double z, double l,
+                          float color[4],
+                          int dimension,
+                          int enableWire);
+
+#endif /* _4DT_G4D_H_ */
