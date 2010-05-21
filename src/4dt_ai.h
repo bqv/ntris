@@ -11,12 +11,12 @@
 #define _4DT_AI_H
 
 /*------------------------------------------------------------------------------
-   PROTOTYPES
+   DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+extern int autoGamer_ON;
 
-// Trigger the AI to make a turn.
-extern void dostep(void);
+extern void aiTrigger(float time);
 
 
 #endif

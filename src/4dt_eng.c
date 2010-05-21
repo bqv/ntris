@@ -29,6 +29,10 @@
 // CONSTANTS
 ------------------------------------------------------------------------------*/
 
+
+// time ellapsed while the the solid steps one level down;
+static double timestep = 1.5;
+
 // defined solids
 static TSolid solids[SOLIDTYPES] =
 /* 1 cube */  {0x0001, // 00 00 00 00  00 00 00 01
@@ -60,9 +64,6 @@ t_game_Engine ge;
 // duplicates the game engine
 extern t_game_Engine copyGameEngine(t_game_Engine in_game_Engine);
 
-// initialize the game variables
-extern void initGame(t_game_opts in_game_opts);
-
 // lower the solid with one level
 // result indicates that it invalid (end of game)
 extern bool lowerSolid(void);
@@ -83,6 +84,23 @@ extern bool turn(char ax1, char ax2);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+
+/** \brief triggers the autoplayer engine */
+void engTrigger(float time)
+{
+  // Time storage for lower down the solid
+  // initialised with ellapsed time since program started.
+  static double timeLower = 0.0;
+
+  // If time ellapsed since last storage larger the time of step down,
+  if (time - timeLower > timestep) {
+    // lower the solid and
+    lowerSolid();
+    // store the actual time.
+    timeLower = time;
+  }
+}
 
 // duplicates the game engine
 t_game_Engine copyGameEngine(t_game_Engine in_game_Engine)
@@ -105,7 +123,7 @@ t_game_Engine copyGameEngine(t_game_Engine in_game_Engine)
 }
 
 // initialize the game variables
-void initGame(t_game_opts in_game_opts)
+void initGame(void)
 {
    char t; // Loop counter.
 
@@ -122,7 +140,7 @@ void initGame(t_game_opts in_game_opts)
    NewSolid();
 
    // set options
-   ge.game_opts = in_game_opts;
+   ge.game_opts.diff = 2;
 
    // init score value
    ge.score = 0;
@@ -244,9 +262,7 @@ bool lowerSolid(void)
 bool turn(char ax1, char ax2)
 {
    // loop cnt, temp var
-   int n, n2, i, tmp;
-   // point
-   int p[4];
+   int n, n2;
 
    // remove the solid to a temp solid
    TSolid tempSolid = ge.solid;

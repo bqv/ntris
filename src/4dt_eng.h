@@ -73,11 +73,14 @@ typedef struct
 } t_game_Engine;
 
 /*------------------------------------------------------------------------------
-   PROTOTYPES
+   DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+// Struct of game engine:
+extern t_game_Engine ge;
+
 // initialize the game variables
-extern void initGame(t_game_opts in_game_opts);
+extern void initGame(void);
 
 // lower the solid with one level
 // result indicates that it invalid (end of game)
@@ -89,6 +92,8 @@ extern bool turn(char ax1, char ax2);
 
 // duplicates the game engine
 extern t_game_Engine copyGameEngine(t_game_Engine in_game_Engine);
+
+extern void engTrigger(float time);
 
 
 #endif
