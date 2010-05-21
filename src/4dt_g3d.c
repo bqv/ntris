@@ -14,7 +14,8 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
-#include <math.h>
+
+#include "4dt_m3d.h"
 
 #include "4dt_g3d.h"
 
@@ -50,6 +51,14 @@ static const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
+
+// initial direction of the viewPort (deg);
+double angleX = -60.0;
+double angleZ = 10.0;
+
+// changes of the viewPort direction by one keypress (deg);
+double dangle = 10.0;
+
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
@@ -60,41 +69,58 @@ static void resize(int width, int height);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-/** \brief Calculates the crossProduct of v1 and v2 vector where
-    'n' the result vector. */
-static void crossProduct(double *n, double v1[3], double v2[3])
+/** \brief Starts the actual frame drawing */
+void g3dBeginPreDraw(void)
 {
-  // Calculate crossproduct by coordinates.
-  n[0] = v1[1] * v2[2] - v2[1] * v1[2];
-  n[1] = v1[2] * v2[0] - v2[2] * v1[0];
-  n[2] = v1[0] * v2[1] - v2[0] * v1[1];
+
+  // Clear the display buffer.
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glPushMatrix();
 }
 
-/** \brief Normalise a vector. */
-static void normalise(double *v)
+/** todo: temporary function, should be merged to g3dBeginPreDraw */
+void g3dBeginDraw(void)
+{
+  // Place and orient the viewport.
+  glTranslated(0, 0, -6);
+  glRotated(angleX, 1, 0, 0);
+  glRotated(angleZ, 0, 0, 1);
+}
+
+
+/** \brief Close the actual frame drawing */
+void g3dEndDraw(void)
+{
+  glPopMatrix();
+
+  // Swap the buffers.
+  glutSwapBuffers();
+}
+
+
+// Draw bitmap text to the specified coordinates and font.
+void g3dRenderString(double x, double y, double z,
+                    float color[4],
+                    char *string)
 {
   // Local variables:
-  int i; // loop counter;
-  double l; // length of the vector.
+  char *c; // actual character.
 
-  // Calculate length of the vector.
-  l = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+  void *font =  GLUT_BITMAP_9_BY_15;
 
-  // For each coordinate
-  for (i = 0; i < 3; i++)
+  // Set color for the text.
+  glColor4d(color[0], color[1], color[2], color[3]);
+
+  // Set position in 3D.
+  glRasterPos3d(x, y, z);
+
+  // For each character of the string
+  for (c=string; *c != '\0'; c++)
   {
-    // normalise the coordinate.
-    v[i] /= l;
+    // draw the character.
+    glutBitmapCharacter(font, *c);
   }
-}
-
-/** \brief Calculate normal vector of the plane of v1, v2 vector. */
-static void calcNormal(double *n, double v1[3], double v2[3])
-{
-  // Calculate normal by crossproducting v1 and v2.
-  crossProduct(n, v1, v2);
-  // Normalise the normal vector.
-  normalise(n);
 }
 
 /** \brief Draw quad with given coordinates, color, style. */
@@ -120,7 +146,7 @@ void g3dDrawPoly(float points[4][4],
   }
 
   // Calculate normal vector.
-  calcNormal(norm, v1, v2);
+  m3dCalcNormal(norm, v1, v2);
 
   // Set the color of the facet.
   glColor4d(color[0], color[1], color[2], color[3]);

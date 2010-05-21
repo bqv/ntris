@@ -25,12 +25,18 @@
 // Axises belongs to the turns around 1..4 axis
 char turnAxises[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 
+// time ellapsed while the AI steps the next turn;
+static const double timestepAI = 0.15;
+
 /*------------------------------------------------------------------------------
    VARIABLES
 ------------------------------------------------------------------------------*/
 
 // Struct of game engine.
 extern t_game_Engine ge;
+
+// flag for auto gamer
+int autoGamer_ON = 0;
 
 // Array of the number of turns by axises needed to the best situation.
 int neededTurns[4];
@@ -62,12 +68,29 @@ int SearchBestSitu(void);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+/** \brief triggers the autoplayer engine */
+void aiTrigger(float time)
+{
+  // Time storage for AI step
+  // initialised with ellapsed time since program started.
+  static double timeAI = 0.0;
+
+  // If time ellapsed since last storage larger the time of AI step,
+  // and auto player is switched on,
+  if ((time - timeAI > timestepAI) && (autoGamer_ON)) {
+    // make the AI step and
+    dostep();
+    // store the actual time.
+    timeAI = time;
+  }
+}
+
 // Trigger the AI to make a turn.
 void dostep(void)
 {
   // Local variables:
   char stepMade = 0; // inditcator of turn already made;
-  int i, ax1, ax2;   // loop counters;
+  int i;   // loop counters;
 
   static int solidnum = -1;
 

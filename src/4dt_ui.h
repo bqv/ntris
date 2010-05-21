@@ -5,8 +5,8 @@
  
 ------------------------------------------------------------------------------*/
  
-#ifndef _4DT_G3D_H_
-#define _4DT_G3D_H_
+#ifndef _4DT_UI_H_
+#define _4DT_UI_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -16,26 +16,19 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+enum
+{
+  UI_KEY_UP    = 0x0100,
+  UI_KEY_LEFT  = 0x0200,
+  UI_KEY_DOWN  = 0x0300,
+  UI_KEY_RIGHT = 0x0400,
+} tuiKeyCodes;
+
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern double angleX;
-extern double angleZ;
-extern double dangle;
+extern void uiKeyPress(int key);
 
-
-extern void g3dInit(int argc, char *argv[]);
-extern void g3dDrawPoly(float point[4][4],
-                        float color[4],
-                        int enableWire);
-extern void g3dRenderString(double x, double y, double z,
-                           float color[4],
-                           char *string);
-extern void g3dBeginPreDraw(void);
-extern void g3dBeginDraw(void);
-extern void g3dEndDraw(void);
-
-
-
-#endif /* _4DT_G3D_H_ */
+#endif /* 4DT_UI_H_ */
