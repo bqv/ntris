@@ -33,15 +33,15 @@
 
 /** Constant light parameters */
 static const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-static const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+static const GLfloat light_diffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
 static const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-static const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
+static const GLfloat light_position[] = { 2.0f, -2.0f, 5.0f, 1.0f };
 
 /** Constant material parameters */
 static const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
 static const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-static const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-static const GLfloat high_shininess[] = { 100.0f };
+static const GLfloat mat_specular[]   = { 0.6f, 0.6f, 0.5f, 1.0f };
+static const GLfloat high_shininess[] = { 30.0f };
 
 /** Background color. */
 static const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -53,8 +53,8 @@ static const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
 // initial direction of the viewPort (deg);
-double angleX = -60.0;
-double angleZ = 10.0;
+double angleX = -75.0;
+double angleZ = 20.0;
 
 // changes of the viewPort direction by one keypress (deg);
 double dangle = 10.0;
