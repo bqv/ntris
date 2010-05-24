@@ -97,6 +97,11 @@ static void scnDrawBG(void)
 /** Initialize the scene */
 void scnInit(void)
 {
+  // Initialize random number generator with the
+  // Answer to the Ultimate Question of Life, the Universe, and Everything
+  // to get always the same colors for levels.
+  srand(42);
+
   scnInitLevelColors();
 }
 
