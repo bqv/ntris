@@ -74,7 +74,7 @@ static double perspFact(double w)
 /** \brief Draws 4D polygon */
 void g4dDrawPoly(float points[4][4],
                  float color[4],
-                 int enableWire)
+                 int mode)
 {
   int i, n;
 
@@ -84,7 +84,7 @@ void g4dDrawPoly(float points[4][4],
     points[i][n] = points[i][n] * perspFact(points[i][3]);
   }
 
-  g3dDrawPoly(points, color, enableWire);
+  g3dDrawPoly(points, color, mode);
 }
 
 
@@ -92,7 +92,7 @@ void g4dDrawPoly(float points[4][4],
 void g4dDraw4DCube(double x, double y, double z, double l,
                    float color[4],
                    int dimension,
-                   int enableWire)
+                   int mode)
 {
   // Array contains the points of a 4D hypercube.
   float points[16][4] =
@@ -159,6 +159,6 @@ void g4dDraw4DCube(double x, double y, double z, double l,
       pointlist[k][j] = points[faces[i][k]][j];
     }
 
-    g4dDrawPoly(pointlist, color, enableWire);
+    g4dDrawPoly(pointlist, color, mode);
   }
 }
