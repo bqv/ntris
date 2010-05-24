@@ -10,6 +10,8 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
+#include <time.h>
+
 
 #include "4dt_eng.h"
 
@@ -107,25 +109,28 @@ t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine)
 /** initialize the game variables */
 void engInitGame(void)
 {
-   int t; // Loop counter.
+  int t; // Loop counter.
 
-   // for the every part of the space
-   for (t = 0; t < SPACELENGTH; t++)
-   {
-      engGE.space[t] = 0x00;
-   }
+  // initialize random generator
+  srand(time(NULL));
 
-   // initialise the number of solids dropped
-   engGE.solidnum = 0;
+  // for the every part of the space
+  for (t = 0; t < SPACELENGTH; t++)
+  {
+    engGE.space[t] = 0x00;
+  }
 
-   // get new solid
-   engNewSolid();
+  // initialise the number of solids dropped
+  engGE.solidnum = 0;
 
-   // set options
-   engGE.game_opts.diff = 2;
+  // get new solid
+  engNewSolid();
 
-   // init score value
-   engGE.score = 0;
+  // set options
+  engGE.game_opts.diff = 2;
+
+  // init score value
+  engGE.score = 0;
 }
 
 /** get a new random solid */
