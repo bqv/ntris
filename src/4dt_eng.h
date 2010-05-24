@@ -11,38 +11,27 @@
    MACROS
 ------------------------------------------------------------------------------*/
 
-/** boolean type */
-#define bool unsigned char
-
-/** one 3D level of the game space x, y, z */
-#define TLevel unsigned char
-
-/** 2x2x2x2 supercube / container of a Solid */
-#define TSolid unsigned short int
-
-
 /** length of the game space (num of levels) */
 #define SPACELENGTH (12)
-
-/** get the cell of the level at x, y, z from
-    the game space empty or full */
-#define getSpaceCell(l,x,y,z) \
-  ((ge.space[l]) & (0x01 << ((x)+(y)*2+(z)*4)))
-
-/** get the cell of the level at x, y, z from
-    the game space empty or full */
-#define getSolidCell(l,x,y,z) \
-  ((ge.solid) & (0x01 << ((x)+(y)*2+(z)*4+(l)*8)))
 
 /*------------------------------------------------------------------------------
    TYPE DEFINITIONS
 ------------------------------------------------------------------------------*/
 
+/** boolean type */
+typedef unsigned char bool;
+
+/** one 3D level of the game space x, y, z */
+typedef unsigned char TLevel;
+
+/** 2x2x2x2 supercube / container of a Solid */
+typedef unsigned short int TSolid;
+
 /** game options */
 typedef struct
 {
       /** difficulty level [0..2] */
-      char diff;
+      int diff;
 
 } t_game_opts;
 
@@ -56,7 +45,7 @@ typedef struct
   TSolid solid;
   /** position of actual solid
       0 if reached the floor */
-  char pos;
+  int pos;
   /** indicator of  */
   bool isnewsolid;
   /** score collected in the actual game */
@@ -73,11 +62,26 @@ typedef struct
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern t_game_Engine ge;
-extern void initGame(void);
-extern bool lowerSolid(void);
-extern bool turn(char ax1, char ax2);
-extern t_game_Engine copyGameEngine(t_game_Engine in_game_Engine);
+extern t_game_Engine engGE;
+
+/** get the cell of the level at x, y, z from
+    the game space empty or full */
+static inline int engGetSpaceCell(int l, int x, int y, int z)
+{
+  return(engGE.space[l] & (0x01 << (x + y*2 + z*4)));
+}
+
+/** get the cell of the level at x, y, z from
+    the game space empty or full */
+static inline int engGetSolidCell(int l, int x, int y, int z)
+{
+  return (engGE.solid & (0x01 << (x + y*2 + z*4 + l*8)));
+}
+
+extern void engInitGame(void);
+extern bool engLowerSolid(void);
+extern bool engTurn(char ax1, char ax2);
+extern t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine);
 
 extern void engTrigger(float time);
 

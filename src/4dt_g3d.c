@@ -29,19 +29,19 @@
 ------------------------------------------------------------------------------*/
 
 /** Constant light parameters */
-static const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-static const GLfloat light_diffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
-static const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-static const GLfloat light_position[] = { 2.0f, -5.0f, 2.5f, 1.0f };
+static const GLfloat g3dLightAmbient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+static const GLfloat g3dLightDiffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
+static const GLfloat g3dLightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+static const GLfloat g3dLightPosition[] = { 2.0f, -5.0f, 2.5f, 1.0f };
 
 /** Constant material parameters */
-static const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
-static const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-static const GLfloat mat_specular[]   = { 0.6f, 0.6f, 0.5f, 1.0f };
-static const GLfloat high_shininess[] = { 30.0f };
+static const GLfloat g3dMatAmbient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
+static const GLfloat g3dMatDiffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
+static const GLfloat g3dMatSpecular[]   = { 0.6f, 0.6f, 0.5f, 1.0f };
+static const GLfloat g3dHighShininess[] = { 30.0f };
 
 /** Background color. */
-static const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
+static const GLfloat g3dBgColor[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
 /*------------------------------------------------------------------------------
@@ -50,17 +50,19 @@ static const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
 /** initial direction of the viewPort (deg); */
-double angleX = -75.0;
-double angleZ = 20.0;
+double g3dAngleX = -75.0;
+double g3dAngleZ = 20.0;
 
 /** changes of the viewPort direction by one keypress (deg); */
-double dangle = 10.0;
+double g3dDAngle = 10.0;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static void resize(int width, int height);
+static void g3dResize(int width, int height);
+static void g3dSwitchTo2D(void);
+static void g3dSwitchTo3D(void);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -75,7 +77,7 @@ void g3dBeginPreDraw(void)
 
 /** Switch the projection to 2D mode for window coordinate draw
  *  (coordinate interval: 0, 0 - 1, 1) */
-void g3dSwitchTo2D(void)
+static void g3dSwitchTo2D(void)
 {
   // switch off light and Z testing
   glDisable(GL_DEPTH_TEST);
@@ -96,7 +98,7 @@ void g3dSwitchTo2D(void)
 }
 
 /** Switch back the projection mode from 2D mode */
-void g3dSwitchTo3D(void)
+static void g3dSwitchTo3D(void)
 {
   // restore matrices
   glMatrixMode(GL_PROJECTION);
@@ -141,8 +143,8 @@ void g3dBeginDraw(void)
 
   // Place and orient the viewport.
   glTranslated(0, 0, -6);
-  glRotated(angleX, 1, 0, 0);
-  glRotated(angleZ, 0, 0, 1);
+  glRotated(g3dAngleX, 1, 0, 0);
+  glRotated(g3dAngleZ, 0, 0, 1);
 }
 
 
@@ -272,7 +274,7 @@ void g3dDrawPoly(float points[4][4],
 }
 
 /** \brief Resize function. */
-static void resize(int width, int height)
+static void g3dResize(int width, int height)
 {
   // Calculate the factor of the window edges.
   const float ar = (float) width / (float) height;
@@ -309,10 +311,10 @@ void g3dInit(int argc, char *argv[])
   glutCreateWindow("4DTris");
 
   // Set the reshape function.
-  glutReshapeFunc(resize);
+  glutReshapeFunc(g3dResize);
 
   // Set background color.
-  glClearColor(bg_color[0], bg_color[1], bg_color[2], bg_color[3]);
+  glClearColor(g3dBgColor[0], g3dBgColor[1], g3dBgColor[2], g3dBgColor[3]);
 
   // Enable cull face.
   glEnable(GL_CULL_FACE);
@@ -331,16 +333,16 @@ void g3dInit(int argc, char *argv[])
   glEnable(GL_LIGHTING);
 
   // Set up the light.
-  glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  glLightfv(GL_LIGHT0, GL_AMBIENT,  g3dLightAmbient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE,  g3dLightDiffuse);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, g3dLightSpecular);
+  glLightfv(GL_LIGHT0, GL_POSITION, g3dLightPosition);
 
   // Set up the material.
-  glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,   g3dMatAmbient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,   g3dMatDiffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR,  g3dMatSpecular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, g3dHighShininess);
 
   // Enable alpha blend.
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

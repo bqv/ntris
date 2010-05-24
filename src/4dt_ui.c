@@ -50,28 +50,28 @@ void uiKeyPress(int key)
     case UI_KEY_UP:
       // rotate viewport around x axis
       // to positive direction.
-      angleX += dangle;
+      g3dAngleX += g3dDAngle;
     break;
 
     // If up arrow then
     case UI_KEY_LEFT:
       // rotate viewport around z axis
       // to negative direction.
-      angleZ += dangle;
+      g3dAngleZ += g3dDAngle;
     break;
 
     // If up arrow then
     case UI_KEY_DOWN:
       // rotate viewport around x axis
       // to positive direction.
-      angleX -= dangle;
+      g3dAngleX -= g3dDAngle;
     break;
 
     // If up arrow then
     case UI_KEY_RIGHT:
       // rotate viewport around z axis
       // to negative direction.
-      angleZ -= dangle;
+      g3dAngleZ -= g3dDAngle;
     break;
 
     // If 'Esc' or 'q' then
@@ -85,54 +85,54 @@ void uiKeyPress(int key)
     case 'z':
       // turn the solid
       // around axis 2.
-      turn(0, 1);
+      engTurn(0, 1);
     break;
 
     // If 'x' then
     case 'x':
       // turn the solid
       // around axis 0.
-      turn(1, 2);
+      engTurn(1, 2);
     break;
 
     // If 'c' then
     case 'c':
       // turn the solid
       // around axis 1.
-      turn(2, 0);
+      engTurn(2, 0);
     break;
 
     // If 'v' then
     case 'v':
       // turn the solid
       // around axis 4.
-      turn(0, 3);
+      engTurn(0, 3);
     break;
 
     // If space then
     case ' ':
       // step down the solid.
-      lowerSolid();
+      engLowerSolid();
     break;
 
     case '1':
       // Set game difficulty to easy.
-      ge.game_opts.diff = 0;
+      engGE.game_opts.diff = 0;
     break;
 
     case '2':
       // Set game difficulty to medium.
-      ge.game_opts.diff = 1;
+      engGE.game_opts.diff = 1;
     break;
 
     case '3':
       // Set game difficulty to hard.
-      ge.game_opts.diff = 2;
+      engGE.game_opts.diff = 2;
     break;
 
     case 'a':
       // Switch the autoplayer on.
-      autoGamer_ON = !autoGamer_ON;
+      aiAutoGamerON = !aiAutoGamerON;
     break;
   }
 }

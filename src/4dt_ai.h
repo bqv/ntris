@@ -11,7 +11,7 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern int autoGamer_ON;
+extern int aiAutoGamerON;
 
 extern void aiTrigger(float time);
 
