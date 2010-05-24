@@ -1,10 +1,8 @@
-/*
- Short Description:
- This file is the game engine of the 4D Tetris.
- Game space and element storage and handling.
-
- ToDo:
-
+/**
+ * \file  4dt_eng.c
+ * \brief This file is the game engine of the 4D Tetris.
+ *
+ *  Game space and element storage and handling.
  */
 
 /*------------------------------------------------------------------------------
@@ -19,10 +17,10 @@
    MACROS
 ------------------------------------------------------------------------------*/
 
-// number of type of solids
+/** number of type of solids */
 #define SOLIDTYPES (6)
 
-// number of difficulty levels
+/** number of difficulty levels */
 #define DIFFLEVELS (3)
 
 /*------------------------------------------------------------------------------
@@ -30,10 +28,10 @@
 ------------------------------------------------------------------------------*/
 
 
-// time ellapsed while the the solid steps one level down;
+/** time ellapsed while the the solid steps one level down in sec; */
 static double timestep = 1.5;
 
-// defined solids
+/** defined solids */
 static TSolid solids[SOLIDTYPES] =
 /* 1 cube */  {0x0001, // 00 00 00 00  00 00 00 01
 /* 2 cube */   0x0003, // 00 00 00 00  00 00 00 11
@@ -42,43 +40,32 @@ static TSolid solids[SOLIDTYPES] =
 /* 4 cube */   0x0027, // 00 00 00 00  00 10 11 11
 /* 4 cube */   0x0017};// 00 00 00 00  00 01 01 11
 
-// probabilities of solids in different
-// difficulty levels (easy, medium, hard)
+/** probabilities of solids in different
+    difficulty levels (easy, medium, hard) */
 static int probs[DIFFLEVELS][SOLIDTYPES] =
 {{10, 5, 5, 1, 1, 1},
  {5, 3, 2, 1, 1, 1},
  {2, 1, 1, 1, 1, 1}};
 
+/** Score points for filling a level in different difficulty levels */
 static int scoreStep[DIFFLEVELS] = { 100, 200, 400};
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
+/** Game engine container */
 t_game_Engine ge;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-// duplicates the game engine
 extern t_game_Engine copyGameEngine(t_game_Engine in_game_Engine);
-
-// lower the solid with one level
-// result indicates that it invalid (end of game)
 extern bool lowerSolid(void);
-
-// get a new random solid
 extern void NewSolid(void);
-
-// check overlap between solid and gamespace
 extern bool checkOverlap(void);
-
-// deletes the full levels
 extern void killFullLevels(void);
-
-// turns the solid from axis1 to axis 2
-// returns indicator of turn availability
 extern bool turn(char ax1, char ax2);
 
 /*------------------------------------------------------------------------------
@@ -86,8 +73,8 @@ extern bool turn(char ax1, char ax2);
 ------------------------------------------------------------------------------*/
 
 
-/** \brief triggers the autoplayer engine */
-void engTrigger(float time)
+/** triggers the autoplayer engine */
+void engTrigger(float time /**< ellapsed time since program started in sec */)
 {
   // Time storage for lower down the solid
   // initialised with ellapsed time since program started.
@@ -102,7 +89,7 @@ void engTrigger(float time)
   }
 }
 
-// duplicates the game engine
+/** duplicates the game engine */
 t_game_Engine copyGameEngine(t_game_Engine in_game_Engine)
 {
   // Local variables:
@@ -122,7 +109,7 @@ t_game_Engine copyGameEngine(t_game_Engine in_game_Engine)
   return result;
 }
 
-// initialize the game variables
+/** initialize the game variables */
 void initGame(void)
 {
    char t; // Loop counter.
@@ -146,7 +133,7 @@ void initGame(void)
    ge.score = 0;
 }
 
-// get a new random solid
+/** get a new random solid */
 void NewSolid(void)
 {
    // probability
@@ -190,14 +177,15 @@ void NewSolid(void)
    ge.solidnum++;
 }
 
-// check overlap between solid and gamespace
+/** check overlap between solid and gamespace
+ *  \return overlapping detected flag */
 bool checkOverlap(void)
 {
    return !!( ( (TSolid)ge.space[ge.pos+1] << 8 | ge.space[ge.pos]) & ge.solid);
 
 }//end of checkOverlap
 
-// deletes the full levels
+/** deletes the full levels */
 void killFullLevels(void)
 {
    // loop counter
@@ -227,8 +215,8 @@ void killFullLevels(void)
 
 } //end of checkFullLevels
 
-// lower the solid with one level
-// result> false if invalid (end of game)
+/** lower the solid with one level
+   \return false if invalid (end of game) */
 bool lowerSolid(void)
 {
    // set the new solid indicator false
@@ -257,8 +245,8 @@ bool lowerSolid(void)
    }
 }
 
-// turns the solid from axis 1 to axis 2
-// returns indicator of turn availability
+/** turns the solid from axis 1 to axis 2
+   \return indicator of turn availability */
 bool turn(char ax1, char ax2)
 {
    // loop cnt, temp var
@@ -268,7 +256,7 @@ bool turn(char ax1, char ax2)
    TSolid tempSolid = ge.solid;
    ge.solid = 0x0000;
 
- // turn it
+   // turn it
 
    // for every cell
    for (n = 0; n < 16; n++)

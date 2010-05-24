@@ -1,9 +1,7 @@
-/* ------------------------------------------------------------------------------
-   Short Description:
-
-   ToDo:
-
-------------------------------------------------------------------------------*/
+/**
+ * \file  4dt_ui.c
+ * \brief Modul of user interface event handlers
+ */
 
 /*------------------------------------------------------------------------------
    INCLUDE FILES
@@ -42,7 +40,7 @@
 ------------------------------------------------------------------------------*/
 
 
-// Eventhandler of special key pressing.
+/** Eventhandler of special key pressing. */
 void uiKeyPress(int key)
 {
   // Check which key pressed.

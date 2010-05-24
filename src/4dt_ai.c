@@ -1,14 +1,6 @@
-/*
- Short Description:
- This file is the Computer gamer's logic.
-
- ToDo:
- - Improve AI with considering overlap:
-    |    | |    | |    |
-    |**  | | ** | |  **|
-    |XX X| |XX X| |XX X|
-   Now these are equivalent.
-
+/**
+ *  \file 4dt_ai.c
+ *  \brief This file is the Computer gamer's logic.
  */
 
 /*------------------------------------------------------------------------------
@@ -22,54 +14,46 @@
    CONSTANTS
 ------------------------------------------------------------------------------*/
 
-// Axises belongs to the turns around 1..4 axis
+/** Axises belongs to the turns around 1..4 axis */
 char turnAxises[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 
-// time ellapsed while the AI steps the next turn;
+/** time ellapsed while the AI steps the next turn in sec; */
 static const double timestepAI = 0.15;
 
 /*------------------------------------------------------------------------------
    VARIABLES
 ------------------------------------------------------------------------------*/
 
-// Struct of game engine.
+/** Struct of game engine. */
 extern t_game_Engine ge;
 
-// flag for auto gamer
+/** flag for auto gamer */
 int autoGamer_ON = 0;
 
-// Array of the number of turns by axises needed to the best situation.
+/** Array of the number of turns by axises needed to the best situation. */
 int neededTurns[4];
 
-// Array contains the CenterOf Gravity of each situation.
+/** Array contains the CenterOf Gravity of each situation. */
 double cog[4 * 4 * 4 * 4];
 
-// Array contains the number of turns for each situation.
+/** Array contains the number of turns for each situation. */
 int turns[4 * 4 * 4 * 4];
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-// Trigger the AI to make a turn.
 void dostep(void);
-
-// Finds the best situation from all turn variation
-// (the most effective one with fewest turn).
 int findBestSolution(void);
-
-// Calculate Cog of the situation.
 double ProcessSitu(void);
-
-// Search the best situation.
 int SearchBestSitu(void);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-/** \brief triggers the autoplayer engine */
-void aiTrigger(float time)
+/** Triggers the autoplayer engine. */
+void aiTrigger(float time /** ellapsed time since program started in sec*/)
 {
   // Time storage for AI step
   // initialised with ellapsed time since program started.
@@ -85,7 +69,7 @@ void aiTrigger(float time)
   }
 }
 
-// Trigger the AI to make a turn.
+/** Trigger the AI to make a turn. */
 void dostep(void)
 {
   // Local variables:
@@ -102,7 +86,7 @@ void dostep(void)
     solidnum = ge.solidnum;
   }
   else
-  {
+  { // else
     // For each axis,
     for (i = 0; i < 4; i++)
     {
@@ -123,14 +107,15 @@ void dostep(void)
     // If no turn made, so no more turn needed, then
     if (!stepMade)
     {
-      // lower the solid.
+      // lower the solid. }
       lowerSolid();
     }
   }
 }
 
-// Finds the best situation from all turn variation
-// (the most effective one with fewest turn).
+/** Finds the best situation from all turn variation
+ *  (the most effective one with fewest turn).
+ *  \return id of optimal turn variation */
 int findBestSolution(void)
 {
   // Local variables:
@@ -198,7 +183,8 @@ int findBestSolution(void)
 
 }  // End of function
 
-// Calculate Cog of the situation.
+/** Calculate Center of gravity of the game space with landed object.
+ *  \return height (on 4th axis) of CoG */
 double ProcessSitu(void)
 {
   // Loop counters for axises.
@@ -237,7 +223,8 @@ double ProcessSitu(void)
 
 }  // End of function.
 
-// Search the best situation.
+/** Search the best situation.
+ *  \return ID of optimal situation */
 int SearchBestSitu(void)
 {
   // Local variables:

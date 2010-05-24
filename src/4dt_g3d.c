@@ -1,10 +1,7 @@
-/* ------------------------------------------------------------------------------
-   Short Description:
-   3D GLUT scene rendering modul.
-
-   ToDo:
-
-------------------------------------------------------------------------------*/
+/**
+ * \file 4dt_g3d.c
+ * \brief 3D OpenGL scene rendering modul.
+ */
 
 /*------------------------------------------------------------------------------
    INCLUDE FILES
@@ -52,11 +49,11 @@ static const GLfloat bg_color[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 ------------------------------------------------------------------------------*/
 
 
-// initial direction of the viewPort (deg);
+/** initial direction of the viewPort (deg); */
 double angleX = -75.0;
 double angleZ = 20.0;
 
-// changes of the viewPort direction by one keypress (deg);
+/** changes of the viewPort direction by one keypress (deg); */
 double dangle = 10.0;
 
 /*------------------------------------------------------------------------------
@@ -99,7 +96,7 @@ void g3dEndDraw(void)
 }
 
 
-// Draw bitmap text to the specified coordinates and font.
+/** Draw bitmap text to the specified coordinates and font. */
 void g3dRenderString(double x, double y, double z,
                     float color[4],
                     char *string)
@@ -126,7 +123,7 @@ void g3dRenderString(double x, double y, double z,
 /** \brief Draw quad with given coordinates, color, style. */
 void g3dDrawPoly(float points[4][4],
                  float color[4],
-                 int enableWire)
+                 int enableWire /**< Wireframe drawing enable*/)
 {
   // loop counters
   int k;

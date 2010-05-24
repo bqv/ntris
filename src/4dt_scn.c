@@ -1,10 +1,7 @@
-/* ------------------------------------------------------------------------------
-   Short Description:
-   Modul for handling game scene
-
-   ToDo:
-
-------------------------------------------------------------------------------*/
+/**
+ * \file  4dt_scn.c
+ * \brief Modul for handling game scene
+ */
 
 /*------------------------------------------------------------------------------
    INCLUDE FILES
@@ -34,10 +31,10 @@
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
-// Color of the 4D cube.
+/** Color of the 4D cube. */
 static float cube4d_color[4] = {0.4, 0.4, 0.6, 0.15};
 
-// array of the colors of game space levels.
+/** array of the colors of game space levels. */
 static float level_colors[SPACELENGTH][4];
 
 
@@ -70,7 +67,7 @@ static void initLevelColors(void)
   }
 }
 
-// Write out the score to the game window.
+/** Write out the score to the game window. */
 static void writeScore(void)
 {
   // Local variables:
@@ -85,12 +82,13 @@ static void writeScore(void)
 }
 
 
+/** Initialize the scene */
 void scnInit(void)
 {
   initLevelColors();
 }
 
-/* Main drawing function. */
+/** Main drawing function. */
 void scnDisplay(void)
 {
   // Local variables:
