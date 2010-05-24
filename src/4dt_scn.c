@@ -78,7 +78,17 @@ static void writeScore(void)
   sprintf(text, "Score: %i", ge.score);
 
   // Render the text.
-  g3dRenderString(-3.5, -2.5, -6.0, color, text);
+  g3dRenderString(0.1, 0.1, color, text);
+}
+
+/** Draw background for scene */
+static void scnDrawBG(void)
+{
+  float color1[4] = {1.0, 1.0, 1.0, 1.0};
+  float color2[4] = {0.8, 0.8, 0.8, 1.0};
+
+  // Draw background
+  g3dDrawRectangle(0.0, 0.0, 1.0, 1.0, color1, color2);
 }
 
 
@@ -95,6 +105,8 @@ void scnDisplay(void)
   int l, x, y, z;        // loop counter;
 
   g3dBeginPreDraw();
+
+  scnDrawBG();
 
   // Write out the game score.
   writeScore();
