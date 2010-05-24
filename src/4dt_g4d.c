@@ -22,20 +22,26 @@
 ------------------------------------------------------------------------------*/
 
 /** Size of cube represent the lowest level. */
-static const double baseSize = 0.75;
+static const double g4dBaseSize = 0.75;
 /** Size of cube represent the highest level. */
-static const double maxSize = 2.0;
+static const double g4dMaxSize = 2.0;
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
 /** Maximal coordinate on 4th axis */
-static double w_max;
+static double g4dMaxW;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
+
+static double g4dPerspFact(double w);
+
+static void g4dDrawPoly(float points[4][4],
+                        float color[4],
+                        int enableWire);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -45,12 +51,12 @@ static double w_max;
 /** Calibrate/initialize the 4D drawing unit. */
 void g4dCalibrate(double w_maximum)
 {
-  w_max = w_maximum;
+  g4dMaxW = w_maximum;
 }
 
 /** \brief Calculates perspective projection factor of the 'level'
            (game space 4th axis). */
-static double perspFact(double w)
+static double g4dPerspFact(double w)
 {
   // Local variables:
   double baseLevel, // lowest level if the viewpoint is at zero level;
@@ -58,21 +64,21 @@ static double perspFact(double w)
          result;    // return value.
 
   // Calculate size factor.
-  sizeFact = baseSize / maxSize;
+  sizeFact = g4dBaseSize / g4dMaxSize;
 
   // Calculate viewpoint distance from lowest level.
-  baseLevel = w_max * sizeFact / (1 - sizeFact);
+  baseLevel = g4dMaxW * sizeFact / (1 - sizeFact);
 
   // Calculate perspective projection.
-  result = baseSize * (baseLevel + w_max) /
-           (baseLevel + w_max - w);
+  result = g4dBaseSize * (baseLevel + g4dMaxW) /
+           (baseLevel + g4dMaxW - w);
 
   // Return with the result value.
   return result;
 }
 
 /** \brief Draws 4D polygon */
-void g4dDrawPoly(float points[4][4],
+static void g4dDrawPoly(float points[4][4],
                  float color[4],
                  int mode)
 {
@@ -81,7 +87,7 @@ void g4dDrawPoly(float points[4][4],
   for (i = 0; i < 4; i++)
   for (n = 0; n < 3; n++)
   {
-    points[i][n] = points[i][n] * perspFact(points[i][3]);
+    points[i][n] = points[i][n] * g4dPerspFact(points[i][3]);
   }
 
   g3dDrawPoly(points, color, mode);
@@ -116,7 +122,7 @@ void g4dDraw4DCube(double x, double y, double z, double l,
 
   // Array contains the faces (specified with num. of the points)
   // of a 4D hypercube.
-  const char faces[24][4] =
+  const int faces[24][4] =
   {
 // inner cube
 {   8,  12,  14,  10}, {   9,  11,  15,  13}, {   8,   9,  13,  12},

@@ -18,9 +18,9 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern double angleX;
-extern double angleZ;
-extern double dangle;
+extern double g3dAngleX;
+extern double g3dAngleZ;
+extern double g3dDAngle;
 
 
 extern void g3dInit(int argc, char *argv[]);

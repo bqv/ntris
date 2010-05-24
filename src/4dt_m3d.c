@@ -29,6 +29,9 @@
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
+static void m3dCrossProduct(double *n, double v1[3], double v2[3]);
+static void m3dNormalise(double *v);
+
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
@@ -36,7 +39,7 @@
 
 /** \brief Calculates the crossProduct of v1 and v2 vector where
     'n' the result vector. */
-static void crossProduct(double *n, double v1[3], double v2[3])
+static void m3dCrossProduct(double *n, double v1[3], double v2[3])
 {
   // Calculate crossproduct by coordinates.
   n[0] = v1[1] * v2[2] - v2[1] * v1[2];
@@ -45,7 +48,7 @@ static void crossProduct(double *n, double v1[3], double v2[3])
 }
 
 /** \brief Normalise a vector. */
-static void normalise(double *v)
+static void m3dNormalise(double *v)
 {
   // Local variables:
   int i; // loop counter;
@@ -66,7 +69,7 @@ static void normalise(double *v)
 void m3dCalcNormal(double *n, double v1[3], double v2[3])
 {
   // Calculate normal by crossproducting v1 and v2.
-  crossProduct(n, v1, v2);
+  m3dCrossProduct(n, v1, v2);
   // Normalise the normal vector.
-  normalise(n);
+  m3dNormalise(n);
 }

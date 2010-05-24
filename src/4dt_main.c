@@ -50,6 +50,16 @@
 
 /*
 --------------------------------------------------------------------------------
+   PROTOTYPES
+--------------------------------------------------------------------------------
+*/
+
+static void idle(void);
+static void specialKeyPress(int key, int x, int y);
+static void keyPress(unsigned char key, int x, int y);
+
+/*
+--------------------------------------------------------------------------------
    FUNCTIONS
 --------------------------------------------------------------------------------
 */
@@ -72,7 +82,7 @@ static void idle(void)
 }
 
 /** Eventhandler of special key pressing. */
-void specialKeyPress(int key, int x, int y)
+static void specialKeyPress(int key, int x, int y)
 {
   int uiKey;
 
@@ -91,7 +101,7 @@ void specialKeyPress(int key, int x, int y)
 }
 
 /** Eventhandler of key pressing. */
-void keyPress(unsigned char key, int x, int y)
+static void keyPress(unsigned char key, int x, int y)
 {
   uiKeyPress(key);
 
@@ -108,7 +118,7 @@ void keyPress(unsigned char key, int x, int y)
 int main(int argc, char *argv[])
 {
   // Initialize the game engine.
-  initGame();
+  engInitGame();
 
   // Set random colors for game levels
   scnInit();

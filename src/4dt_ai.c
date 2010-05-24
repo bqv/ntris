@@ -15,38 +15,35 @@
 ------------------------------------------------------------------------------*/
 
 /** Axises belongs to the turns around 1..4 axis */
-char turnAxises[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
+static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 
 /** time ellapsed while the AI steps the next turn in sec; */
-static const double timestepAI = 0.15;
+static const double aiTimestep = 0.15;
 
 /*------------------------------------------------------------------------------
    VARIABLES
 ------------------------------------------------------------------------------*/
 
-/** Struct of game engine. */
-extern t_game_Engine ge;
-
 /** flag for auto gamer */
-int autoGamer_ON = 0;
+int aiAutoGamerON = 0;
 
 /** Array of the number of turns by axises needed to the best situation. */
-int neededTurns[4];
+static int aiNeededTurns[4];
 
 /** Array contains the CenterOf Gravity of each situation. */
-double cog[4 * 4 * 4 * 4];
+static double aiCoG[4 * 4 * 4 * 4];
 
 /** Array contains the number of turns for each situation. */
-int turns[4 * 4 * 4 * 4];
+static int aiTurns[4 * 4 * 4 * 4];
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-void dostep(void);
-int findBestSolution(void);
-double ProcessSitu(void);
-int SearchBestSitu(void);
+static void aiDoStep(void);
+static int aiFindBestSolution(void);
+static double aiProcessSitu(void);
+static int aiSearchBestSitu(void);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -61,16 +58,16 @@ void aiTrigger(float time /** ellapsed time since program started in sec*/)
 
   // If time ellapsed since last storage larger the time of AI step,
   // and auto player is switched on,
-  if ((time - timeAI > timestepAI) && (autoGamer_ON)) {
+  if ((time - timeAI > aiTimestep) && (aiAutoGamerON)) {
     // make the AI step and
-    dostep();
+    aiDoStep();
     // store the actual time.
     timeAI = time;
   }
 }
 
 /** Trigger the AI to make a turn. */
-void dostep(void)
+static void aiDoStep(void)
 {
   // Local variables:
   char stepMade = 0; // inditcator of turn already made;
@@ -79,11 +76,11 @@ void dostep(void)
   static int solidnum = -1;
 
   // If got a new solid,
-  if (solidnum != ge.solidnum)
+  if (solidnum != engGE.solidnum)
   {
     // find the best situation (num of turns) to drop it.
-    findBestSolution();
-    solidnum = ge.solidnum;
+    aiFindBestSolution();
+    solidnum = engGE.solidnum;
   }
   else
   { // else
@@ -92,14 +89,14 @@ void dostep(void)
     {
       // if turn needed around and
       // not yet made any turn, then
-      if ((neededTurns[i] > 0) &&
+      if ((aiNeededTurns[i] > 0) &&
           !stepMade)
       {
         // turn around the axis,
-        turn(turnAxises[i][0],
-             turnAxises[i][1]);
+        engTurn(aiTurnAxices[i][0],
+             aiTurnAxices[i][1]);
         // decrease the turns needed, and
-        neededTurns[i]--;
+        aiNeededTurns[i]--;
         // indicate it.
         stepMade = 1;
       }
@@ -108,7 +105,7 @@ void dostep(void)
     if (!stepMade)
     {
       // lower the solid. }
-      lowerSolid();
+      engLowerSolid();
     }
   }
 }
@@ -116,7 +113,7 @@ void dostep(void)
 /** Finds the best situation from all turn variation
  *  (the most effective one with fewest turn).
  *  \return id of optimal turn variation */
-int findBestSolution(void)
+static int aiFindBestSolution(void)
 {
   // Local variables:
   int i, j, n;             // loop counter;
@@ -132,52 +129,52 @@ int findBestSolution(void)
         for (x[0] = 0; x[0] < 4; x[0]++)
   {
     // Back up the actual situation.
-    backup_ge = copyGameEngine(ge);
+    backup_ge = engCopyGameEngine(engGE);
 
     // store the actual pos
-    pos = ge.pos;
+    pos = engGE.pos;
 
     for (j = 0; j < 4; j++)
     {
       // Turn x[j] times around j.th axle.
       for (i = 0; i < x[j]; i++)
       {
-        turn(turnAxises[j][0],
-             turnAxises[j][1]);
+        engTurn(aiTurnAxices[j][0],
+             aiTurnAxices[j][1]);
       }
     }
 
     // While not reached the floor
-    while (ge.pos <= pos)
+    while (engGE.pos <= pos)
     {
       // store the actual pos
-      pos = ge.pos;
+      pos = engGE.pos;
 
       // lower the solid.
-      lowerSolid();
+      engLowerSolid();
     }
 
     // Number of the situation.
     n = x[0]*64 + x[1]*16 + x[2]*4 + x[3];
 
     // Calculate Cog of the situation.
-    cog[n] = ProcessSitu();
+    aiCoG[n] = aiProcessSitu();
 
     // Calculate number of turns made.
-    turns[n] = x[0] + x[1] + x[2] + x[3];
+    aiTurns[n] = x[0] + x[1] + x[2] + x[3];
     // Restore the actual situation.
-    ge = copyGameEngine(backup_ge);
+    engGE = engCopyGameEngine(backup_ge);
 
   }
 
   // Return with the best of situations.
-  bestSitu = SearchBestSitu();
+  bestSitu = aiSearchBestSitu();
 
   // Fill the array of the required steps.
-  neededTurns[3] = bestSitu % 4;
-  neededTurns[2] = bestSitu / 4 % 4;
-  neededTurns[1] = bestSitu / 16 % 4;
-  neededTurns[0] = bestSitu / 64 % 4;
+  aiNeededTurns[3] = bestSitu % 4;
+  aiNeededTurns[2] = bestSitu / 4 % 4;
+  aiNeededTurns[1] = bestSitu / 16 % 4;
+  aiNeededTurns[0] = bestSitu / 64 % 4;
 
   return bestSitu;
 
@@ -185,7 +182,7 @@ int findBestSolution(void)
 
 /** Calculate Center of gravity of the game space with landed object.
  *  \return height (on 4th axis) of CoG */
-double ProcessSitu(void)
+static double aiProcessSitu(void)
 {
   // Loop counters for axises.
   int x, y, z, l;
@@ -202,7 +199,7 @@ double ProcessSitu(void)
         for (z = 0; z < 2; z++)
   {
     // if the cell is full,
-    if (getSpaceCell(l,x,y,z))
+    if (engGetSpaceCell(l,x,y,z))
     {
       // inrease summ and
       sum += 1;
@@ -225,7 +222,7 @@ double ProcessSitu(void)
 
 /** Search the best situation.
  *  \return ID of optimal situation */
-int SearchBestSitu(void)
+static int aiSearchBestSitu(void)
 {
   // Local variables:
   int i,       // loop counter;
@@ -245,10 +242,10 @@ int SearchBestSitu(void)
   for (i = 0; i < 4 * 4 * 4 * 4; i++)
   {
     // If actual CoG lower then lowest,
-    if (cog[i] < lowerCog)
+    if (aiCoG[i] < lowerCog)
     {
       // the actual is the lowest.
-      lowerCog = cog[i];
+      lowerCog = aiCoG[i];
     }
   }
 
@@ -259,7 +256,7 @@ int SearchBestSitu(void)
   for (i = 0; i < 4 * 4 * 4 * 4; i++)
   {
     // If the situations cog is the best
-    if (cog[i] == lowerCog)
+    if (aiCoG[i] == lowerCog)
     {
       return i;
 
@@ -278,10 +275,10 @@ int SearchBestSitu(void)
   for (i = 0; i < cntCog; i++)
   {
     // if actual situ. turns num. fewer then lowest,
-    if (turns[bestSitusCog[i]] < fewerTurn)
+    if (aiTurns[bestSitusCog[i]] < fewerTurn)
     {
       // the actual situs's turn num is the fewest.
-      fewerTurn = turns[bestSitusCog[i]];
+      fewerTurn = aiTurns[bestSitusCog[i]];
     }
   }
 
@@ -292,7 +289,7 @@ int SearchBestSitu(void)
   for (i = 0; i < cntCog; i++)
   {
     // if the turn number match with the best,
-    if (turns[bestSitusCog[i]] == fewerTurn)
+    if (aiTurns[bestSitusCog[i]] == fewerTurn)
     {
       return i;
       // the situation is best.

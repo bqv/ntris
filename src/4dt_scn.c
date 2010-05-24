@@ -32,23 +32,25 @@
 ------------------------------------------------------------------------------*/
 
 /** Color of the 4D cube. */
-static float cube4d_color[4] = {0.4, 0.4, 0.6, 0.15};
+static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.15};
 
 /** array of the colors of game space levels. */
-static float level_colors[SPACELENGTH][4];
-
+static float scnLevelColors[SPACELENGTH][4];
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
+static void scnDrawBG(void);
+static void scnWriteScore(void);
+static void scnInitLevelColors(void);
+
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-
 /** \brief Set random colors for game levels */
-static void initLevelColors(void)
+static void scnInitLevelColors(void)
 {
   // Loop counters.
   int i, j;
@@ -60,22 +62,22 @@ static void initLevelColors(void)
     for (j = 0; j < 3; j++)
     {
       // create a random value.
-      level_colors[i][j] = (double)rand() / RAND_MAX;
+      scnLevelColors[i][j] = (double)rand() / RAND_MAX;
     }
     // Set the color's alpha component.
-    level_colors[i][3] = 1.0;
+    scnLevelColors[i][3] = 1.0;
   }
 }
 
 /** Write out the score to the game window. */
-static void writeScore(void)
+static void scnWriteScore(void)
 {
   // Local variables:
   char text[30];     // buffer for the full text;
   float color[4] = {0.2, 0.2, 0.4, 0.8};
 
   // Create the score character array.
-  sprintf(text, "Score: %i", ge.score);
+  sprintf(text, "Score: %i", engGE.score);
 
   // Render the text.
   g3dRenderString(0.1, 0.1, color, text);
@@ -95,7 +97,7 @@ static void scnDrawBG(void)
 /** Initialize the scene */
 void scnInit(void)
 {
-  initLevelColors();
+  scnInitLevelColors();
 }
 
 /** Main drawing function. */
@@ -109,7 +111,7 @@ void scnDisplay(void)
   scnDrawBG();
 
   // Write out the game score.
-  writeScore();
+  scnWriteScore();
 
   g3dBeginDraw();
 
@@ -124,10 +126,10 @@ void scnDisplay(void)
     for (z = 0; z <= 1; z++)
     {
       // if the cell is not empty then
-      if (!!getSpaceCell(l, x, y, z))
+      if (!!engGetSpaceCell(l, x, y, z))
       {
         // draw the cube.
-        g4dDraw4DCube(x - 1, y - 1, z - 1, 1 + l, level_colors[l], 4, 0);
+        g4dDraw4DCube(x - 1, y - 1, z - 1, 1 + l, scnLevelColors[l], 4, 0);
       }
     }
   }
@@ -139,7 +141,7 @@ void scnDisplay(void)
   for (y = 0; y <= 1; y++)
   for (z = 0; z <= 1; z++)
   {
-    g4dDraw4DCube(x - 1, y - 1, z - 1, 0, cube4d_color, 3, 1);
+    g4dDraw4DCube(x - 1, y - 1, z - 1, 0, scn4DCubeColor, 3, 1);
   }
 
   // Draw the actual solid.
@@ -152,10 +154,10 @@ void scnDisplay(void)
     for (z = 0; z <= 1; z++)
     {
       // if the cell is not empty then
-      if (!!getSolidCell(l, x, y, z))
+      if (!!engGetSolidCell(l, x, y, z))
       {
         // draw the hypercube.
-        g4dDraw4DCube(x - 1, y - 1, z - 1, ge.pos + l, cube4d_color, 4, 1);
+        g4dDraw4DCube(x - 1, y - 1, z - 1, engGE.pos + l, scn4DCubeColor, 4, 1);
       }
     }
   }
