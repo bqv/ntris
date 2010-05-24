@@ -1,10 +1,8 @@
-/* ------------------------------------------------------------------------------
-   Short Description:
+/**
+ *  \file  4dt_g3d.h
+ *  \brief Header for 3D OpenGL scene rendering modul.
+ */
 
-   ToDo: 
- 
-------------------------------------------------------------------------------*/
- 
 #ifndef _4DT_G3D_H_
 #define _4DT_G3D_H_
 
@@ -35,7 +33,5 @@ extern void g3dRenderString(double x, double y, double z,
 extern void g3dBeginPreDraw(void);
 extern void g3dBeginDraw(void);
 extern void g3dEndDraw(void);
-
-
 
 #endif /* _4DT_G3D_H_ */

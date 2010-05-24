@@ -1,9 +1,6 @@
-/*
- Short Description:
- Header of the 4D-TRIS Computer gamer's logic.
-
- ToDo: 
- 
+/**
+    \file  4dt_ai.h
+    \brief Header of the 4D-TRIS Computer gamer's logic.
  */
 
 #ifndef _4DT_AI_H

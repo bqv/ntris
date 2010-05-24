@@ -1,27 +1,29 @@
-/*
-4D-TRIS - Tetris like game in four dimension
-Copyright (C) 2008 Simon, Laszlo
+/**
+   \mainpage 4DTRIS - Tetris like game in four dimension
+   \image html 4DTRIS_icon_128.png
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, version 3 of the License.
+   Copyright (C) 2008 Simon, Laszlo
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, version 3 of the License.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*//*
- Author: Simon, Laszlo <laszlo.simon@gmail.com>
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
- Short Description:
- This program is a tetris game uses 4D hypercubes.
- This file is the main unit of the application.
+   \warning You should have received a copy of the GNU General Public License
+            along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- ToDo:
-*/
+   \author Simon, Laszlo <laszlo.simon@gmail.com>
+
+   \include README
+ */
+/**
+ * \file 4dt_main.c
+ * \brief This file is the main unit of the application.
+ */
 
 /*
 --------------------------------------------------------------------------------
@@ -57,7 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-// Idle process.
+/** Idle process. */
 static void idle(void)
 {
   double time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
@@ -69,7 +71,7 @@ static void idle(void)
   glutPostRedisplay();
 }
 
-// Eventhandler of special key pressing.
+/** Eventhandler of special key pressing. */
 void specialKeyPress(int key, int x, int y)
 {
   int uiKey;
@@ -88,7 +90,7 @@ void specialKeyPress(int key, int x, int y)
   glutPostRedisplay();
 }
 
-// Eventhandler of key pressing.
+/** Eventhandler of key pressing. */
 void keyPress(unsigned char key, int x, int y)
 {
   uiKeyPress(key);
@@ -102,7 +104,7 @@ void keyPress(unsigned char key, int x, int y)
     M A I N
 */
 
-// Main function of the software
+/** Main function of the software */
 int main(int argc, char *argv[])
 {
   // Initialize the game engine.

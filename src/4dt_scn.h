@@ -1,10 +1,8 @@
-/* ------------------------------------------------------------------------------
-   Short Description:
+/**
+ * \file  4dt_scn.h
+ * \brief Header for modul for handling game scene
+ */
 
-   ToDo: 
- 
-------------------------------------------------------------------------------*/
- 
 #ifndef _4DT_SCN_H_
 #define _4DT_SCN_H_
 
