@@ -12,6 +12,7 @@ sources = 4dt_ai.c \
           4dt_m3d.c \
           4dt_g3d.c \
           4dt_g4d.c \
+          4dt_hst.c \
           4dt_ui.c
 
 objects = $(sources:.c=.o) 

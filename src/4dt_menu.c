@@ -13,6 +13,7 @@
 #include "4dt_g3d.h"
 #include "4dt_ai.h"
 #include "4dt_eng.h"
+#include "4dt_hst.h"
 
 #include "4dt_menu.h"
 
@@ -31,32 +32,6 @@
 
 /** String type for menu caption. */
 typedef char* tMenuString;
-
-/** Enums for each menu item */
-typedef enum
-{
-eOFF,
-  eRoot,
-    eNewGame,
-    eOptions,
-      eVideoOptions,
-      eAudioOptions,
-        eSound,
-        eMusic,
-      eGameOptions,
-        eAutoPlayer,
-        eDiffLevel,
-        eControls,
-    eHelp,
-      eHelppage,
-      eHighScores,
-      eAbout,
-    eBackToGame,
-    eQuit,
-    eItemNum,
-    eNull
-}
-eMenuItem;
 
 /** Menu item descriptor struct */
 typedef struct
@@ -90,27 +65,27 @@ static void menuQuit(void);
 ------------------------------------------------------------------------------*/
 
 /** Menu item descriptor array. Must be same order then Menu item enums! */
-static tMenuItem menuItems[eItemNum] =
+static tMenuItem menuItems[eMenuItemNum] =
 {
 /* en, caption,        function,     parent,        submenus */
-  {1, "",               NULL,         eOFF,          {eRoot, eNull}},
-  {1, "Main",           NULL,         eOFF,          {eNewGame, eOptions, eHelp, eBackToGame, eQuit, eNull}},
-  {1, "New Game",       menuNew,      eRoot,         {eNull} },
-  {1, "Options",        NULL,         eRoot,         {eVideoOptions, eAudioOptions, eGameOptions, eNull} },
-  {0, "Video Options",  NULL,         eOptions,      {eNull} },
-  {0, "Audio Options",  NULL,         eOptions,      {eSound, eMusic, eNull} },
-  {0, "Sound",          menuSound,    eAudioOptions, {eNull}  },
-  {0, "Music",          menuMusic,    eAudioOptions, {eNull}  },
-  {1, "Game Options",   NULL,         eOptions,      {eAutoPlayer, eDiffLevel, eControls, eNull} },
-  {1, "Auto Player - ON", menuAuto,   eGameOptions,  {eNull}  },
-  {1, "Diff. Level - Hard", menuLevel, eGameOptions, {eNull}  },
-  {0, "Controls",       menuControls, eGameOptions,  {eNull}  },
-  {1, "Help",           NULL,         eRoot,         {eHelppage, eHighScores, eAbout, eNull} },
-  {1, "Help Page",      menuHelp,     eHelp,         {eNull}  },
-  {0, "High Scores",    menuScores,   eHelp,         {eNull}  },
-  {1, "About",          menuAbout,    eHelp,         {eNull}  },
-  {0, "Back To Game",   menuBack,     eRoot,         {eNull}  },
-  {1, "Quit",           menuQuit,     eRoot,         {eNull}  },
+  {1, "",               NULL,         eMenuOFF,          {eMenuRoot, eMenuNull}},
+  {1, "Main",           NULL,         eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
+  {1, "New Game",       menuNew,      eMenuRoot,         {eMenuNull} },
+  {1, "Options",        NULL,         eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
+  {0, "Video Options",  NULL,         eMenuOptions,      {eMenuNull} },
+  {0, "Audio Options",  NULL,         eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
+  {0, "Sound",          menuSound,    eMenuAudioOptions, {eMenuNull}  },
+  {0, "Music",          menuMusic,    eMenuAudioOptions, {eMenuNull}  },
+  {1, "Game Options",   NULL,         eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuControls, eMenuNull} },
+  {1, "Auto Player - ON", menuAuto,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Diff. Level - Hard", menuLevel, eMenuGameOptions, {eMenuNull}  },
+  {0, "Controls",       menuControls, eMenuGameOptions,  {eMenuNull}  },
+  {1, "Help",           NULL,         eMenuRoot,         {eMenuHelppage, eMenuHighScores, eMenuAbout, eMenuNull} },
+  {1, "Help Page",      menuHelp,     eMenuHelp,         {eMenuNull}  },
+  {1, "High Scores",    menuScores,   eMenuHelp,         {eMenuNull}  },
+  {1, "About",          menuAbout,    eMenuHelp,         {eMenuNull}  },
+  {0, "Back To Game",   menuBack,     eMenuRoot,         {eMenuNull}  },
+  {1, "Quit",           menuQuit,     eMenuRoot,         {eMenuNull}  },
 };
 
 /** Text of help page */
@@ -143,8 +118,8 @@ tMenuString menuAboutText[TEXTLINENUM] =
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
-static eMenuItem menuActItem = eRoot; /**< Actual active menu item.           */
-static int menuSelItems[eItemNum];    /**< Last selected submenu in each menuitem */
+static eMenuItem menuActItem = eMenuRoot; /**< Actual active menu item.           */
+static int menuSelItems[eMenuItemNum];    /**< Last selected submenu in each menuitem */
 static char **menuText = NULL;        /**< Actual menu text for display       */
 
 /*------------------------------------------------------------------------------
@@ -152,9 +127,9 @@ static char **menuText = NULL;        /**< Actual menu text for display       */
 ------------------------------------------------------------------------------*/
 
 /** Get function for query menu active state. */
-int menuActive(void)
+int menuActived(void)
 {
-  return(menuActItem != eOFF);
+  return(menuActItem != eMenuOFF);
 }
 
 /** Counts sub menu items of a menu item. */
@@ -162,12 +137,22 @@ static int menuSubNum(eMenuItem item)
 {
   int i = 0;
 
-  while( (menuItems[item].submenus[i] != eNull) && (i < MENUMAXITEM) )
+  while( (menuItems[item].submenus[i] != eMenuNull) && (i < MENUMAXITEM) )
   {
     i++;
   }
 
   return(i);
+}
+
+/** Set menu item active */
+void menuGotoItem(eMenuItem menuItem)
+{
+  menuActItem = menuItem;
+   if (NULL != menuItems[menuActItem].function)
+   {
+     (*menuItems[menuActItem].function)();
+   }
 }
 
 /** Menu state machine. */
@@ -201,11 +186,7 @@ void menuNavigate(eMenuEvent event)
       // Step in to a menu item
       if (1 == menuItems[subItem].enabled)
       {
-        menuActItem = subItem;
-        if (NULL != menuItems[menuActItem].function)
-        {
-          (*menuItems[menuActItem].function)();
-        }
+        menuGotoItem(subItem);
       }
       break;
     case eMenuBack:
@@ -268,9 +249,9 @@ static void menuNew(void)
 
   aiAutoGamerON = 0;
 
-  menuItems[eAutoPlayer].caption = "Auto Player - OFF";
+  menuItems[eMenuAutoPlayer].caption = "Auto Player - OFF";
 
-  menuItems[eBackToGame].enabled = 1;
+  menuItems[eMenuBackToGame].enabled = 1;
 
   menuNavigate(eMenuBack);
   menuNavigate(eMenuBack);
@@ -290,7 +271,7 @@ static void menuAuto(void)
 {
   aiAutoGamerON = !aiAutoGamerON;
 
-  menuItems[eAutoPlayer].caption = (aiAutoGamerON)
+  menuItems[eMenuAutoPlayer].caption = (aiAutoGamerON)
                                    ? "Auto Player - ON"
                                    : "Auto Player - OFF";
   menuNavigate(eMenuBack);
@@ -307,7 +288,7 @@ static void menuLevel(void)
 
   engGE.game_opts.diff = (engGE.game_opts.diff+1) % DIFFLEVELS;
 
-  menuItems[eDiffLevel].caption = captions[engGE.game_opts.diff];
+  menuItems[eMenuDiffLevel].caption = captions[engGE.game_opts.diff];
 
   menuNavigate(eMenuBack);
 }
@@ -324,7 +305,8 @@ static void menuHelp(void)
 
 static void menuScores(void)
 {
-  // Not implemented yet
+  hstAddScore(engGE.score);
+  hstPrintScoreTab(&menuText, TEXTLINENUM);
 }
 
 static void menuAbout(void)

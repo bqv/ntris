@@ -122,6 +122,8 @@ void engResetGame(void)
    
   // init score value
   engGE.score = 0;
+
+  engGE.gameOver = 0;
 }
 
 
@@ -246,10 +248,11 @@ bool engLowerSolid(void)
     engNewSolid();
 
     // check new solid already overlapped
-    return (!engCheckOverlap());
+    engGE.gameOver = engCheckOverlap();
+    return (engGE.gameOver);
   }
 
-  return(1);
+  return(0);
 }
 
 /** turns the solid from axis 1 to axis 2

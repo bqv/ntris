@@ -43,6 +43,7 @@
 #include "4dt_scn.h"
 #include "4dt_ui.h"
 #include "4dt_menu.h"
+#include "4dt_hst.h"
 
 /*
 --------------------------------------------------------------------------------
@@ -76,12 +77,20 @@ static void idle(void)
 {
   double time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 
-  if (!menuActive() || aiAutoGamerON)
+  if (engGE.gameOver == 0)
   {
-    engTrigger(time);
+    if (!menuActived() || aiAutoGamerON)
+    {
+      engTrigger(time);
+    }
+    aiTrigger(time);
   }
-
-  aiTrigger(time);
+  else
+  {
+    aiAutoGamerON = 1;
+    menuGotoItem(eMenuHighScores);
+    engResetGame();
+  }
 
   glutPostRedisplay();
 }
@@ -122,6 +131,9 @@ static void keyPress(unsigned char key, int x, int y)
 /** Main function of the software */
 int main(int argc, char *argv[])
 {
+  // Initialize/load High Score table
+  hstInit();
+
   // Initialize the game engine.
   engInitGame();
 

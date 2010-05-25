@@ -169,7 +169,7 @@ void scnDisplay(void)
   }
 
   // draw the menu
-  if (menuActive())
+  if (menuActived())
   {
     menuDraw();
   }

@@ -82,6 +82,7 @@ static void g3dSwitchTo2D(void)
   // switch off light and Z testing
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_LIGHTING);
+  glEnable(GL_BLEND);
 
   // store matrices
   glMatrixMode(GL_PROJECTION);
@@ -110,6 +111,7 @@ static void g3dSwitchTo3D(void)
   // reenable depth test and light
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHTING);
+  glDisable(GL_BLEND);
 }
 
 /** Draws a rectangle filled with gradient color */
