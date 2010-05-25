@@ -53,6 +53,8 @@ typedef struct
   bool isnewsolid;
   /** score collected in the actual game */
   int score;
+  /** flag for indicate game over */
+  int gameOver;
   /** num of the solid */
   int solidnum;
 

@@ -45,7 +45,7 @@
 void uiKeyPress(int key)
 {
   // if game menu is activated
-  if(menuActive())
+  if(menuActived())
   {
     // Forward user action to menu module
     // Check which key pressed.

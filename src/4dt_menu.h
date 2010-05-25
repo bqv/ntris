@@ -18,6 +18,32 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+/** Enums for each menu item */
+typedef enum
+{
+eMenuOFF,
+  eMenuRoot,
+    eMenuNewGame,
+    eMenuOptions,
+      eMenuVideoOptions,
+      eMenuAudioOptions,
+        eMenuSound,
+        eMenuMusic,
+      eMenuGameOptions,
+        eMenuAutoPlayer,
+        eMenuDiffLevel,
+        eMenuControls,
+    eMenuHelp,
+      eMenuHelppage,
+      eMenuHighScores,
+      eMenuAbout,
+    eMenuBackToGame,
+    eMenuQuit,
+    eMenuItemNum,
+    eMenuNull
+}
+eMenuItem;
+
 /** Enums for menu controlling events*/
 typedef enum
 {
@@ -32,8 +58,9 @@ eMenuEvent;
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern int  menuActive(void);
+extern int  menuActived(void);
 extern void menuDraw(void);
 extern void menuNavigate(eMenuEvent event);
+extern void menuGotoItem(eMenuItem menuItem);
 
 #endif /* _4DT_MENU_H_ */
