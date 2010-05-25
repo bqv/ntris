@@ -25,7 +25,7 @@ static const double aiTimestep = 0.15;
 ------------------------------------------------------------------------------*/
 
 /** flag for auto gamer */
-int aiAutoGamerON = 0;
+int aiAutoGamerON = 1;
 
 /** Array of the number of turns by axises needed to the best situation. */
 static int aiNeededTurns[4];

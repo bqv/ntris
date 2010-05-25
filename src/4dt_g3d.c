@@ -157,8 +157,22 @@ void g3dEndDraw(void)
   glutSwapBuffers();
 }
 
-
 /** Draw bitmap text to the specified coordinates and font. */
+void g3dRenderText(double x, double y,
+                   float color[4],
+                   char **strings,
+                   int lineNum,
+                   double lineSpace)
+{
+  int i;
+
+  for (i = 0; i < lineNum; i++)
+  {
+    g3dRenderString(x, y - i * lineSpace, color, strings[i]);
+  }
+}
+
+/** Draw bitmap string to the specified coordinates and font. */
 void g3dRenderString(double x, double y,
                     float color[4],
                     char *string)

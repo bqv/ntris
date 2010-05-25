@@ -14,6 +14,7 @@
 #include "4dt_eng.h"
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
+#include "4dt_menu.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -167,5 +168,10 @@ void scnDisplay(void)
     }
   }
 
+  // draw the menu
+  if (menuActive())
+  {
+    menuDraw();
+  }
   g3dEndDraw();
 }
