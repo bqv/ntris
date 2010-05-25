@@ -17,10 +17,14 @@
 /** Enum for special keys */
 enum
 {
-  UI_KEY_UP    = 0x0100,
-  UI_KEY_LEFT  = 0x0200,
-  UI_KEY_DOWN  = 0x0300,
-  UI_KEY_RIGHT = 0x0400,
+  UI_KEY_BACKSPACE = 8,
+  UI_KEY_TAB       = 9,
+  UI_KEY_ENTER     = 13,
+  UI_KEY_ESC       = 27,
+  UI_KEY_UP        = 0x0100,
+  UI_KEY_LEFT      = 0x0200,
+  UI_KEY_DOWN      = 0x0300,
+  UI_KEY_RIGHT     = 0x0400,
 } tuiKeyCodes;
 
 

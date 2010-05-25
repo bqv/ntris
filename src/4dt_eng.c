@@ -22,9 +22,6 @@
 /** number of type of solids */
 #define SOLIDTYPES (6)
 
-/** number of difficulty levels */
-#define DIFFLEVELS (3)
-
 /*------------------------------------------------------------------------------
 // CONSTANTS
 ------------------------------------------------------------------------------*/
@@ -106,13 +103,10 @@ t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine)
   return result;
 }
 
-/** initialize the game variables */
-void engInitGame(void)
+/** Reset game variables */
+void engResetGame(void)
 {
   int t; // Loop counter.
-
-  // initialize random generator
-  srand(time(NULL));
 
   // for the every part of the space
   for (t = 0; t < SPACELENGTH; t++)
@@ -126,11 +120,22 @@ void engInitGame(void)
   // get new solid
   engNewSolid();
 
+  // init score value
+  engGE.score = 0;
+}
+
+
+/** initialize the game variables */
+void engInitGame(void)
+{
+  // initialize random generator
+  srand(time(NULL));
+
   // set options
   engGE.game_opts.diff = 2;
 
-  // init score value
-  engGE.score = 0;
+  // reset parameters
+  engResetGame();
 }
 
 /** get a new random solid */

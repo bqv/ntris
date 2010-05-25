@@ -42,6 +42,8 @@
 #include "4dt_g4d.h"
 #include "4dt_scn.h"
 #include "4dt_ui.h"
+#include "4dt_menu.h"
+
 /*
 --------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -74,7 +76,10 @@ static void idle(void)
 {
   double time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 
-  engTrigger(time);
+  if (!menuActive() || aiAutoGamerON)
+  {
+    engTrigger(time);
+  }
 
   aiTrigger(time);
 

@@ -14,6 +14,9 @@
 /** length of the game space (num of levels) */
 #define SPACELENGTH (12)
 
+/** number of difficulty levels */
+#define DIFFLEVELS (3)
+
 /*------------------------------------------------------------------------------
    TYPE DEFINITIONS
 ------------------------------------------------------------------------------*/
@@ -78,6 +81,7 @@ static inline int engGetSolidCell(int l, int x, int y, int z)
   return (engGE.solid & (0x01 << (x + y*2 + z*4 + l*8)));
 }
 
+extern void engResetGame(void);
 extern void engInitGame(void);
 extern bool engLowerSolid(void);
 extern bool engTurn(char ax1, char ax2);

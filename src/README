@@ -8,7 +8,7 @@ ___________________________________________________________________
 
 README
 
- 4D-TRIS
+ 4DTRIS
  Created by Simon, Laszlo
 
  This Application is a Tetris game extended to 4 dimension. The
@@ -23,12 +23,17 @@ README
  $ make all
  $ ./4dtris
 
+ Dependency:
+ - OpenGL
+ - GLU
+ - GLUT
  ---
 
  Game Controls:
+ - esc        - menu
  - arrow keys - rotate the view port
  - z, x, c, v - turn the blocks around the 4 axis
- - q, esc     - exit
+ - q          - exit
  - 1, 2, 3    - difficulty level (easy, medium, hard)
  - a          - auto player on/off
 
