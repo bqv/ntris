@@ -92,6 +92,7 @@ static void idle(void)
     engResetGame();
   }
 
+  usleep(50000);
   glutPostRedisplay();
 }
 
