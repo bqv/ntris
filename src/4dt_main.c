@@ -57,9 +57,10 @@
 --------------------------------------------------------------------------------
 */
 
-static void idle(void);
 static void specialKeyPress(int key, int x, int y);
 static void keyPress(unsigned char key, int x, int y);
+static void engineTimerCallback(int value);
+static void autoplayTimerCallback(int value);
 
 /*
 --------------------------------------------------------------------------------
@@ -71,19 +72,15 @@ static void keyPress(unsigned char key, int x, int y);
     Event handlers
 */
 
-
-/** Idle process. */
-static void idle(void)
+static void engineTimerCallback(int value)
 {
-  double time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-
   if (engGE.gameOver == 0)
   {
     if (!menuActived() || aiAutoGamerON)
     {
-      engTrigger(time);
+      // lower the solid and
+      engLowerSolid();
     }
-    aiTrigger(time);
   }
   else
   {
@@ -92,8 +89,26 @@ static void idle(void)
     engResetGame();
   }
 
-  usleep(50000);
+  // Force drawing
   glutPostRedisplay();
+
+  // set call back again
+  glutTimerFunc(engGetTimestep(), engineTimerCallback, value);
+}
+
+
+static void autoplayTimerCallback(int value)
+{
+  if ((engGE.gameOver == 0) && (aiAutoGamerON))
+  {
+    aiDoStep();
+  }
+
+  // Force drawing
+  glutPostRedisplay();
+
+  // set call back again
+  glutTimerFunc(150, autoplayTimerCallback, value);
 }
 
 /** Eventhandler of special key pressing. */
@@ -141,8 +156,10 @@ int main(int argc, char *argv[])
   // Set random colors for game levels
   scnInit();
 
+  // initialise 3D drawing modul
   g3dInit(argc, argv);
 
+  // initialise 4D drawing modul
   g4dCalibrate(SPACELENGTH);
 
   // Set the display function.
@@ -151,8 +168,9 @@ int main(int argc, char *argv[])
   glutKeyboardFunc(keyPress);
   // Set the special keypress event handler function.
   glutSpecialFunc(specialKeyPress);
-  // Set the idle function.
-  glutIdleFunc(idle);
+  // set timer callbacks
+  glutTimerFunc(engGetTimestep(), engineTimerCallback, 0);
+  glutTimerFunc(150, autoplayTimerCallback, 0);
 
   // Start glut's main loop.
   glutMainLoop();
