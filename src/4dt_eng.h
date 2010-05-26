@@ -69,6 +69,14 @@ typedef struct
 
 extern t_game_Engine engGE;
 
+/** time step, while the solid steps one level down in msec; */
+
+static inline int engGetTimestep(void)
+{
+  // calculate timestep depending on actual score
+  return(10000/(4+engGE.score/10000));
+}
+
 /** get the cell of the level at x, y, z from
     the game space empty or full */
 static inline int engGetSpaceCell(int l, int x, int y, int z)
@@ -88,8 +96,5 @@ extern void engInitGame(void);
 extern bool engLowerSolid(void);
 extern bool engTurn(char ax1, char ax2);
 extern t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine);
-
-extern void engTrigger(float time);
-
 
 #endif

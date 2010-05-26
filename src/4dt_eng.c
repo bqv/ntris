@@ -26,9 +26,6 @@
 // CONSTANTS
 ------------------------------------------------------------------------------*/
 
-/** time ellapsed while the the solid steps one level down in sec; */
-static const double engTimestep = 1.5;
-
 /** defined solids */
 static const TSolid engSolids[SOLIDTYPES] =
 /* 1 cube */  {0x0001, // 00 00 00 00  00 00 00 01
@@ -66,22 +63,6 @@ static void engKillFullLevels(void);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
-
-/** triggers the autoplayer engine */
-void engTrigger(float time /**< ellapsed time since program started in sec */)
-{
-  // Time storage for lower down the solid
-  // initialised with ellapsed time since program started.
-  static double timeLower = 0.0;
-
-  // If time ellapsed since last storage larger the time of step down,
-  if (time - timeLower > engTimestep) {
-    // lower the solid and
-    engLowerSolid();
-    // store the actual time.
-    timeLower = time;
-  }
-}
 
 /** duplicates the game engine */
 t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine)

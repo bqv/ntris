@@ -12,8 +12,6 @@
 ------------------------------------------------------------------------------*/
 
 extern int aiAutoGamerON;
-
-extern void aiTrigger(float time);
-
+extern void aiDoStep(void);
 
 #endif

@@ -17,9 +17,6 @@
 /** Axises belongs to the turns around 1..4 axis */
 static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 
-/** time ellapsed while the AI steps the next turn in sec; */
-static const double aiTimestep = 0.15;
-
 /*------------------------------------------------------------------------------
    VARIABLES
 ------------------------------------------------------------------------------*/
@@ -40,7 +37,6 @@ static int aiTurns[4 * 4 * 4 * 4];
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static void aiDoStep(void);
 static int aiFindBestSolution(void);
 static double aiProcessSitu(void);
 static int aiSearchBestSitu(void);
@@ -49,25 +45,8 @@ static int aiSearchBestSitu(void);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-/** Triggers the autoplayer engine. */
-void aiTrigger(float time /** ellapsed time since program started in sec*/)
-{
-  // Time storage for AI step
-  // initialised with ellapsed time since program started.
-  static double timeAI = 0.0;
-
-  // If time ellapsed since last storage larger the time of AI step,
-  // and auto player is switched on,
-  if ((time - timeAI > aiTimestep) && (aiAutoGamerON)) {
-    // make the AI step and
-    aiDoStep();
-    // store the actual time.
-    timeAI = time;
-  }
-}
-
 /** Trigger the AI to make a turn. */
-static void aiDoStep(void)
+void aiDoStep(void)
 {
   // Local variables:
   char stepMade = 0; // inditcator of turn already made;
