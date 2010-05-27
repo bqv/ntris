@@ -17,40 +17,41 @@
 /** number of difficulty levels */
 #define DIFFLEVELS (3)
 
+/** Size of gamespace */
+#define XSIZE 2
+#define YSIZE 2
+#define ZSIZE 2
+#define WSIZE 2
+
 /*------------------------------------------------------------------------------
    TYPE DEFINITIONS
 ------------------------------------------------------------------------------*/
 
-/** boolean type */
-typedef unsigned char bool;
-
 /** one 3D level of the game space x, y, z */
-typedef unsigned char TLevel;
+typedef char tEngLevel[XSIZE][YSIZE][ZSIZE];
 
 /** 2x2x2x2 supercube / container of a Solid */
-typedef unsigned short int TSolid;
+typedef tEngLevel tEngSolid[WSIZE];
 
 /** game options */
 typedef struct 
 {
-      /** difficulty level [0..2] */
-      int diff;
-
-} t_game_opts;
+  /** difficulty level [0..2] */
+  int diff;
+}
+tEngGameOptions;
 
 
 /** sturct of the game variables */
 typedef struct 
 {
   /** the game space  */
-  TLevel space[SPACELENGTH];
+  tEngLevel space[SPACELENGTH];
   /** actual solid */
-  TSolid solid;
+  tEngSolid solid;
   /** position of actual solid
       0 if reached the floor */
   int pos;
-  /** indicator of  */
-  bool isnewsolid;
   /** score collected in the actual game */
   int score;
   /** flag for indicate game over */
@@ -59,15 +60,15 @@ typedef struct
   int solidnum;
 
   /** struct of game options */
-  t_game_opts game_opts;
+  tEngGameOptions game_opts;
 
-} t_game_Engine;
+} tEngGame;
 
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern t_game_Engine engGE;
+extern tEngGame engGE;
 
 /** time step, while the solid steps one level down in msec; */
 
@@ -79,22 +80,23 @@ static inline int engGetTimestep(void)
 
 /** get the cell of the level at x, y, z from
     the game space empty or full */
-static inline int engGetSpaceCell(int l, int x, int y, int z)
+static inline int engGetSpaceCell(int w, int x, int y, int z)
 {
-  return(engGE.space[l] & (0x01 << (x + y*2 + z*4)));
+  return(engGE.space[w][x][y][z]);
 }
 
 /** get the cell of the level at x, y, z from
     the game space empty or full */
-static inline int engGetSolidCell(int l, int x, int y, int z)
+static inline int engGetSolidCell(int w, int x, int y, int z)
 {
-  return (engGE.solid & (0x01 << (x + y*2 + z*4 + l*8)));
+  return (engGE.solid[w][x][y][z]);
 }
 
 extern void engResetGame(void);
 extern void engInitGame(void);
-extern bool engLowerSolid(void);
-extern bool engTurn(char ax1, char ax2);
-extern t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine);
+extern int engLowerSolid(void);
+extern int engTurn(char ax1, char ax2);
+extern tEngGame engCopyGameEngine(tEngGame inGameEngine);
+extern  void engPrintSpace(void);
 
 #endif

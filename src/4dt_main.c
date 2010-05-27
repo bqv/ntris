@@ -72,12 +72,15 @@ static void autoplayTimerCallback(int value);
     Event handlers
 */
 
+/** Timer function for Game engine. */
 static void engineTimerCallback(int value)
 {
   if (engGE.gameOver == 0)
   {
     if (!menuActived() || aiAutoGamerON)
     {
+      engPrintSpace();
+
       // lower the solid and
       engLowerSolid();
     }
@@ -96,11 +99,12 @@ static void engineTimerCallback(int value)
   glutTimerFunc(engGetTimestep(), engineTimerCallback, value);
 }
 
-
+/** Timer function for Autoplayer. */
 static void autoplayTimerCallback(int value)
 {
   if ((engGE.gameOver == 0) && (aiAutoGamerON))
   {
+    engPrintSpace();
     aiDoStep();
   }
 
@@ -150,11 +154,11 @@ int main(int argc, char *argv[])
   // Initialize/load High Score table
   hstInit();
 
-  // Initialize the game engine.
-  engInitGame();
-
   // Set random colors for game levels
   scnInit();
+
+  // Initialize the game engine.
+  engInitGame();
 
   // initialise 3D drawing modul
   g3dInit(argc, argv);
