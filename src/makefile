@@ -19,7 +19,7 @@ objects = $(sources:.c=.o)
 
 cflags = -Wall
 
-libs = -lglut -lGL -lGLU
+libs = -lglut -lGL
 
 all : $(bin)
 

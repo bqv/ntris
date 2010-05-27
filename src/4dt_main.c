@@ -31,8 +31,6 @@
 --------------------------------------------------------------------------------
 */
 
-#include <GL/gl.h> 
-#include <GL/glu.h>
 #include <GL/glut.h>
 
 
@@ -160,18 +158,39 @@ int main(int argc, char *argv[])
   // Initialize the game engine.
   engInitGame();
 
+  // Set the size of the window.
+  glutInitWindowSize(640,480);
+
+  // Set the position of the window's top left corner.
+  glutInitWindowPosition(50,50);
+
+  // Initialise Glut.
+  glutInit(&argc, argv);
+
+  // Set Glut display mode.
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+
+  // Create the window with the specified title.
+  glutCreateWindow("4DTris");
+
+  // Set the reshape function.
+  glutReshapeFunc(g3dResize);
+
   // initialise 3D drawing modul
-  g3dInit(argc, argv);
+  g3dInit();
 
   // initialise 4D drawing modul
   g4dCalibrate(SPACELENGTH);
 
   // Set the display function.
   glutDisplayFunc(scnDisplay);
+
   // Set the keypress event handler function.
   glutKeyboardFunc(keyPress);
+
   // Set the special keypress event handler function.
   glutSpecialFunc(specialKeyPress);
+
   // set timer callbacks
   glutTimerFunc(engGetTimestep(), engineTimerCallback, 0);
   glutTimerFunc(150, autoplayTimerCallback, 0);
