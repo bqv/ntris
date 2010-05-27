@@ -112,14 +112,12 @@ void scnDisplay(void)
   // Local variables:
   int l, x, y, z;        // loop counter;
 
-  g3dBeginPreDraw();
+  g3dBeginDraw();
 
   scnDrawBG();
 
   // Write out the game score.
   scnWriteScore();
-
-  g3dBeginDraw();
 
   // Draw the gamespace.
 
@@ -173,5 +171,6 @@ void scnDisplay(void)
   {
     menuDraw();
   }
+
   g3dEndDraw();
 }

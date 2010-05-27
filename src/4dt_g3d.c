@@ -8,7 +8,6 @@
 ------------------------------------------------------------------------------*/
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
 
@@ -60,7 +59,7 @@ double g3dDAngle = 10.0;
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static void g3dResize(int width, int height);
+extern void g3dResize(int width, int height);
 static void g3dSwitchTo2D(void);
 static void g3dSwitchTo3D(void);
 
@@ -69,10 +68,18 @@ static void g3dSwitchTo3D(void);
 ------------------------------------------------------------------------------*/
 
 /** \brief Starts the actual frame drawing */
-void g3dBeginPreDraw(void)
+void g3dBeginDraw(void)
 {
   // Clear the display buffer.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glPushMatrix();
+  glLoadIdentity();
+
+  // Place and orient the viewport.
+  glTranslated(0, 0, -6);
+  glRotated(g3dAngleX, 1, 0, 0);
+  glRotated(g3dAngleZ, 0, 0, 1);
 }
 
 /** Switch the projection to 2D mode for window coordinate draw
@@ -93,7 +100,7 @@ static void g3dSwitchTo2D(void)
   // set 2D coord.sys.
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluOrtho2D(0, 1, 0, 1);
+  glOrtho(0,1,0,1,-1,1);
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity ();
 }
@@ -136,19 +143,6 @@ void g3dDrawRectangle(float x0, float y0, float x1, float y1,
 
   g3dSwitchTo3D();
 }
-
-/** todo: temporary function, should be merged to g3dBeginPreDraw */
-void g3dBeginDraw(void)
-{
-  glPushMatrix();
-  glLoadIdentity();
-
-  // Place and orient the viewport.
-  glTranslated(0, 0, -6);
-  glRotated(g3dAngleX, 1, 0, 0);
-  glRotated(g3dAngleZ, 0, 0, 1);
-}
-
 
 /** \brief Close the actual frame drawing */
 void g3dEndDraw(void)
@@ -290,7 +284,7 @@ void g3dDrawPoly(float points[4][4],
 }
 
 /** \brief Resize function. */
-static void g3dResize(int width, int height)
+void g3dResize(int width, int height)
 {
   // Calculate the factor of the window edges.
   const float ar = (float) width / (float) height;
@@ -301,7 +295,7 @@ static void g3dResize(int width, int height)
   glMatrixMode(GL_PROJECTION);
 
   glLoadIdentity();
-  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 100.0);
+  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 10.0);
 
   // Set Matrixmode.
   glMatrixMode(GL_MODELVIEW);
@@ -309,26 +303,8 @@ static void g3dResize(int width, int height)
 }
 
 /** \brief Initialise 3D drawing module. */
-void g3dInit(int argc, char *argv[])
+void g3dInit(void)
 {
-  // Set the size of the window.
-  glutInitWindowSize(640,480);
-
-  // Set the position of the window's top left corner.
-  glutInitWindowPosition(50,50);
-
-  // Initialise Glut.
-  glutInit(&argc, argv);
-
-  // Set Glut display mode.
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-
-  // Create the window with the specified title.
-  glutCreateWindow("4DTris");
-
-  // Set the reshape function.
-  glutReshapeFunc(g3dResize);
-
   // Set background color.
   glClearColor(g3dBgColor[0], g3dBgColor[1], g3dBgColor[2], g3dBgColor[3]);
 
