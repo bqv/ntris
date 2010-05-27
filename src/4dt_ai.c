@@ -98,7 +98,7 @@ static int aiFindBestSolution(void)
   int i, j, n;             // loop counter;
   int x[4];                // loop counters;
   int bestSitu;            // number of the best situation
-  t_game_Engine backup_ge; // backup game engine;
+  tEngGame backup_ge; // backup game engine;
   int pos;
 
   // For each turn number variation:

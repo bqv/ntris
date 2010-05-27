@@ -10,6 +10,7 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 
@@ -26,21 +27,33 @@
 // CONSTANTS
 ------------------------------------------------------------------------------*/
 
+/** Empty solid */
+static const tEngSolid engEmptySolid =
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {0,1}}}};
+
+/** Empty level */
+static const tEngLevel engEmptyLevel = {{{0,0}, {0,0}}, {{0,0}, {0,0}}};
+
+/** Full level */
+static const tEngLevel engFullLevel = {{{1,1}, {1,1}}, {{1,1}, {1,1}}};
+
 /** defined solids */
-static const TSolid engSolids[SOLIDTYPES] =
-/* 1 cube */  {0x0001, // 00 00 00 00  00 00 00 01
-/* 2 cube */   0x0003, // 00 00 00 00  00 00 00 11
-/* 3 cube L */ 0x0007, // 00 00 00 00  00 00 01 11
-/* 4 cube */   0x000f, // 00 00 00 00  00 00 11 11
-/* 4 cube */   0x0027, // 00 00 00 00  00 10 11 11
-/* 4 cube */   0x0017};// 00 00 00 00  00 01 01 11
+static const tEngSolid engSolids[SOLIDTYPES] =
+{
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {0,1}}}},
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {1,1}}}},
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,1}, {1,1}}}},
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{1,1}, {1,1}}}},
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {1,0}}, {{0,1}, {1,1}}}},
+  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,1}}, {{0,1}, {1,1}}}},
+};
 
 /** probabilities of solids in different
     difficulty levels (easy, medium, hard) */
 static const int engProbs[DIFFLEVELS][SOLIDTYPES] =
 {{10, 5, 5, 1, 1, 1},
- {5, 3, 2, 1, 1, 1},
- {2, 1, 1, 1, 1, 1}};
+ { 5, 3, 2, 1, 1, 1},
+ { 2, 1, 1, 1, 1, 1}};
 
 /** Score points for filling a level in different difficulty levels */
 static const int engScoreStep[DIFFLEVELS] = { 100, 200, 400};
@@ -50,34 +63,116 @@ static const int engScoreStep[DIFFLEVELS] = { 100, 200, 400};
 ------------------------------------------------------------------------------*/
 
 /** Game engine container */
-t_game_Engine engGE;
+tEngGame engGE;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
 static void engNewSolid(void);
-static bool engCheckOverlap(void);
+static int engOverlapping(void);
 static void engKillFullLevels(void);
+static int engEqLevel(tEngLevel level1, tEngLevel level2);
+static void engCopyLevel(tEngLevel target, tEngLevel source);
+static void engCopySolid(tEngSolid target, tEngSolid source);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-/** duplicates the game engine */
-t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine)
+void engPrintSpace(void)
 {
-  // Local variables:
-  t_game_Engine result; // duplicated game engine;
-  int i;                // loop counter.
+  int w, x, y, z;
+
+  for(y = YSIZE-1; y >= 0; y--)
+  {
+    for(z = ZSIZE-1; z >= 0 ; z--)
+    {
+      printf((z == 1) ? " " : "");
+      for(w = 0; w < SPACELENGTH; w++)
+      {
+        for(x = 0; x < XSIZE; x++)
+        {
+          printf(engGE.space[w][x][y][z] ||
+                 (  (w - engGE.pos >= 0) && (w - engGE.pos < WSIZE)
+                     && engGetSolidCell(w - engGE.pos, x, y, z))
+                 ? "X" : ".");
+          printf("  ");
+        }
+        printf(" ");
+      }
+      printf("\n");
+    }
+  }
+  printf("\n");
+}
+
+/** Compare two levels */
+static int engEqLevel(tEngLevel level1, tEngLevel level2)
+{
+  int x, y, z;
+  int equal = 1;
+
+  for(x = 0; x < XSIZE; x++)
+  for(y = 0; y < YSIZE; y++)
+  for(z = 0; z < ZSIZE; z++)
+  {
+    if (level1[x][y][z] != level2[x][y][z]) equal = 0;
+  }
+
+  return(equal);
+}
+
+/** Copy level to another. */
+static void engCopyLevel(tEngLevel target, tEngLevel source)
+{
+  int x, y, z;
+
+  for(x = 0; x < XSIZE; x++)
+  for(y = 0; y < YSIZE; y++)
+  for(z = 0; z < ZSIZE; z++)
+  {
+    target[x][y][z] = source[x][y][z];
+  }
+}
+
+/** Clears a levels */
+static void engClearLevel(tEngLevel level)
+{
+  int x, y, z;
+
+  for(x = 0; x < XSIZE; x++)
+  for(y = 0; y < YSIZE; y++)
+  for(z = 0; z < ZSIZE; z++)
+  {
+    level[x][y][z] = 0;
+  }
+}
+
+/** duplicates a solid */
+static void engCopySolid(tEngSolid target, tEngSolid source)
+{
+  int w;
+
+  for (w = 0; w < WSIZE; w++)
+  {
+    engCopyLevel(target[w], source[w]);
+  }
+}
+
+/** duplicates the game engine */
+tEngGame engCopyGameEngine(tEngGame inGameEngine)
+{
+  int w;
+  tEngGame result; // duplicated game engine;
 
   // Copy the input game engine to the result one.
-  result = in_game_Engine;
+  result = inGameEngine;
 
   // Copy the gamespace to the result.
-  for (i = 0; i < SPACELENGTH; i++)
+  for (w = 0; w < SPACELENGTH; w++)
   {
-    result.space[i] = in_game_Engine.space[i];
+    engCopyLevel(result.space[w], inGameEngine.space[w]);
   }
 
   // return with the result gamespace
@@ -87,12 +182,12 @@ t_game_Engine engCopyGameEngine(t_game_Engine in_game_Engine)
 /** Reset game variables */
 void engResetGame(void)
 {
-  int t; // Loop counter.
+  int w;
 
   // for the every part of the space
-  for (t = 0; t < SPACELENGTH; t++)
+  for (w = 0; w < SPACELENGTH; w++)
   {
-    engGE.space[t] = 0x00;
+    engClearLevel(engGE.space[w]);
   }
 
   // initialise the number of solids dropped
@@ -152,14 +247,11 @@ static void engNewSolid(void)
      prb += engProbs[engGE.game_opts.diff][i];
    }
 
-   engGE.solid = engSolids[i];
+   engCopySolid(engGE.solid, engSolids[i]);
 
    // position the new solid to the
    // top 2 level of the space
-   engGE.pos = SPACELENGTH - 2;
-
-   // set the indicator of new solid true
-   engGE.isnewsolid = 1;
+   engGE.pos = SPACELENGTH - WSIZE;
 
    // increase the number of the solid
    engGE.solidnum++;
@@ -167,9 +259,20 @@ static void engNewSolid(void)
 
 /** check overlap between solid and gamespace
  *  \return overlapping detected flag */
-static bool engCheckOverlap(void)
+static int engOverlapping(void)
 {
-   return !!( ( (TSolid)engGE.space[engGE.pos+1] << 8 | engGE.space[engGE.pos]) & engGE.solid);
+  int w, x, y, z;
+  int overlap = 0;
+
+  for(w = 0; w < WSIZE; w++)
+  for(x = 0; x < XSIZE; x++)
+  for(y = 0; y < YSIZE; y++)
+  for(z = 0; z < ZSIZE; z++)
+  {
+    overlap |= engGE.space[engGE.pos+w][x][y][z] && !!engGetSolidCell(w, x, y, z);
+  }
+
+  return(overlap);
 
 }//end of checkOverlap
 
@@ -183,19 +286,19 @@ static void engKillFullLevels(void)
    for(t = 0; t < SPACELENGTH; t++)
    {
       // if full level found
-      if (engGE.space[t] == 0xff)
+      if (engEqLevel(engGE.space[t], engFullLevel))
       {
          // increase score
          engGE.score += engScoreStep[engGE.game_opts.diff];
 
          // step down every higher level
-         for (tn = t+1; tn <= SPACELENGTH; tn++)
+         for (tn = t+1; tn < SPACELENGTH; tn++)
          {
-            // get the next level or 0 on the top level
-            engGE.space[tn-1] = engGE.space[tn] *
-                         (tn < SPACELENGTH);
-
+            // get the next level
+            engCopyLevel(engGE.space[tn-1], engGE.space[tn]);
          } // end of every level
+         // 0 on the top level
+         engClearLevel(engGE.space[SPACELENGTH-1]);
 
       } // end of if full
 
@@ -205,23 +308,27 @@ static void engKillFullLevels(void)
 
 /** lower the solid with one level
    \return false if invalid (end of game) */
-bool engLowerSolid(void)
+int engLowerSolid(void)
 {
-  // set the new solid indicator false
-  engGE.isnewsolid = 0;
+  int w, x, y, z;
 
   // solid reached the floor flag
-  bool onFloor = (engGE.pos <= 0) ||
-                 ( (engGE.pos-- || 1) &&
-                   engCheckOverlap() &&
-                   (engGE.pos++ || 1) );
+  int onFloor = (engGE.pos <= 0) ||
+                ( (engGE.pos-- || 1) &&
+                  engOverlapping() &&
+                  (engGE.pos++ || 1) );
 
   // if reached the floor,
   if (onFloor)
   {
     // put the solid to the space
-    engGE.space[engGE.pos]   |= engGE.solid;
-    engGE.space[engGE.pos+1] |= engGE.solid >> 8;
+    for(w = 0; w < WSIZE; w++)
+    for(x = 0; x < XSIZE; x++)
+    for(y = 0; y < YSIZE; y++)
+    for(z = 0; z < ZSIZE; z++)
+    {
+      engGE.space[engGE.pos+w][x][y][z] |= engGetSolidCell(w, x, y, z);
+    }
 
     // delete the full levels
     engKillFullLevels();
@@ -229,7 +336,7 @@ bool engLowerSolid(void)
     engNewSolid();
 
     // check new solid already overlapped
-    engGE.gameOver = engCheckOverlap();
+    engGE.gameOver = engOverlapping();
     return (engGE.gameOver);
   }
 
@@ -238,42 +345,63 @@ bool engLowerSolid(void)
 
 /** turns the solid from axis 1 to axis 2
    \return indicator of turn availability */
-bool engTurn(char ax1, char ax2)
+int engTurn(char ax1, char ax2)
 {
    // loop cnt, temp var
-   int n, n2;
+   int r1[4];
+   int r2[4];
+   int tmp;
 
    // remove the solid to a temp solid
-   TSolid tempSolid = engGE.solid;
-   engGE.solid = 0x0000;
+   tEngSolid tempSolid;
+   engCopySolid(tempSolid, engGE.solid);
+   engCopySolid(engGE.solid, engEmptySolid);
 
    // turn it
 
    // for every cell
-   for (n = 0; n < 16; n++)
+   for(r1[0] = 0; r1[0] < WSIZE; r1[0]++)
+   for(r1[1] = 0; r1[1] < XSIZE; r1[1]++)
+   for(r1[2] = 0; r1[2] < YSIZE; r1[2]++)
+   for(r1[3] = 0; r1[3] < ZSIZE; r1[3]++)
    {
      // the bits of the number of the element are
      // the coords of the element - so the num = pos vector
 
      // turn the vector (replace the two bit specified by axis num,
-     //    and negate the second)
-     n2 = (((n & (~(0x01 << ax2)))
-            & (~(0x01 << ax1)))
-            | (   ((n >> ax1) & 0x01) << ax2))
-            | ( (!((n >> ax2) & 0x01)) << ax1);
+     // and negate the second)
+     r2[0] = r1[0];
+     r2[1] = r1[1];
+     r2[2] = r1[2];
+     r2[3] = r1[3];
+
+     tmp   = r2[ax1];
+     r2[ax1] = !r2[ax2];
+     r2[ax2] = tmp;
 
       // get the element to the new turned place
-      engGE.solid |= ((tempSolid >> n) & 0x01) << n2;
+      engGE.solid[r2[0]][r2[1]][r2[2]][r2[3]] =
+          tempSolid[r1[0]][r1[1]][r1[2]][r1[3]];
    }
 
    // put to the lower level of the solid
    // if lower level empty then
-   if (engGE.solid && 0x00ff == 0x00)
-      // move from the higher level to the lower
-      engGE.solid = engGE.solid >> 8;
+   if (engEqLevel(engGE.solid[0], engEmptyLevel))
+   {
+     // move from the higher level to the lower
+     engCopyLevel(engGE.solid[0], engGE.solid[1]);
+     engCopyLevel(engGE.solid[1], engEmptyLevel);
+   }
 
    // if overlapped, invalid turn
    // get back the original
-   return !(engCheckOverlap() && (engGE.solid = tempSolid));
-
+   if (engOverlapping())
+   {
+     engCopySolid(engGE.solid, tempSolid);
+     return(0);
+   }
+   else
+   {
+     return(1);
+   }
 }
