@@ -56,6 +56,20 @@ tM4dVector m4dUnitVector(eM4dAxis axis)
   return unit;
 }
 
+/** Creates a vector with the given coordinates */
+tM4dVector m4dVector(double x, double y, double z, double w)
+{
+  tM4dVector vector;
+
+  vector.c[eM4dAxisX] = x;
+  vector.c[eM4dAxisY] = y;
+  vector.c[eM4dAxisZ] = z;
+  vector.c[eM4dAxisW] = w;
+
+  return vector;
+}
+
+
 /** Creates a null matrix. */
 tM4dMatrix m4dNullMatrix()
 {

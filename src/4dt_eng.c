@@ -108,6 +108,8 @@ void engPrintSpace(void)
 {
   int w, x, y, z;
 
+  tEngSolid solid = engObject2Solid(engGE.object);
+
   for(y = YSIZE-1; y >= 0; y--)
   {
     for(z = ZSIZE-1; z >= 0 ; z--)
@@ -120,8 +122,8 @@ void engPrintSpace(void)
           printf(engGE.space[w][x][y][z] ||
                  (      (w - engGE.object.pos.c[eM4dAxisW] >= 0)
                      && (w - engGE.object.pos.c[eM4dAxisW] < WSIZE)
-                     && engGetSolidCell(w - engGE.object.pos.c[eM4dAxisW],
-                                        x, y, z))
+                     && solid.c[w - lround(engGE.object.pos.c[eM4dAxisW])]
+                               [x][y][z])
                  ? "X" : ".");
           printf("  ");
         }
@@ -282,6 +284,8 @@ static int engOverlapping(void)
   int w, x, y, z, pos;
   int overlap = 0;
 
+  tEngSolid solid = engObject2Solid(engGE.object);
+
   for(w = 0; w < WSIZE; w++)
   for(x = 0; x < XSIZE; x++)
   for(y = 0; y < YSIZE; y++)
@@ -290,7 +294,7 @@ static int engOverlapping(void)
     pos = engGE.object.pos.c[eM4dAxisW];
 
     overlap |= (((pos + w) >= 0) ? engGE.space[pos + w][x][y][z] : 1)
-               && engGetSolidCell(w, x, y, z);
+               && solid.c[w][x][y][z];
   }
 
   return(overlap);
@@ -344,13 +348,15 @@ int engLowerSolid(void)
   // if reached the floor,
   if (onFloor)
   {
+    tEngSolid solid = engObject2Solid(engGE.object);
+
     // put the solid to the space
     for(w = 0; w < WSIZE; w++)
     for(x = 0; x < XSIZE; x++)
     for(y = 0; y < YSIZE; y++)
     for(z = 0; z < ZSIZE; z++)
     {
-      engGE.space[lround(engGE.object.pos.c[eM4dAxisW])+w][x][y][z] |= engGetSolidCell(w, x, y, z);
+      engGE.space[lround(engGE.object.pos.c[eM4dAxisW])+w][x][y][z] |= solid.c[w][x][y][z];
     }
 
     // delete the full levels

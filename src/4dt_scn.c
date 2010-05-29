@@ -114,6 +114,8 @@ void scnDisplay(void)
   // Local variables:
   int l, x, y, z;        // loop counter;
 
+  tEngSolid solid = engObject2Solid(engGE.object);
+
   g3dBeginDraw();
 
   scnDrawBG();
@@ -132,10 +134,12 @@ void scnDisplay(void)
     for (z = 0; z <= 1; z++)
     {
       // if the cell is not empty then
-      if (!!engGetSpaceCell(l, x, y, z))
+      if (engGetSpaceCell(l, x, y, z))
       {
         // draw the cube.
-        g4dDraw4DCube(x - 1, y - 1, z - 1, 1 + l, scnLevelColors[l], 4, 0);
+        g4dDraw4DCube(m4dVector(x - 1, y - 1, z - 1, l),
+                      m4dUnitMatrix(),
+                      scnLevelColors[l], 4, 0);
       }
     }
   }
@@ -147,7 +151,9 @@ void scnDisplay(void)
   for (y = 0; y <= 1; y++)
   for (z = 0; z <= 1; z++)
   {
-    g4dDraw4DCube(x - 1, y - 1, z - 1, 0, scn4DCubeColor, 3, 1);
+    g4dDraw4DCube(m4dVector(x - 1, y - 1, z - 1, 0),
+                  m4dUnitMatrix(),
+                  scn4DCubeColor, 3, 1);
   }
 
   // Draw the actual solid.
@@ -160,11 +166,12 @@ void scnDisplay(void)
     for (z = 0; z <= 1; z++)
     {
       // if the cell is not empty then
-      if (!!engGetSolidCell(l, x, y, z))
+      if (solid.c[l][x][y][z])
       {
         // draw the hypercube.
-        g4dDraw4DCube(x - 1, y - 1, z - 1,
-                      round(engGE.object.pos.c[eM4dAxisW]) + l,
+        g4dDraw4DCube(m4dVector(x - 1, y - 1, z - 1,
+                                round(engGE.object.pos.c[eM4dAxisW]) + l),
+                      m4dUnitMatrix(),
                       scn4DCubeColor, 4, 1);
       }
     }

@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------*/
 
 #include "4dt_g3d.h"
+#include "4dt_m4d.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -95,7 +96,8 @@ static void g4dDrawPoly(float points[4][4],
 
 
 /** \brief Draw a 4D cube to the specified place of the game space. */
-void g4dDraw4DCube(double x, double y, double z, double l,
+void g4dDraw4DCube(tM4dVector center,
+                   tM4dMatrix orientation,
                    float color[4],
                    int dimension,
                    int mode)
@@ -145,10 +147,10 @@ void g4dDraw4DCube(double x, double y, double z, double l,
   {
       // correct the coordinates with the perspective torsion to
       // the direction of the 4th axis.
-      points[n][0] = points[n][0] + x;
-      points[n][1] = points[n][1] + y;
-      points[n][2] = points[n][2] + z;
-      points[n][3] = points[n][2] + l + ((n < 8) ? -1 : 0);
+      points[n][0] = points[n][0] + center.c[0];
+      points[n][1] = points[n][1] + center.c[1];
+      points[n][2] = points[n][2] + center.c[2];
+      points[n][3] = points[n][3] + center.c[3]; // + ((n < 8) ? -1 : 0);
   }
 
   // Determine number of facets which has to be drawn
