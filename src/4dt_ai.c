@@ -8,13 +8,14 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
+#include "4dt_m4d.h"
 #include "4dt_eng.h"
 
 /*------------------------------------------------------------------------------
    CONSTANTS
 ------------------------------------------------------------------------------*/
 
-/** Axises belongs to the turns around 1..4 axis */
+/** Axices belongs to the turns around 1..4 axis */
 static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 
 /*------------------------------------------------------------------------------
@@ -99,7 +100,7 @@ static int aiFindBestSolution(void)
   int x[4];                // loop counters;
   int bestSitu;            // number of the best situation
   tEngGame backup_ge; // backup game engine;
-  int pos;
+  double pos;
 
   // For each turn number variation:
   for (x[3] = 0; x[3] < 4; x[3]++)
@@ -110,24 +111,24 @@ static int aiFindBestSolution(void)
     // Back up the actual situation.
     backup_ge = engCopyGameEngine(engGE);
 
-    // store the actual pos
-    pos = engGE.pos;
-
     for (j = 0; j < 4; j++)
     {
       // Turn x[j] times around j.th axle.
       for (i = 0; i < x[j]; i++)
       {
         engTurn(aiTurnAxices[j][0],
-             aiTurnAxices[j][1]);
+                aiTurnAxices[j][1]);
       }
     }
 
+    // store the actual pos
+    pos = engGE.object.pos.c[eM4dAxisW];
+
     // While not reached the floor
-    while (engGE.pos <= pos)
+    while (engGE.object.pos.c[eM4dAxisW] <= pos)
     {
       // store the actual pos
-      pos = engGE.pos;
+      pos = engGE.object.pos.c[eM4dAxisW];
 
       // lower the solid.
       engLowerSolid();

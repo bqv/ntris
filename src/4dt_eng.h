@@ -8,6 +8,12 @@
 #define _4DT_ENG_H
 
 /*------------------------------------------------------------------------------
+   INCLUDES
+------------------------------------------------------------------------------*/
+
+#include "4dt_m4d.h"
+
+/*------------------------------------------------------------------------------
    MACROS
 ------------------------------------------------------------------------------*/
 
@@ -23,6 +29,8 @@
 #define ZSIZE 2
 #define WSIZE 2
 
+#define MAXBLOCKNUM 4
+
 /*------------------------------------------------------------------------------
    TYPE DEFINITIONS
 ------------------------------------------------------------------------------*/
@@ -31,7 +39,27 @@
 typedef char tEngLevel[XSIZE][YSIZE][ZSIZE];
 
 /** 2x2x2x2 supercube / container of a Solid */
-typedef tEngLevel tEngSolid[WSIZE];
+typedef struct
+{
+  tEngLevel c[WSIZE];
+} tEngSolid;
+
+/** Container of block array */
+typedef struct
+{
+  int        num;            /**< Number of blocks */
+  tM4dVector c[MAXBLOCKNUM]; /** Array of block center position vectors */
+} tEngBlocks;
+
+/** Object container struct */
+typedef struct
+{
+  tM4dVector pos;    /**< actual position of the object */
+  tM4dMatrix axices; /**< Vectors of the 4 axices
+                          builds the object's own coord.sys */
+  tEngBlocks block;  /**< Vectors of each blocks center  in the
+                          objects's own coordinate system */
+} tEngObject;
 
 /** game options */
 typedef struct
@@ -47,16 +75,13 @@ typedef struct
 {
   /** the game space  */
   tEngLevel space[SPACELENGTH];
-  /** actual solid */
-  tEngSolid solid;
-  /** position of actual solid
-      0 if reached the floor */
-  int pos;
+  /** actual object */
+  tEngObject object;
   /** score collected in the actual game */
   int score;
   /** flag for indicate game over */
   int gameOver;
-  /** num of the solid */
+  /** counter for used objects */
   int solidnum;
 
   /** struct of game options */
@@ -70,8 +95,15 @@ typedef struct
 
 extern tEngGame engGE;
 
-/** time step, while the solid steps one level down in msec; */
+extern void engResetGame(void);
+extern void engInitGame(void);
+extern int engLowerSolid(void);
+extern int engTurn(char ax1, char ax2);
+extern tEngGame engCopyGameEngine(tEngGame inGameEngine);
+extern void engPrintSpace(void);
+extern tEngSolid engObject2Solid(tEngObject object);
 
+/** time step, while the solid steps one level down in msec; */
 static inline int engGetTimestep(void)
 {
   // calculate timestep depending on actual score
@@ -89,14 +121,9 @@ static inline int engGetSpaceCell(int w, int x, int y, int z)
     the game space empty or full */
 static inline int engGetSolidCell(int w, int x, int y, int z)
 {
-  return (engGE.solid[w][x][y][z]);
-}
+  tEngSolid solid = engObject2Solid(engGE.object);
 
-extern void engResetGame(void);
-extern void engInitGame(void);
-extern int engLowerSolid(void);
-extern int engTurn(char ax1, char ax2);
-extern tEngGame engCopyGameEngine(tEngGame inGameEngine);
-extern  void engPrintSpace(void);
+  return (solid.c[w][x][y][z]);
+}
 
 #endif
