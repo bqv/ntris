@@ -12,16 +12,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
-
+#include "4dt_m4d.h"
 #include "4dt_eng.h"
 
 /*------------------------------------------------------------------------------
    MACROS
 ------------------------------------------------------------------------------*/
 
-/** number of type of solids */
-#define SOLIDTYPES (6)
+/** number of type of objects */
+#define OBJECTTYPES (6)
 
 /*------------------------------------------------------------------------------
 // CONSTANTS
@@ -29,28 +30,29 @@
 
 /** Empty solid */
 static const tEngSolid engEmptySolid =
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {0,1}}}};
+{   {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {0,0}}}}   };
 
 /** Empty level */
 static const tEngLevel engEmptyLevel = {{{0,0}, {0,0}}, {{0,0}, {0,0}}};
 
 /** Full level */
-static const tEngLevel engFullLevel = {{{1,1}, {1,1}}, {{1,1}, {1,1}}};
+static tEngLevel engFullLevel = {{{1,1}, {1,1}}, {{1,1}, {1,1}}};
 
 /** defined solids */
-static const tEngSolid engSolids[SOLIDTYPES] =
+static const tEngBlocks engObjects[OBJECTTYPES] =
 {
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {0,1}}}},
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {1,1}}}},
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,1}, {1,1}}}},
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{1,1}, {1,1}}}},
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {1,0}}, {{0,1}, {1,1}}}},
-  {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,1}}, {{0,1}, {1,1}}}},
+// num  1. x  y  z  w    2. x  y  z  w    3. x  y  z  w    4. x  y  z  w
+  {1, { {{ 1, 1, 1, 0}}, {{ 0, 0, 0, 0}}, {{ 0, 0, 0, 0}}, {{ 0, 0, 0, 0}} } }, //  .
+  {2, { {{ 1, 1, 1, 0}}, {{ 1, 1,-1, 0}}, {{ 0, 0, 0, 0}}, {{ 0, 0, 0, 0}} } }, //  :
+  {3, { {{ 1, 1, 1, 0}}, {{ 1, 1,-1, 0}}, {{ 1,-1, 1, 0}}, {{ 0, 0, 0, 0}} } }, //  :.
+  {4, { {{ 1, 1, 1, 0}}, {{ 1, 1,-1, 0}}, {{ 1,-1, 1, 0}}, {{ 1,-1,-1, 0}} } }, //  ::
+  {4, { {{ 1, 1, 1, 0}}, {{ 1, 1,-1, 0}}, {{ 1,-1, 1, 0}}, {{-1, 1,-1, 0}} } }, // ':.
+  {4, { {{ 1, 1, 1, 0}}, {{ 1, 1,-1, 0}}, {{ 1,-1, 1, 0}}, {{-1, 1, 1, 0}} } }, // ,:.
 };
 
 /** probabilities of solids in different
     difficulty levels (easy, medium, hard) */
-static const int engProbs[DIFFLEVELS][SOLIDTYPES] =
+static const int engProbs[DIFFLEVELS][OBJECTTYPES] =
 {{10, 5, 5, 1, 1, 1},
  { 5, 3, 2, 1, 1, 1},
  { 2, 1, 1, 1, 1, 1}};
@@ -74,12 +76,34 @@ static int engOverlapping(void);
 static void engKillFullLevels(void);
 static int engEqLevel(tEngLevel level1, tEngLevel level2);
 static void engCopyLevel(tEngLevel target, tEngLevel source);
-static void engCopySolid(tEngSolid target, tEngSolid source);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+/** Render/convert an object to gamespace array */
+tEngSolid engObject2Solid(tEngObject object)
+{
+  int i;
+  tEngSolid solid;
+  tM4dVector vec;
+
+  solid = engEmptySolid;
+
+  for (i = 0; i < object.block.num; i++)
+  {
+    vec = m4dMultiplyMV(object.axices, object.block.c[i]);
+
+    solid.c[(vec.c[eM4dAxisW] > 0) ? 1 : 0]
+           [(vec.c[eM4dAxisX] > 0) ? 1 : 0]
+           [(vec.c[eM4dAxisY] > 0) ? 1 : 0]
+           [(vec.c[eM4dAxisZ] > 0) ? 1 : 0] = 1;
+  }
+
+  return solid;
+}
+
+/** Prints out the game space to std out. */
 void engPrintSpace(void)
 {
   int w, x, y, z;
@@ -94,8 +118,10 @@ void engPrintSpace(void)
         for(x = 0; x < XSIZE; x++)
         {
           printf(engGE.space[w][x][y][z] ||
-                 (  (w - engGE.pos >= 0) && (w - engGE.pos < WSIZE)
-                     && engGetSolidCell(w - engGE.pos, x, y, z))
+                 (      (w - engGE.object.pos.c[eM4dAxisW] >= 0)
+                     && (w - engGE.object.pos.c[eM4dAxisW] < WSIZE)
+                     && engGetSolidCell(w - engGE.object.pos.c[eM4dAxisW],
+                                        x, y, z))
                  ? "X" : ".");
           printf("  ");
         }
@@ -117,7 +143,7 @@ static int engEqLevel(tEngLevel level1, tEngLevel level2)
   for(y = 0; y < YSIZE; y++)
   for(z = 0; z < ZSIZE; z++)
   {
-    if (level1[x][y][z] != level2[x][y][z]) equal = 0;
+    if (level1[x][y][z] != level2[x][y][z]) { equal = 0; }
   }
 
   return(equal);
@@ -146,17 +172,6 @@ static void engClearLevel(tEngLevel level)
   for(z = 0; z < ZSIZE; z++)
   {
     level[x][y][z] = 0;
-  }
-}
-
-/** duplicates a solid */
-static void engCopySolid(tEngSolid target, tEngSolid source)
-{
-  int w;
-
-  for (w = 0; w < WSIZE; w++)
-  {
-    engCopyLevel(target[w], source[w]);
   }
 }
 
@@ -227,7 +242,7 @@ static void engNewSolid(void)
    int i;
 
    // for every solid type
-   for (i = 0; i < SOLIDTYPES; i++)
+   for (i = 0; i < OBJECTTYPES; i++)
    {
       // summarize the probability
       sum += engProbs[engGE.game_opts.diff][i];
@@ -247,11 +262,14 @@ static void engNewSolid(void)
      prb += engProbs[engGE.game_opts.diff][i];
    }
 
-   engCopySolid(engGE.solid, engSolids[i]);
+   engGE.object.axices = m4dUnitMatrix();
+
+   engGE.object.block = engObjects[i];
 
    // position the new solid to the
    // top 2 level of the space
-   engGE.pos = SPACELENGTH - WSIZE;
+   engGE.object.pos = m4dNullVector();
+   engGE.object.pos.c[eM4dAxisW] = SPACELENGTH - WSIZE;
    
    // increase the number of the solid
    engGE.solidnum++;
@@ -261,7 +279,7 @@ static void engNewSolid(void)
  *  \return overlapping detected flag */
 static int engOverlapping(void)
 {
-  int w, x, y, z;
+  int w, x, y, z, pos;
   int overlap = 0;
 
   for(w = 0; w < WSIZE; w++)
@@ -269,7 +287,10 @@ static int engOverlapping(void)
   for(y = 0; y < YSIZE; y++)
   for(z = 0; z < ZSIZE; z++)
   {
-    overlap |= engGE.space[engGE.pos+w][x][y][z] && !!engGetSolidCell(w, x, y, z);
+    pos = engGE.object.pos.c[eM4dAxisW];
+
+    overlap |= (((pos + w) >= 0) ? engGE.space[pos + w][x][y][z] : 1)
+               && engGetSolidCell(w, x, y, z);
   }
 
   return(overlap);
@@ -279,30 +300,30 @@ static int engOverlapping(void)
 /** deletes the full levels */
 static void engKillFullLevels(void)
 {
-   // loop counter
-   int t, tn;
+  // loop counter
+  int t, tn;
 
-   // for every level
-   for(t = 0; t < SPACELENGTH; t++)
-   {
-      // if full level found
-      if (engEqLevel(engGE.space[t], engFullLevel))
+  // for every level
+  for(t = 0; t < SPACELENGTH; t++)
+  {
+    // if full level found
+    if (engEqLevel(engGE.space[t], engFullLevel))
+    {
+      // increase score
+      engGE.score += engScoreStep[engGE.game_opts.diff];
+
+      // step down every higher level
+      for (tn = t+1; tn < SPACELENGTH; tn++)
       {
-         // increase score
-         engGE.score += engScoreStep[engGE.game_opts.diff];
+        // get the next level
+        engCopyLevel(engGE.space[tn-1], engGE.space[tn]);
+      } // end of every level
+     // 0 on the top level
+     engClearLevel(engGE.space[SPACELENGTH-1]);
 
-         // step down every higher level
-         for (tn = t+1; tn < SPACELENGTH; tn++)
-         {
-            // get the next level
-            engCopyLevel(engGE.space[tn-1], engGE.space[tn]);
-         } // end of every level
-         // 0 on the top level
-         engClearLevel(engGE.space[SPACELENGTH-1]);
+    } // end of if full
 
-      } // end of if full
-
-   } // end of every level
+  } // end of every level
 
 } //end of checkFullLevels
 
@@ -311,12 +332,14 @@ static void engKillFullLevels(void)
 int engLowerSolid(void)
 {
   int w, x, y, z;
+  int onFloor = 0;
 
-  // solid reached the floor flag
-  int onFloor = (engGE.pos <= 0) ||
-                ( (engGE.pos-- || 1) &&
-                  engOverlapping() &&
-                  (engGE.pos++ || 1) );
+  engGE.object.pos.c[eM4dAxisW]--;
+  if (engOverlapping())
+  {
+    engGE.object.pos.c[eM4dAxisW]++;
+    onFloor = 1;
+  }
 
   // if reached the floor,
   if (onFloor)
@@ -327,7 +350,7 @@ int engLowerSolid(void)
     for(y = 0; y < YSIZE; y++)
     for(z = 0; z < ZSIZE; z++)
     {
-      engGE.space[engGE.pos+w][x][y][z] |= engGetSolidCell(w, x, y, z);
+      engGE.space[lround(engGE.object.pos.c[eM4dAxisW])+w][x][y][z] |= engGetSolidCell(w, x, y, z);
     }
 
     // delete the full levels
@@ -347,63 +370,25 @@ int engLowerSolid(void)
    \return indicator of turn availability */
 int engTurn(char ax1, char ax2)
 {
-   // loop cnt, temp var
-   int r1[4];
-   int r2[4];
-   int tmp;
+  tEngObject obj;
 
-   // remove the solid to a temp solid
-   tEngSolid tempSolid;
-   engCopySolid(tempSolid, engGE.solid);
-   engCopySolid(engGE.solid, engEmptySolid);
+  // store object
+  obj = engGE.object;
 
-   // turn it
+  // turn it
+  engGE.object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, M_PI / 2),
+                                      engGE.object.axices);
 
-   // for every cell
-   for(r1[0] = 0; r1[0] < WSIZE; r1[0]++)
-   for(r1[1] = 0; r1[1] < XSIZE; r1[1]++)
-   for(r1[2] = 0; r1[2] < YSIZE; r1[2]++)
-   for(r1[3] = 0; r1[3] < ZSIZE; r1[3]++)
-   {
-     // the bits of the number of the element are 
-     // the coords of the element - so the num = pos vector
-
-     // turn the vector (replace the two bit specified by axis num,
-     // and negate the second)
-     r2[0] = r1[0];
-     r2[1] = r1[1];
-     r2[2] = r1[2];
-     r2[3] = r1[3];
-
-     tmp   = r2[ax1];
-     r2[ax1] = !r2[ax2];
-     r2[ax2] = tmp;
-
-      // get the element to the new turned place
-      engGE.solid[r2[0]][r2[1]][r2[2]][r2[3]] =
-          tempSolid[r1[0]][r1[1]][r1[2]][r1[3]];
-   }
-
-   // put to the lower level of the solid
-   // if lower level empty then
-   if (engEqLevel(engGE.solid[0], engEmptyLevel))
-   {
-     // move from the higher level to the lower
-     engCopyLevel(engGE.solid[0], engGE.solid[1]);
-     engCopyLevel(engGE.solid[1], engEmptyLevel);
-   }
-
-   // if overlapped, invalid turn
-   // get back the original
-   if (engOverlapping())
-   {
-     engCopySolid(engGE.solid, tempSolid);
-     return(0);
-   }
-   else
-   {
-     return(1);
-   }
+  // if overlapped, invalid turn
+  // get back the original
+  if (engOverlapping())
+  {
+    engGE.object = obj;
+    return(0);
+  }
+  else
+  {
+    return(1);
+  }
 }
-
 

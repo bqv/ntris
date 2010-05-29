@@ -10,7 +10,9 @@
 // Include standard library.
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
+#include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
@@ -161,7 +163,9 @@ void scnDisplay(void)
       if (!!engGetSolidCell(l, x, y, z))
       {
         // draw the hypercube.
-        g4dDraw4DCube(x - 1, y - 1, z - 1, engGE.pos + l, scn4DCubeColor, 4, 1);
+        g4dDraw4DCube(x - 1, y - 1, z - 1,
+                      round(engGE.object.pos.c[eM4dAxisW]) + l,
+                      scn4DCubeColor, 4, 1);
       }
     }
   }

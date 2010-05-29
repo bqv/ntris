@@ -33,7 +33,7 @@
 
 #include <GL/glut.h>
 
-
+#include "4dt_m4d.h"
 #include "4dt_ai.h"
 #include "4dt_eng.h"
 #include "4dt_g3d.h"
