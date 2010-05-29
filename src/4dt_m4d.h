@@ -50,4 +50,7 @@ extern tM4dMatrix m4dRotMatrix(eM4dAxis axis1, eM4dAxis axis2, double angle);
 extern tM4dVector m4dMultiplyMV(tM4dMatrix matrix, tM4dVector vector);
 extern tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR);
 
+extern void m4dPrintVector(tM4dVector vector);
+extern void m4dPrintMatrix(tM4dMatrix matrix);
+
 #endif /* _4DT_M4D_H_ */
