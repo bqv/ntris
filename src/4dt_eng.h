@@ -117,13 +117,4 @@ static inline int engGetSpaceCell(int w, int x, int y, int z)
   return(engGE.space[w][x][y][z]);
 }
 
-/** get the cell of the level at x, y, z from
-    the game space empty or full */
-static inline int engGetSolidCell(int w, int x, int y, int z)
-{
-  tEngSolid solid = engObject2Solid(engGE.object);
-
-  return (solid.c[w][x][y][z]);
-}
-
 #endif

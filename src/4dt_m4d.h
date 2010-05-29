@@ -42,6 +42,7 @@ typedef struct
 
 extern tM4dVector m4dNullVector();
 extern tM4dVector m4dUnitVector(eM4dAxis axis);
+extern tM4dVector m4dVector(double x, double y, double z, double w);
 
 extern tM4dMatrix m4dNullMatrix();
 extern tM4dMatrix m4dUnitMatrix();

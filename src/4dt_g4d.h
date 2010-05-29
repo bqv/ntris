@@ -20,9 +20,10 @@
 
 extern void g4dCalibrate(double w_maximum);
 
-extern void g4dDraw4DCube(double x, double y, double z, double l,
+extern void g4dDraw4DCube(tM4dVector center,
+                          tM4dMatrix orientation,
                           float color[4],
                           int dimension,
-                          int enableWire);
+                          int mode);
 
 #endif /* _4DT_G4D_H_ */
