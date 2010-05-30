@@ -40,6 +40,7 @@ eMenuOFF,
       eMenuAbout,
     eMenuBackToGame,
     eMenuQuit,
+    eMenuGameOver,
     eMenuItemNum,
     eMenuNull
 }
