@@ -12,6 +12,7 @@
 ------------------------------------------------------------------------------*/
 
 extern int aiAutoGamerON;
+extern int aiTimeStep;
 extern void aiDoStep(void);
 
 #endif

@@ -49,6 +49,8 @@
 --------------------------------------------------------------------------------
 */
 
+const int animationTimeStep = 25;
+
 /*
 --------------------------------------------------------------------------------
    PROTOTYPES
@@ -59,7 +61,7 @@ static void specialKeyPress(int key, int x, int y);
 static void keyPress(unsigned char key, int x, int y);
 static void engineTimerCallback(int value);
 static void autoplayTimerCallback(int value);
-
+static void animationTimerCallback(int value);
 /*
 --------------------------------------------------------------------------------
    FUNCTIONS
@@ -70,6 +72,23 @@ static void autoplayTimerCallback(int value);
     Event handlers
 */
 
+static void animationTimerCallback(int value)
+{
+  int moreCallNeeded;
+
+  // apply animation step
+  moreCallNeeded = engAnimation();
+
+  // set call back again
+  if (moreCallNeeded)
+  {
+    glutTimerFunc(animationTimeStep, animationTimerCallback, value);
+  }
+
+  // Force drawing
+  glutPostRedisplay();
+}
+
 /** Timer function for Game engine. */
 static void engineTimerCallback(int value)
 {
@@ -78,6 +97,7 @@ static void engineTimerCallback(int value)
     if (!menuActived() || aiAutoGamerON)
     {
       engPrintSpace();
+
 
       // lower the solid and
       engLowerSolid();
@@ -95,6 +115,9 @@ static void engineTimerCallback(int value)
 
   // set call back again
   glutTimerFunc(engGetTimestep(), engineTimerCallback, value);
+
+  // set animation callback
+  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 /** Timer function for Autoplayer. */
@@ -110,7 +133,10 @@ static void autoplayTimerCallback(int value)
   glutPostRedisplay();
 
   // set call back again
-  glutTimerFunc(150, autoplayTimerCallback, value);
+  glutTimerFunc(aiTimeStep, autoplayTimerCallback, value);
+
+  // set animation callback
+  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 /** Eventhandler of special key pressing. */
@@ -130,6 +156,9 @@ static void specialKeyPress(int key, int x, int y)
 
   // Refresh the display.
   glutPostRedisplay();
+
+  // set animation callback
+  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 /** Eventhandler of key pressing. */
@@ -139,6 +168,9 @@ static void keyPress(unsigned char key, int x, int y)
 
   // Refresh the display.
   glutPostRedisplay();
+
+  // set animation callback
+  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 
@@ -193,7 +225,7 @@ int main(int argc, char *argv[])
 
   // set timer callbacks
   glutTimerFunc(engGetTimestep(), engineTimerCallback, 0);
-  glutTimerFunc(150, autoplayTimerCallback, 0);
+  glutTimerFunc(aiTimeStep, autoplayTimerCallback, 0);
 
   // Start glut's main loop.
   glutMainLoop();

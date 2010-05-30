@@ -25,6 +25,9 @@ static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 /** flag for auto gamer */
 int aiAutoGamerON = 1;
 
+/** Time step for autoplayer in msec */
+int aiTimeStep = 150;
+
 /** Array of the number of turns by axises needed to the best situation. */
 static int aiNeededTurns[4];
 
@@ -69,9 +72,12 @@ void aiDoStep(void)
     {
       // if turn needed around and
       // not yet made any turn, then
-      if ((aiNeededTurns[i] > 0) &&
-          !stepMade)
+      if (   (aiNeededTurns[i] > 0)
+          && (!stepMade)
+          && (!engGE.lock))
       {
+        aiTimeStep = 200;
+
         // turn around the axis,
         engTurn(aiTurnAxices[i][0],
              aiTurnAxices[i][1]);
@@ -82,8 +88,10 @@ void aiDoStep(void)
       }
     }
     // If no turn made, so no more turn needed, then
-    if (!stepMade)
+    if ((!stepMade) && (!engGE.lock))
     {
+      aiTimeStep = 100;
+
       // lower the solid. }
       engLowerSolid();
     }
@@ -111,6 +119,8 @@ static int aiFindBestSolution(void)
     // Back up the actual situation.
     backup_ge = engCopyGameEngine(engGE);
 
+    engGE.animation.enable = 0;
+
     for (j = 0; j < 4; j++)
     {
       // Turn x[j] times around j.th axle.
@@ -121,18 +131,17 @@ static int aiFindBestSolution(void)
       }
     }
 
-    // store the actual pos
-    pos = engGE.object.pos.c[eM4dAxisW];
-
-    // While not reached the floor
-    while (engGE.object.pos.c[eM4dAxisW] <= pos)
+    do
     {
       // store the actual pos
       pos = engGE.object.pos.c[eM4dAxisW];
 
       // lower the solid.
       engLowerSolid();
+
+    // While not reached the floor
     }
+    while (engGE.object.pos.c[eM4dAxisW] < pos);
 
     // Number of the situation.
     n = x[0]*64 + x[1]*16 + x[2]*4 + x[3];
@@ -181,7 +190,7 @@ static double aiProcessSitu(void)
     // if the cell is full,
     if (engGetSpaceCell(l,x,y,z))
     {
-      // inrease summ and
+      // inrease sum and
       sum += 1;
       // add the position to Cog.
       cog += l;

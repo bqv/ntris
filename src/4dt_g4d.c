@@ -103,24 +103,24 @@ void g4dDraw4DCube(tM4dVector center,
                    int mode)
 {
   // Array contains the points of a 4D hypercube.
-  float points[16][4] =
+  tM4dVector points[16] =
   /*  x,   y,   z,   l */
-  {{0.0, 0.0, 0.0, 0.0},
-   {1.0, 0.0, 0.0, 0.0},
-   {0.0, 1.0, 0.0, 0.0},
-   {1.0, 1.0, 0.0, 0.0},
-   {0.0, 0.0, 1.0, 0.0},
-   {1.0, 0.0, 1.0, 0.0},
-   {0.0, 1.0, 1.0, 0.0},
-   {1.0, 1.0, 1.0, 0.0},
-   {0.0, 0.0, 0.0, 1.0},
-   {1.0, 0.0, 0.0, 1.0},
-   {0.0, 1.0, 0.0, 1.0},
-   {1.0, 1.0, 0.0, 1.0},
-   {0.0, 0.0, 1.0, 1.0},
-   {1.0, 0.0, 1.0, 1.0},
-   {0.0, 1.0, 1.0, 1.0},
-   {1.0, 1.0, 1.0, 1.0}};
+  { {{-0.5,-0.5,-0.5,-0.5}},
+    {{ 0.5,-0.5,-0.5,-0.5}},
+    {{-0.5, 0.5,-0.5,-0.5}},
+    {{ 0.5, 0.5,-0.5,-0.5}},
+    {{-0.5,-0.5, 0.5,-0.5}},
+    {{ 0.5,-0.5, 0.5,-0.5}},
+    {{-0.5, 0.5, 0.5,-0.5}},
+    {{ 0.5, 0.5, 0.5,-0.5}},
+    {{-0.5,-0.5,-0.5, 0.5}},
+    {{ 0.5,-0.5,-0.5, 0.5}},
+    {{-0.5, 0.5,-0.5, 0.5}},
+    {{ 0.5, 0.5,-0.5, 0.5}},
+    {{-0.5,-0.5, 0.5, 0.5}},
+    {{ 0.5,-0.5, 0.5, 0.5}},
+    {{-0.5, 0.5, 0.5, 0.5}},
+    {{ 0.5, 0.5, 0.5, 0.5}} };
 
   // Array contains the faces (specified with num. of the points)
   // of a 4D hypercube.
@@ -142,15 +142,11 @@ void g4dDraw4DCube(tM4dVector center,
   int n, i, j, k;
   int facenum;
 
-  // For each point of the hypercube
+  // Move each point of the hypercube to its final position
   for (n = 0; n < 16; n++)
   {
-      // correct the coordinates with the perspective torsion to
-      // the direction of the 4th axis.
-      points[n][0] = points[n][0] + center.c[0];
-      points[n][1] = points[n][1] + center.c[1];
-      points[n][2] = points[n][2] + center.c[2];
-      points[n][3] = points[n][3] + center.c[3]; // + ((n < 8) ? -1 : 0);
+    points[n] = m4dMultiplyMV(orientation, points[n]);
+    points[n] = m4dAddVectors(points[n], center);
   }
 
   // Determine number of facets which has to be drawn
@@ -164,7 +160,7 @@ void g4dDraw4DCube(tM4dVector center,
     for (k = 0; k < 4; k++)
     for (j = 0; j < 4; j++)
     {
-      pointlist[k][j] = points[faces[i][k]][j];
+      pointlist[k][j] = points[faces[i][k]].c[j];
     }
 
     g4dDrawPoly(pointlist, color, mode);

@@ -83,6 +83,17 @@ typedef struct
   int gameOver;
   /** counter for used objects */
   int solidnum;
+  /** engine locked while animation running */
+  int lock;
+
+  /** animation related variables*/
+  struct
+  {
+    int enable;   /** animation switch */
+    int num;  /** number of transformation have to be performed */
+    tM4dMatrix transform; /** transformation to be performed. */
+    double posDecrease;   /** position decreasion to be performed */
+  } animation;
 
   /** struct of game options */
   tEngGameOptions game_opts;
@@ -102,6 +113,7 @@ extern int engTurn(char ax1, char ax2);
 extern tEngGame engCopyGameEngine(tEngGame inGameEngine);
 extern void engPrintSpace(void);
 extern tEngSolid engObject2Solid(tEngObject object);
+extern int engAnimation(void);
 
 /** time step, while the solid steps one level down in msec; */
 static inline int engGetTimestep(void)

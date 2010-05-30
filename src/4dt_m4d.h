@@ -48,6 +48,8 @@ extern tM4dMatrix m4dNullMatrix();
 extern tM4dMatrix m4dUnitMatrix();
 extern tM4dMatrix m4dRotMatrix(eM4dAxis axis1, eM4dAxis axis2, double angle);
 
+extern tM4dVector m4dAddVectors(tM4dVector vector1, tM4dVector vector2);
+extern tM4dVector m4dMultiplySV(double scalar, tM4dVector vector);
 extern tM4dVector m4dMultiplyMV(tM4dMatrix matrix, tM4dVector vector);
 extern tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR);
 
