@@ -47,6 +47,8 @@ static const GLfloat g3dBgColor[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
+/** Enable flag for auto viewprot rotation */
+int g3dAutoRotationEnabled = 1;
 
 /** initial direction of the viewPort (deg); */
 double g3dAngleX = -75.0;
@@ -66,6 +68,29 @@ static void g3dSwitchTo3D(void);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+
+/** View rotation procedure. Should be triggered. */
+int m3dRotateViewport(void)
+{
+  if (g3dAutoRotationEnabled)
+  {
+    g3dAngleX += 0.25;
+    g3dAngleZ += 0.2;
+    return(1);
+  }
+  else
+  {
+    return(0);
+  }
+}
+
+/** resets the viewport */
+void g3dResetViewport(void)
+{
+  g3dAngleX = -75.0;
+  g3dAngleZ = 20.0;
+}
 
 /** \brief Starts the actual frame drawing */
 void g3dBeginDraw(void)

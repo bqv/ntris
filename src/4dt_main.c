@@ -50,6 +50,7 @@
 */
 
 const int animationTimeStep = 25;
+const int rotationTimeStep = 25;
 
 /*
 --------------------------------------------------------------------------------
@@ -62,6 +63,8 @@ static void keyPress(unsigned char key, int x, int y);
 static void engineTimerCallback(int value);
 static void autoplayTimerCallback(int value);
 static void animationTimerCallback(int value);
+static void rotationTimerCallback(int value);
+
 /*
 --------------------------------------------------------------------------------
    FUNCTIONS
@@ -72,6 +75,19 @@ static void animationTimerCallback(int value);
     Event handlers
 */
 
+/** Timer for view rotation when no player */
+static void rotationTimerCallback(int value)
+{
+  if (m3dRotateViewport())
+  {
+    glutTimerFunc(rotationTimeStep, rotationTimerCallback, value);
+
+    // Force drawing
+    glutPostRedisplay();
+  }
+}
+
+/** Timer for animations */
 static void animationTimerCallback(int value)
 {
   int moreCallNeeded;
@@ -92,8 +108,12 @@ static void animationTimerCallback(int value)
 /** Timer function for Game engine. */
 static void engineTimerCallback(int value)
 {
+  static int gameOverDetected = 0;
+
   if (engGE.gameOver == 0)
   {
+    gameOverDetected = 0;
+
     if (!menuActived() || aiAutoGamerON)
     {
       engPrintSpace();
@@ -105,9 +125,12 @@ static void engineTimerCallback(int value)
   }
   else
   {
-    aiAutoGamerON = 1;
-    menuGotoItem(eMenuHighScores);
-    engResetGame();
+    if (gameOverDetected != 1)
+    {
+      glutTimerFunc(rotationTimeStep, rotationTimerCallback, value);
+      menuGotoItem(eMenuGameOver);
+      gameOverDetected = 1;
+    }
   }
 
   // Force drawing
@@ -226,6 +249,7 @@ int main(int argc, char *argv[])
   // set timer callbacks
   glutTimerFunc(engGetTimestep(), engineTimerCallback, 0);
   glutTimerFunc(aiTimeStep, autoplayTimerCallback, 0);
+  glutTimerFunc(rotationTimeStep, rotationTimerCallback, 0);
 
   // Start glut's main loop.
   glutMainLoop();

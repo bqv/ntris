@@ -21,6 +21,7 @@
 extern double g3dAngleX;
 extern double g3dAngleZ;
 extern double g3dDAngle;
+extern int g3dAutoRotationEnabled;
 
 
 extern void g3dInit(void);
@@ -40,6 +41,8 @@ extern void g3dDrawRectangle(float x0, float y0, float x1, float y1,
 extern void g3dBeginDraw(void);
 extern void g3dEndDraw(void);
 extern void g3dResize(int width, int height);
+extern void g3dResetViewport(void);
+extern int  m3dRotateViewport(void);
 
 
 #endif /* _4DT_G3D_H_ */

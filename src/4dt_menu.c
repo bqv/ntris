@@ -38,7 +38,9 @@ typedef struct
 {
   char        enabled;               /**< Flag for enable menu item */
   tMenuString caption;               /**< Caption of the menu item */
-  void        (*function)(void);     /**< Callback celled when menu item
+  void        (*activate)(void);     /**< Callback called when menu item
+                                          activates */
+  void        (*deactivate)(void);   /**< Callback called when menu item
                                           activates */
   eMenuItem   parent;                /**< Parent menu item */
   eMenuItem   submenus[MENUMAXITEM]; /**< (last item must be 'eNull') */
@@ -60,6 +62,8 @@ static void menuAbout(void);
 static void menuBack(void);
 static void menuQuit(void);
 static void menuAnimation(void);
+static void menuGameOver(void);
+static void menuGameOverOff(void);
 
 /*------------------------------------------------------------------------------
    CONSTANTS
@@ -68,26 +72,27 @@ static void menuAnimation(void);
 /** Menu item descriptor array. Must be same order then Menu item enums! */
 static tMenuItem menuItems[eMenuItemNum] =
 {
-/* en, caption,        function,     parent,        submenus */
-  {1, "",               NULL,         eMenuOFF,          {eMenuRoot, eMenuNull}},
-  {1, "Main",           NULL,         eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
-  {1, "New Game",       menuNew,      eMenuRoot,         {eMenuNull} },
-  {1, "Options",        NULL,         eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {1, "Video Options",  NULL,         eMenuOptions,      {eMenuAnimation, eMenuNull} },
-  {1, "Animation - ON", menuAnimation,eMenuVideoOptions, {eMenuNull} },
-  {0, "Audio Options",  NULL,         eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
-  {0, "Sound",          menuSound,    eMenuAudioOptions, {eMenuNull}  },
-  {0, "Music",          menuMusic,    eMenuAudioOptions, {eMenuNull}  },
-  {1, "Game Options",   NULL,         eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuControls, eMenuNull} },
-  {1, "Auto Player - ON", menuAuto,   eMenuGameOptions,  {eMenuNull}  },
-  {1, "Diff. Level - Hard", menuLevel, eMenuGameOptions, {eMenuNull}  },
-  {0, "Controls",       menuControls, eMenuGameOptions,  {eMenuNull}  },
-  {1, "Help",           NULL,         eMenuRoot,         {eMenuHelppage, eMenuHighScores, eMenuAbout, eMenuNull} },
-  {1, "Help Page",      menuHelp,     eMenuHelp,         {eMenuNull}  },
-  {1, "High Scores",    menuScores,   eMenuHelp,         {eMenuNull}  },
-  {1, "About",          menuAbout,    eMenuHelp,         {eMenuNull}  },
-  {0, "Back To Game",   menuBack,     eMenuRoot,         {eMenuNull}  },
-  {1, "Quit",           menuQuit,     eMenuRoot,         {eMenuNull}  },
+/* en, caption,         activate,      deact., parent,            submenus */
+  {0, "",               NULL,          NULL,   eMenuOFF,          {eMenuRoot, eMenuNull}},
+  {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
+  {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
+  {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
+  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuNull} },
+  {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
+  {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
+  {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
+  {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
+  {1, "Game Options",   NULL,          NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuControls, eMenuNull} },
+  {1, "Auto Player - ON", menuAuto,    NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Diff. Level - Hard", menuLevel, NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {0, "Controls",       menuControls,  NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Help",           NULL,          NULL,   eMenuRoot,         {eMenuHelppage, eMenuHighScores, eMenuAbout, eMenuNull} },
+  {1, "Help Page",      menuHelp,      NULL,   eMenuHelp,         {eMenuNull}  },
+  {1, "High Scores",    menuScores,    NULL,   eMenuHelp,         {eMenuNull}  },
+  {1, "About",          menuAbout,     NULL,   eMenuHelp,         {eMenuNull}  },
+  {0, "Back To Game",   menuBack,      NULL,   eMenuRoot,         {eMenuNull}  },
+  {1, "Quit",           menuQuit,      NULL,   eMenuRoot,         {eMenuNull}  },
+  {1, "",               menuGameOver, menuGameOverOff, eMenuRoot, {eMenuNewGame, eMenuHighScores, eMenuRoot, eMenuNull}  },
 };
 
 /** Text of help page */
@@ -115,6 +120,15 @@ tMenuString menuAboutText[TEXTLINENUM] =
   "",
   ""
 };
+
+/** Text of help page */
+tMenuString menuGameOverText[TEXTLINENUM] =
+{
+  "", "", "","", "", "",
+  "Game over.",
+  ""
+};
+
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -150,11 +164,20 @@ static int menuSubNum(eMenuItem item)
 /** Set menu item active */
 void menuGotoItem(eMenuItem menuItem)
 {
-  menuActItem = menuItem;
-   if (NULL != menuItems[menuActItem].function)
-   {
-     (*menuItems[menuActItem].function)();
-   }
+  if (menuItem != menuActItem)
+  {
+    if (NULL != menuItems[menuActItem].deactivate)
+    {
+      (*menuItems[menuActItem].deactivate)();
+    }
+
+    menuActItem = menuItem;
+
+    if (NULL != menuItems[menuActItem].activate)
+    {
+      (*menuItems[menuActItem].activate)();
+    }
+  }
 }
 
 /** Menu state machine. */
@@ -193,8 +216,11 @@ void menuNavigate(eMenuEvent event)
       break;
     case eMenuBack:
       // Step out from a menu item
-      menuActItem = menuItems[menuActItem].parent;
-      menuText = NULL;
+      if (1 == menuItems[menuItems[menuActItem].parent].enabled)
+      {
+        menuActItem = menuItems[menuActItem].parent;
+        menuText = NULL;
+      }
       break;
     default:
       exit(1); // Control should not reach this point
@@ -244,6 +270,21 @@ void menuDraw(void)
    MENUITEM CALLBACK FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+static void menuGameOver(void)
+{
+  g3dAutoRotationEnabled = 1;
+  menuText = menuGameOverText;
+  menuItems[eMenuBackToGame].enabled = 0;
+  menuItems[eMenuOFF].enabled = 0;
+}
+
+static void menuGameOverOff(void)
+{
+  menuText = NULL;
+  aiAutoGamerON = 1;
+  engResetGame();
+}
+
 static void menuNew(void)
 {
   // reset game engine
@@ -254,6 +295,10 @@ static void menuNew(void)
   menuItems[eMenuAutoPlayer].caption = "Auto Player - OFF";
 
   menuItems[eMenuBackToGame].enabled = 1;
+  menuItems[eMenuOFF].enabled = 1;
+
+  g3dResetViewport();
+  g3dAutoRotationEnabled = 0;
 
   menuNavigate(eMenuBack);
   menuNavigate(eMenuBack);
