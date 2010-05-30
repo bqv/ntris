@@ -18,6 +18,8 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+extern int scnAxle;
+
 extern void scnInit(void);
 extern void scnDisplay(void);
 

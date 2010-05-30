@@ -13,9 +13,11 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <math.h>
 
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
+#include "4dt_scn.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -436,6 +438,10 @@ int engTurn(char ax1, char ax2)
   // turn it
   engGE.object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, M_PI / 2.0),
                                       engGE.object.axices);
+
+  // Calc and set turn axis in scene drawing from axices defines the turning
+  // plane. Fortunately this simple empiric equation does the trick
+  scnAxle = abs(3 - ax1 - ax2);
 
   // if overlapped, invalid turn
   // get back the original

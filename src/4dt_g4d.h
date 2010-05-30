@@ -26,4 +26,9 @@ extern void g4dDraw4DCube(tM4dVector center,
                           int dimension,
                           int mode);
 
+extern void g4dDrawTriangle(float points[3][4],
+                            float colors[3][4],
+                            int mode);
+
+
 #endif /* _4DT_G4D_H_ */

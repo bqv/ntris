@@ -222,6 +222,77 @@ void g3dRenderString(double x, double y,
   g3dSwitchTo3D();
 }
 
+/** Draws 3D triangle */
+void g3dDrawTriangle(float points[3][4],
+                     float colors[3][4],
+                     int mode /**< 0: fill, 1: fill & wire, 2: wire */)
+{
+  int k;
+  // Normal vector of the actual facet.
+  double norm[3];
+  // Vectors of two edge of the facet.
+  double v1[3];
+  double v2[3];
+
+  // For each coordinate
+  for (k = 0; k < 3; k++)
+  {
+    // calculate two vector of two edge from the points.
+    v1[k] = points[1][k] - points[0][k];
+    v2[k] = points[2][k] - points[0][k];
+  }
+  // Calculate normal vector.
+  m3dCalcNormal(norm, v1, v2);
+
+  glDepthMask(GL_FALSE);
+  glEnable(GL_BLEND);
+
+  // if enabled fill draw
+  if (mode < 2)
+  {
+    glBegin(GL_TRIANGLES);
+
+    // Set the normal vector.
+    glNormal3d(norm[0], norm[1], norm[2]);
+
+    for (k = 0; k < 3; k++)
+    {
+      glColor4f(colors[k][0], colors[k][1], colors[k][2], colors[k][3]);
+
+      glVertex3f(points[k][0], points[k][1], points[k][2]);
+    }
+    glEnd();
+  }
+
+  // if enabled wire draw
+  if (mode > 0)
+  {
+    glLineWidth(2.0);
+
+    // Start draw a line strip.
+    glBegin(GL_LINE_STRIP);
+
+    // For each point of the facet
+    for (k = 0; k < 3; k++)
+    {
+      glColor4f(colors[k][0], colors[k][1], colors[k][2], colors[k][3]);
+      glVertex3d(points[k][0], points[k][1], points[k][2]);
+    }
+
+    // Close the strip.
+    glColor4f(colors[0][0],  colors[0][1], colors[0][2], colors[0][3]);
+    glVertex3d(points[0][0], points[0][1], points[0][2]);
+
+    // Finish drawing.
+    glEnd();
+
+    glLineWidth(1.0);
+  }
+
+  glDepthMask(GL_TRUE);
+  glDisable(GL_BLEND);
+}
+
 /** \brief Draw quad with given coordinates, color, style. */
 void g3dDrawPoly(float points[4][4],
                  float color[4],
