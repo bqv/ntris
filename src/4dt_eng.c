@@ -41,13 +41,19 @@ static tEngLevel engFullLevel = {{{1,1}, {1,1}}, {{1,1}, {1,1}}};
 /** defined solids */
 static const tEngBlocks engObjects[OBJECTTYPES] =
 {
-// num  1. x  y  z  w    2. x  y  z  w    3. x  y  z  w    4. x  y  z  w
-  {1, { {{ 1, 1, 1,-1}}, {{ 0, 0, 0, 0}}, {{ 0, 0, 0, 0}}, {{ 0, 0, 0, 0}} } }, //  .
-  {2, { {{ 1, 1, 1,-1}}, {{ 1, 1,-1,-1}}, {{ 0, 0, 0, 0}}, {{ 0, 0, 0, 0}} } }, //  :
-  {3, { {{ 1, 1, 1,-1}}, {{ 1, 1,-1,-1}}, {{ 1,-1, 1,-1}}, {{ 0, 0, 0, 0}} } }, //  :.
-  {4, { {{ 1, 1, 1,-1}}, {{ 1, 1,-1,-1}}, {{ 1,-1, 1,-1}}, {{ 1,-1,-1,-1}} } }, //  ::
-  {4, { {{ 1, 1, 1,-1}}, {{ 1, 1,-1,-1}}, {{ 1,-1, 1,-1}}, {{-1, 1,-1,-1}} } }, // ':.
-  {4, { {{ 1, 1, 1,-1}}, {{ 1, 1,-1,-1}}, {{ 1,-1, 1,-1}}, {{-1, 1, 1,-1}} } }, // ,:.
+// num 1.,3. x    y    z    w  2.,4.  x    y    z    w
+  {1, { {{ 0.5, 0.5, 0.5,-0.5}}, {{ 0.0, 0.0, 0.0, 0.0}},
+        {{ 0.0, 0.0, 0.0, 0.0}}, {{ 0.0, 0.0, 0.0, 0.0}} } }, //  .
+  {2, { {{ 0.5, 0.5, 0.5,-0.5}}, {{ 0.5, 0.5,-0.5,-0.5}},
+        {{ 0.0, 0.0, 0.0, 0.0}}, {{ 0.0, 0.0, 0.0, 0.0}} } }, //  :
+  {3, { {{ 0.5, 0.5, 0.5,-0.5}}, {{ 0.5, 0.5,-0.5,-0.5}},
+        {{ 0.5,-0.5, 0.5,-0.5}}, {{ 0.0, 0.0, 0.0, 0.0}} } }, //  :.
+  {4, { {{ 0.5, 0.5, 0.5,-0.5}}, {{ 0.5, 0.5,-0.5,-0.5}},
+        {{ 0.5,-0.5, 0.5,-0.5}}, {{ 0.5,-0.5,-0.5,-0.5}} } }, //  ::
+  {4, { {{ 0.5, 0.5, 0.5,-0.5}}, {{ 0.5, 0.5,-0.5,-0.5}},
+        {{ 0.5,-0.5, 0.5,-0.5}}, {{-0.5, 0.5,-0.5,-0.5}} } }, // ':.
+  {4, { {{ 0.5, 0.5, 0.5,-0.5}}, {{ 0.5, 0.5,-0.5,-0.5}},
+        {{ 0.5,-0.5, 0.5,-0.5}}, {{-0.5, 0.5, 0.5,-0.5}} } }, // ,:.
 };
 
 /** probabilities of solids in different
@@ -80,6 +86,31 @@ static void engCopyLevel(tEngLevel target, tEngLevel source);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Performing the queued transformation, return flag indicates if more
+ *  call needed (1), or queue empty (0). */
+int engAnimation(void)
+{
+  if (engGE.animation.num > 0)
+  {
+    engGE.object.axices = m4dMultiplyMM(engGE.animation.transform,
+                                        engGE.object.axices);
+
+    engGE.object.pos.c[eM4dAxisW] -= engGE.animation.posDecrease;
+
+    engGE.animation.num--;
+  }
+
+  if (engGE.animation.num <= 0)
+  {
+    engGE.lock = 0;
+    return(0);
+  }
+  else
+  {
+    return(1);
+  }
+}
 
 /** Render/convert an object to gamespace array */
 tEngSolid engObject2Solid(tEngObject object)
@@ -217,6 +248,11 @@ void engResetGame(void)
   engGE.score = 0;
 
   engGE.gameOver = 0;
+
+  engGE.animation.num = 0;
+  engGE.lock = 0;
+  engGE.animation.posDecrease = 0;
+  engGE.animation.transform   = m4dUnitMatrix();
 }
 
 
@@ -228,6 +264,7 @@ void engInitGame(void)
 
   // set options
   engGE.game_opts.diff = 2;
+  engGE.animation.enable = 1;
 
   // reset parameters
   engResetGame();
@@ -344,6 +381,20 @@ int engLowerSolid(void)
     engGE.object.pos.c[eM4dAxisW]++;
     onFloor = 1;
   }
+  else
+  {
+    if (engGE.animation.enable)
+    {
+      engGE.object.pos.c[eM4dAxisW]++;
+      if (!engGE.lock)
+      {
+        engGE.lock = 1;
+        engGE.animation.num  = 2.0;
+        engGE.animation.posDecrease  = 1.0 / 2.0;
+        engGE.animation.transform   = m4dUnitMatrix();
+      }
+    }
+  }
 
   // if reached the floor,
   if (onFloor)
@@ -377,12 +428,13 @@ int engLowerSolid(void)
 int engTurn(char ax1, char ax2)
 {
   tEngObject obj;
+  int result;
 
   // store object
   obj = engGE.object;
 
   // turn it
-  engGE.object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, M_PI / 2),
+  engGE.object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, M_PI / 2.0),
                                       engGE.object.axices);
 
   // if overlapped, invalid turn
@@ -390,11 +442,25 @@ int engTurn(char ax1, char ax2)
   if (engOverlapping())
   {
     engGE.object = obj;
-    return(0);
+    result = 0;
   }
   else
   {
-    return(1);
+    result = 1;
+
+    if (engGE.animation.enable)
+    {
+      engGE.object = obj;
+      if (!engGE.lock)
+      {
+        engGE.lock = 1;
+        engGE.animation.num  = 5;
+        engGE.animation.posDecrease  = 0.0;
+        engGE.animation.transform  = m4dRotMatrix(ax1, ax2, M_PI / 2.0 / 5.0);
+      }
+    }
   }
+
+  return(result);
 }
 

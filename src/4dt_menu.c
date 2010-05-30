@@ -59,6 +59,7 @@ static void menuScores(void);
 static void menuAbout(void);
 static void menuBack(void);
 static void menuQuit(void);
+static void menuAnimation(void);
 
 /*------------------------------------------------------------------------------
    CONSTANTS
@@ -72,7 +73,8 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Main",           NULL,         eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,      eMenuRoot,         {eMenuNull} },
   {1, "Options",        NULL,         eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {0, "Video Options",  NULL,         eMenuOptions,      {eMenuNull} },
+  {1, "Video Options",  NULL,         eMenuOptions,      {eMenuAnimation, eMenuNull} },
+  {1, "Animation - ON", menuAnimation,eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,         eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,    eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,    eMenuAudioOptions, {eMenuNull}  },
@@ -325,7 +327,15 @@ static void menuQuit(void)
   exit(EXIT_SUCCESS);
 }
 
+static void menuAnimation(void)
+{
+  engGE.animation.enable = !engGE.animation.enable;
 
+  menuItems[eMenuAnimation].caption = (engGE.animation.enable)
+                                   ? "Animation - ON"
+                                   : "Animation - OFF";
+  menuNavigate(eMenuBack);
+}
 
 
 

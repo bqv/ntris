@@ -92,6 +92,35 @@ tM4dMatrix m4dUnitMatrix()
   return unit;
 }
 
+/** adds two vector */
+tM4dVector m4dAddVectors(tM4dVector vector1, tM4dVector vector2)
+{
+  eM4dAxis axis;
+  tM4dVector result;
+
+  for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
+  {
+    result.c[axis] = vector1.c[axis] + vector2.c[axis];
+  }
+
+  return(result);
+}
+
+/** Scalar-vector multiplication */
+tM4dVector m4dMultiplySV(double scalar, tM4dVector vector)
+{
+  eM4dAxis axis;
+  tM4dVector result;
+
+  for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
+  {
+    result.c[axis] = scalar * vector.c[axis];
+  }
+
+  return(result);
+}
+
+
 /** Creates a rotation transformation matrix.
  *  Matrix rotates around the plane specified by the given coordinate axices
  *  by given angle.*/
