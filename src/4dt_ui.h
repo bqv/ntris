@@ -25,6 +25,10 @@ enum
   UI_KEY_LEFT      = 0x0200,
   UI_KEY_DOWN      = 0x0300,
   UI_KEY_RIGHT     = 0x0400,
+  UI_KEY_PGUP      = 0x0500,
+  UI_KEY_PGDOWN    = 0x0600,
+  UI_KEY_HOME      = 0x0700,
+  UI_KEY_END       = 0x0800,
 } tuiKeyCodes;
 
 

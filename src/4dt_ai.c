@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
+
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 
@@ -80,7 +81,7 @@ void aiDoStep(void)
 
         // turn around the axis,
         engTurn(aiTurnAxices[i][0],
-             aiTurnAxices[i][1]);
+                aiTurnAxices[i][1]);
         // decrease the turns needed, and
         aiNeededTurns[i]--;
         // indicate it.

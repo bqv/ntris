@@ -40,6 +40,9 @@ static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.15};
 /** array of the colors of game space levels. */
 static float scnLevelColors[SPACELENGTH][4];
 
+/** selected axle for rotation */
+int scnAxle = 0;
+
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
@@ -47,6 +50,7 @@ static float scnLevelColors[SPACELENGTH][4];
 static void scnDrawBG(void);
 static void scnWriteScore(void);
 static void scnInitLevelColors(void);
+static void scnDrawRotPlanes(void);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -96,6 +100,31 @@ static void scnDrawBG(void)
   g3dDrawRectangle(0.0, 0.0, 1.0, 1.0, color1, color2);
 }
 
+/** draws the rotation planes selected */
+static void scnDrawRotPlanes(void)
+{
+  int i;
+  const double planeSize = 3.5;
+
+  float colors[3][4] = { {0.4, 0.4, 0.6, 0.8},
+                         {0.4, 0.4, 0.6, 0.0},
+                         {0.4, 0.4, 0.6, 0.0}};
+
+  if ((scnAxle <= 2) && (scnAxle >= 0))
+  {
+    for (i = -1; i <= 1; i += 2)
+    {
+      float points[3][4] = { {0.0, 0.0, 0.0, 0.0},
+                             {0.0, 0.0, 0.0, 0.0},
+                             {0.0, 0.0, 0.0, 0.0}};
+
+      points[1][scnAxle] = i * planeSize;
+      points[2][scnAxle] = i * planeSize;
+
+      g4dDrawTriangle(points, colors, 1);
+    }
+  }
+}
 
 /** Initialize the scene */
 void scnInit(void)
@@ -168,6 +197,8 @@ void scnDisplay(void)
     // draw the hypercube.
     g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
   }
+
+  scnDrawRotPlanes();
 
   // draw the menu
   if (menuActived())

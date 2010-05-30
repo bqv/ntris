@@ -99,11 +99,11 @@ static tMenuItem menuItems[eMenuItemNum] =
 tMenuString menuHelpText[TEXTLINENUM] =
 {
   "Game Controls:",
-  "  - arrow keys - rotate the view port",
-  "  - z, x, c, v - turn the blocks around the 4 axis",
-  "  - q          - exit",
-  "  - 1, 2, 3    - difficulty levels",
-  "  - a          - auto player on/off",
+  " - arrow keys - rotate the view port",
+  " - z, x, c, v - turn the blocks around the 4 axis",
+  " - 1, 2, 3 - select rotation axles",
+  " - +, -, pgdn, pgup - rotate around selected axle",
+  " - home, end - rot. around selected and 4th axle",
   "",
   ""
 };

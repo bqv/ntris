@@ -12,6 +12,7 @@
 #include "4dt_eng.h"
 #include "4dt_ai.h"
 #include "4dt_g3d.h"
+#include "4dt_scn.h"
 #include "4dt_menu.h"
 
 #include "4dt_ui.h"
@@ -109,12 +110,6 @@ void uiKeyPress(int key)
         g3dAngleZ -= g3dDAngle;
       break;
 
-      // If 'q' then
-      case 'q':
-        // exit from the software
-        exit(EXIT_SUCCESS);
-      break;
-
       // If 'z' then
       case 'z':
         // turn the solid
@@ -150,18 +145,41 @@ void uiKeyPress(int key)
       break;
 
       case '1':
-        // Set game difficulty to easy.
-        engGE.game_opts.diff = 0;
+          scnAxle = 0;
       break;
 
       case '2':
-        // Set game difficulty to medium.
-        engGE.game_opts.diff = 1;
+          scnAxle = 1;
       break;
 
       case '3':
-        // Set game difficulty to hard.
-        engGE.game_opts.diff = 2;
+          scnAxle = 2;
+      break;
+
+      case UI_KEY_PGUP:
+      case '+':
+      {
+        // turn around selected axle clockwise
+        engTurn((scnAxle == 0) ? 1 : 0, (scnAxle == 2) ? 1 : 2);
+      }
+      break;
+
+      case UI_KEY_PGDOWN:
+      case '-':
+      {
+        // turn around selected axle counterclockwise
+        engTurn((scnAxle == 2) ? 1 : 2, (scnAxle == 0) ? 1 : 0);
+      }
+      break;
+
+      case UI_KEY_HOME:
+        // turn around selected axle clockwise
+        engTurn(scnAxle, 3);
+      break;
+
+      case UI_KEY_END:
+        // turn around selected axle counterclockwise
+        engTurn(3, scnAxle);
       break;
 
       case 'a':

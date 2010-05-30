@@ -78,6 +78,23 @@ static double g4dPerspFact(double w)
   return result;
 }
 
+/** Draws 4D triangle  */
+void g4dDrawTriangle(float points[3][4],
+                     float colors[3][4],
+                     int mode)
+{
+  int i, n;
+
+  for (i = 0; i < 3; i++)
+  for (n = 0; n < 3; n++)
+  {
+    points[i][n] = points[i][n] * g4dPerspFact(points[i][3]);
+  }
+
+  g3dDrawTriangle(points, colors, mode);
+}
+
+
 /** \brief Draws 4D polygon */
 static void g4dDrawPoly(float points[4][4],
                  float color[4],

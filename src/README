@@ -30,10 +30,11 @@ README
  ---
 
  Game Controls:
- - esc        - menu
- - arrow keys - rotate the view port
- - z, x, c, v - turn the blocks around the 4 axis
- - q          - exit
- - 1, 2, 3    - difficulty level (easy, medium, hard)
- - a          - auto player on/off
+ - esc              - menu
+ - arrow keys       - rotate the view port
+ - z, x, c, v       - turn the blocks around the 4 axis
+ - 1, 2, 3          - select rotation axles
+ - a                - auto player on/off
+ - +, -, pgdn, pgup - rotate around selected axle
+ - home, end        - rot. around selected and 4th axle
 
