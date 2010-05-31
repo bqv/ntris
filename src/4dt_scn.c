@@ -143,6 +143,10 @@ void scnDisplay(void)
   // Local variables:
   int n, l, x, y, z;        // loop counter;
 
+  // mask indicates which block space
+  // hidden by upper blocks
+  int mask[2][2][2] = {{{0,0},{0,0}},{{0,0},{0,0}}};
+
   g3dBeginDraw();
 
   scnDrawBG();
@@ -152,21 +156,28 @@ void scnDisplay(void)
 
   // Draw the gamespace.
 
-  // For each level
-  for (l = 0; l < SPACELENGTH; l++)
+  // For each level from top
+  for (l = SPACELENGTH - 1; l >= 0; l--)
   {
     // For each cell of the level
     for (x = 0; x <= 1; x++)
     for (y = 0; y <= 1; y++)
     for (z = 0; z <= 1; z++)
     {
-      // if the cell is not empty then
-      if (engGetSpaceCell(l, x, y, z))
+      // space which has no cube above (so it is visible)
+      // gets rid of Z-fighting
+      if (mask[x][y][z] == 0)
       {
-        // draw the cube.
-        g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                      m4dUnitMatrix(),
-                      scnLevelColors[l], 4, 0);
+        // if the cell is not empty then
+        if (engGetSpaceCell(l, x, y, z))
+        {
+          // draw the cube.
+          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+                        m4dUnitMatrix(),
+                        scnLevelColors[l], 4, 0);
+
+          mask[x][y][z] = 1;
+        }
       }
     }
   }
@@ -178,9 +189,13 @@ void scnDisplay(void)
   for (y = 0; y <= 1; y++)
   for (z = 0; z <= 1; z++)
   {
-    g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
-                  m4dUnitMatrix(),
-                  scn4DCubeColor, 3, 1);
+    // space which has no cube above (so it is visible)
+    if (mask[x][y][z] == 0)
+    {
+      g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
+                    m4dUnitMatrix(),
+                    scn4DCubeColor, 3, 1);
+    }
   }
 
   // Draw the actual solid.
