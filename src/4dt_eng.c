@@ -364,6 +364,8 @@ static void engKillFullLevels(void)
      // 0 on the top level
      engClearLevel(engGE.space[SPACELENGTH-1]);
 
+     // step back with the loop counter to get the same level checked again
+     t--;
     } // end of if full
 
   } // end of every level
