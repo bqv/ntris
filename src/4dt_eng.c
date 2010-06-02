@@ -379,49 +379,50 @@ int engLowerSolid(void)
   int w, x, y, z;
   int onFloor = 0;
 
-  engGE.object.pos.c[eM4dAxisW]--;
-  if (engOverlapping())
+  if (!engGE.lock)
   {
-    engGE.object.pos.c[eM4dAxisW]++;
-    onFloor = 1;
-  }
-  else
-  {
-    if (engGE.animation.enable)
+    engGE.object.pos.c[eM4dAxisW]--;
+    if (engOverlapping())
     {
       engGE.object.pos.c[eM4dAxisW]++;
-      if (!engGE.lock)
+      onFloor = 1;
+    }
+    else
+    {
+      if (engGE.animation.enable)
       {
+        engGE.object.pos.c[eM4dAxisW]++;
+
         engGE.lock = 1;
         engGE.animation.num  = 2.0;
         engGE.animation.posDecrease  = 1.0 / 2.0;
         engGE.animation.transform   = m4dUnitMatrix();
       }
     }
-  }
 
-  // if reached the floor,
-  if (onFloor)
-  {
-    tEngSolid solid = engObject2Solid(engGE.object);
-
-    // put the solid to the space
-    for(w = 0; w < WSIZE; w++)
-    for(x = 0; x < XSIZE; x++)
-    for(y = 0; y < YSIZE; y++)
-    for(z = 0; z < ZSIZE; z++)
+    // if reached the floor,
+    if (onFloor)
     {
-      engGE.space[lround(engGE.object.pos.c[eM4dAxisW])+w][x][y][z] |= solid.c[w][x][y][z];
+      tEngSolid solid = engObject2Solid(engGE.object);
+
+      // put the solid to the space
+      for(w = 0; w < WSIZE; w++)
+      for(x = 0; x < XSIZE; x++)
+      for(y = 0; y < YSIZE; y++)
+      for(z = 0; z < ZSIZE; z++)
+      {
+        engGE.space[lround(engGE.object.pos.c[eM4dAxisW])+w][x][y][z] |= solid.c[w][x][y][z];
+      }
+
+      // delete the full levels
+      engKillFullLevels();
+      // get new solid
+      engNewSolid();
+
+      // check new solid already overlapped
+      engGE.gameOver = engOverlapping();
+      return (engGE.gameOver);
     }
-
-    // delete the full levels
-    engKillFullLevels();
-    // get new solid
-    engNewSolid();
-
-    // check new solid already overlapped
-    engGE.gameOver = engOverlapping();
-    return (engGE.gameOver);
   }
 
   return(0);
