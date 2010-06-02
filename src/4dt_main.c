@@ -2,6 +2,8 @@
    \mainpage 4DTRIS - Tetris like game in four dimension
    \image html 4DTRIS_icon_128.png
 
+   \section License License
+
    Copyright (C) 2008 Simon, Laszlo
 
    This program is free software: you can redistribute it and/or modify
@@ -17,6 +19,12 @@
             along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
    \author Simon, Laszlo <laszlo.simon@gmail.com>
+
+   \section Source_diagram Source diagram
+
+   \dotfile 4dtris-sw-struct.dot
+
+   \section Read_me Read me
 
    \include README
  */
