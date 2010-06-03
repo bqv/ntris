@@ -39,6 +39,7 @@
 --------------------------------------------------------------------------------
 */
 
+#include <string.h>
 #include <GL/glut.h>
 
 #include "4dt_m4d.h"
@@ -60,6 +61,7 @@
 const int animationTimeStep = 25;
 const int rotationTimeStep = 25;
 
+static int debugmode = 0;
 /*
 --------------------------------------------------------------------------------
    PROTOTYPES
@@ -72,6 +74,7 @@ static void engineTimerCallback(int value);
 static void autoplayTimerCallback(int value);
 static void animationTimerCallback(int value);
 static void rotationTimerCallback(int value);
+static void processARGV(int argc, char *argv[]);
 
 /*
 --------------------------------------------------------------------------------
@@ -124,8 +127,7 @@ static void engineTimerCallback(int value)
 
     if (!menuActived() || aiAutoGamerON)
     {
-      engPrintSpace();
-
+      if (debugmode) { engPrintSpace(); }
 
       // lower the solid and
       engLowerSolid();
@@ -156,7 +158,7 @@ static void autoplayTimerCallback(int value)
 {
   if ((engGE.gameOver == 0) && (aiAutoGamerON))
   {
-    engPrintSpace();
+    if (debugmode) { engPrintSpace(); }
     aiDoStep();
   }
 
@@ -208,6 +210,17 @@ static void keyPress(unsigned char key, int x, int y)
   glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
+/** Process command line arguments */
+static void processARGV(int argc, char *argv[])
+{
+  int i;
+
+  for (i = 0; i < argc; i++)
+  {
+    if (strcmp (argv[i], "--debug") == 0) { debugmode = 1; }
+  }
+
+}
 
 /*------------------------------------------------------------------------------
     M A I N
@@ -216,6 +229,8 @@ static void keyPress(unsigned char key, int x, int y)
 /** Main function of the software */
 int main(int argc, char *argv[])
 {
+  processARGV(argc, argv);
+
   // Initialize/load High Score table
   hstInit();
 
