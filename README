@@ -14,27 +14,14 @@ README
  This Application is a Tetris game extended to 4 dimension. The
  visulaization uses OpenGL and GLUT.
 
- Project web page: dtris.sourceforge.net
+ Project web page: http://sourceforge.net/apps/wordpress/dtris/
 
  ---
 
  Install:
- $ cd src
- $ make all
- $ ./4dtris
+ $ ./configure
+ $ make
+ $ make install
 
- Dependency:
- - OpenGL
- - GLU
- - GLUT
- ---
-
- Game Controls:
- - esc              - menu
- - arrow keys       - rotate the view port
- - z, x, c, v       - turn the blocks around the 4 axis
- - 1, 2, 3          - select rotation axles
- - a                - auto player on/off
- - +, -, pgdn, pgup - rotate around selected axle
- - home, end        - rot. around selected and 4th axle
-
+ Run:
+ $ 4dtris
