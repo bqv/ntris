@@ -1,0 +1,31 @@
+
+AC_PREREQ([2.63])
+ 
+AC_INIT([4dtris], [0.3.0], [https://launchpad.net/4dtris])
+ 
+AM_INIT_AUTOMAKE
+ 
+AC_CONFIG_SRCDIR([src])
+ 
+# Checks for programs.
+ 
+AC_PROG_CC
+
+# Checks for libraries.
+ 
+AC_CHECK_LIB([GL], [glBegin])
+AC_CHECK_LIB([glut], [glutInit])
+AC_CHECK_LIB([m], [sqrt])
+ 
+# Checks for header files.
+
+AC_CHECK_HEADERS([stdlib.h string.h math.h stdio.h GL/gl.h GL/glut.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+ 
+AC_CHECK_FUNCS([sqrt])
+
+AC_C_INLINE 
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
