@@ -4,7 +4,7 @@ bin_PROGRAMS = 4dtris
 
 EXTRA_DIST = 4dtris.desktop doc/icon/4dtris.png
 
-Applicationsdir = usr/games
+Applicationsdir = /usr/share/applications
 Applications_DATA = 4dtris.desktop
 
 icondir = /usr/share/games/4dtris

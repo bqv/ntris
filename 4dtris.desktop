@@ -5,3 +5,4 @@ Exec=4dtris
 Icon=/usr/share/games/4dtris/4dtris.png
 Terminal=0
 Type=Application
+Categories=Game;LogicGame

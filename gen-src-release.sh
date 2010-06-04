@@ -9,6 +9,11 @@ aclocal \
 && automake --gnu --add-missing \
 && autoconf
 autoscan
+
+unlink install-sh && cp /usr/share/automake-1.11/install-sh .
+unlink missing && cp /usr/share/automake-1.11/missing .
+unlink depcomp && cp /usr/share/automake-1.11/depcomp .
+
 cd ..
 tar -cf 4dtris-$VER-src.tar 4dtris-$VER
 gzip -c 4dtris-$VER-src.tar >4dtris-$VER-src.tar.gz
