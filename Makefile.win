@@ -1,0 +1,63 @@
+# Project: 4dtris
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 4dtris_private.res
+OBJ  = src/4dt_ai.o src/4dt_eng.o src/4dt_g3d.o src/4dt_g4d.o src/4dt_hst.o src/4dt_m3d.o src/4dt_m4d.o src/4dt_main.o src/4dt_menu.o src/4dt_scn.o src/4dt_ui.o $(RES)
+LINKOBJ  = src/4dt_ai.o src/4dt_eng.o src/4dt_g3d.o src/4dt_g4d.o src/4dt_hst.o src/4dt_m3d.o src/4dt_m4d.o src/4dt_main.o src/4dt_menu.o src/4dt_scn.o src/4dt_ui.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32
+INCS =  -I"C:/Dev-Cpp/include"
+CXXINCS =  -I"C:/Dev-Cpp/include"
+BIN  = 4dtris.exe
+CXXFLAGS = $(CXXINCS)
+CFLAGS = $(INCS)
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before 4dtris.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o "4dtris.exe" $(LIBS)
+
+src/4dt_ai.o: src/4dt_ai.c
+	$(CC) -c src/4dt_ai.c -o src/4dt_ai.o $(CFLAGS)
+
+src/4dt_eng.o: src/4dt_eng.c
+	$(CC) -c src/4dt_eng.c -o src/4dt_eng.o $(CFLAGS)
+
+src/4dt_g3d.o: src/4dt_g3d.c
+	$(CC) -c src/4dt_g3d.c -o src/4dt_g3d.o $(CFLAGS)
+
+src/4dt_g4d.o: src/4dt_g4d.c
+	$(CC) -c src/4dt_g4d.c -o src/4dt_g4d.o $(CFLAGS)
+
+src/4dt_hst.o: src/4dt_hst.c
+	$(CC) -c src/4dt_hst.c -o src/4dt_hst.o $(CFLAGS)
+
+src/4dt_m3d.o: src/4dt_m3d.c
+	$(CC) -c src/4dt_m3d.c -o src/4dt_m3d.o $(CFLAGS)
+
+src/4dt_m4d.o: src/4dt_m4d.c
+	$(CC) -c src/4dt_m4d.c -o src/4dt_m4d.o $(CFLAGS)
+
+src/4dt_main.o: src/4dt_main.c
+	$(CC) -c src/4dt_main.c -o src/4dt_main.o $(CFLAGS)
+
+src/4dt_menu.o: src/4dt_menu.c
+	$(CC) -c src/4dt_menu.c -o src/4dt_menu.o $(CFLAGS)
+
+src/4dt_scn.o: src/4dt_scn.c
+	$(CC) -c src/4dt_scn.c -o src/4dt_scn.o $(CFLAGS)
+
+src/4dt_ui.o: src/4dt_ui.c
+	$(CC) -c src/4dt_ui.c -o src/4dt_ui.o $(CFLAGS)
+
+4dtris_private.res: 4dtris_private.rc
+	$(WINDRES) -i 4dtris_private.rc --input-format=rc -o 4dtris_private.res -O coff
