@@ -352,7 +352,6 @@ static void menuHelp(void)
 
 static void menuScores(void)
 {
-  hstAddScore(engGE.score);
   hstPrintScoreTab(&menuText, TEXTLINENUM);
 }
 
