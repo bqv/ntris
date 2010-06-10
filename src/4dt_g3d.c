@@ -222,75 +222,36 @@ void g3dRenderString(double x, double y,
   g3dSwitchTo3D();
 }
 
-/** Draws 3D triangle */
-void g3dDrawTriangle(float points[3][4],
-                     float colors[3][4],
-                     int mode /**< 0: fill, 1: fill & wire, 2: wire */)
+/** Draws 3D line */
+void g3dDrawLine(float point0[4],
+                 float point1[4],
+                 float color0[4],
+                 float color1[4],
+                 float linewidth)
 {
-  int k;
-  // Normal vector of the actual facet.
-  double norm[3];
-  // Vectors of two edge of the facet.
-  double v1[3];
-  double v2[3];
-
-  // For each coordinate
-  for (k = 0; k < 3; k++)
-  {
-    // calculate two vector of two edge from the points.
-    v1[k] = points[1][k] - points[0][k];
-    v2[k] = points[2][k] - points[0][k];
-  }
-  // Calculate normal vector.
-  m3dCalcNormal(norm, v1, v2);
-
   glDepthMask(GL_FALSE);
   glEnable(GL_BLEND);
+  glDisable(GL_LIGHTING);
 
-  // if enabled fill draw
-  if (mode < 2)
-  {
-    glBegin(GL_TRIANGLES);
+  glLineWidth(linewidth);
 
-    // Set the normal vector.
-    glNormal3d(norm[0], norm[1], norm[2]);
+  // Start draw a line.
+  glBegin(GL_LINES);
 
-    for (k = 0; k < 3; k++)
-    {
-      glColor4f(colors[k][0], colors[k][1], colors[k][2], colors[k][3]);
+  glColor4f(color0[0], color0[1], color0[2], color0[3]);
+  glVertex3d(point0[0], point0[1], point0[2]);
 
-      glVertex3f(points[k][0], points[k][1], points[k][2]);
-    }
-    glEnd();
-  }
+  glColor4f(color1[0], color1[1], color1[2], color1[3]);
+  glVertex3f(point1[0], point1[1], point1[2]);
 
-  // if enabled wire draw
-  if (mode > 0)
-  {
-    glLineWidth(2.0);
+  // Finish drawing.
+  glEnd();
 
-    // Start draw a line strip.
-    glBegin(GL_LINE_STRIP);
-
-    // For each point of the facet
-    for (k = 0; k < 3; k++)
-    {
-      glColor4f(colors[k][0], colors[k][1], colors[k][2], colors[k][3]);
-      glVertex3d(points[k][0], points[k][1], points[k][2]);
-    }
-
-    // Close the strip.
-    glColor4f(colors[0][0],  colors[0][1], colors[0][2], colors[0][3]);
-    glVertex3d(points[0][0], points[0][1], points[0][2]);
-
-    // Finish drawing.
-    glEnd();
-
-    glLineWidth(1.0);
-  }
+  glLineWidth(1.0);
 
   glDepthMask(GL_TRUE);
   glDisable(GL_BLEND);
+  glEnable(GL_LIGHTING);
 }
 
 /** \brief Draw quad with given coordinates, color, style. */

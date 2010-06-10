@@ -50,7 +50,7 @@ int scnAxle = 0;
 static void scnDrawBG(void);
 static void scnWriteScore(void);
 static void scnInitLevelColors(void);
-static void scnDrawRotPlanes(void);
+static void scnDrawRotAxis(void);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -100,28 +100,25 @@ static void scnDrawBG(void)
   g3dDrawRectangle(0.0, 0.0, 1.0, 1.0, color1, color2);
 }
 
-/** draws the rotation planes selected */
-static void scnDrawRotPlanes(void)
+/** draws the rotation axis selected */
+static void scnDrawRotAxis(void)
 {
   int i;
   const double planeSize = 3.5;
 
-  float colors[3][4] = { {0.4, 0.4, 0.6, 0.8},
-                         {0.4, 0.4, 0.6, 0.0},
-                         {0.4, 0.4, 0.6, 0.0}};
+  float color0[4] = {0.0, 0.0, 0.0, 0.8};
+  float color1[4] = {0.0, 0.0, 0.0, 0.0};
 
   if ((scnAxle <= 2) && (scnAxle >= 0))
   {
     for (i = -1; i <= 1; i += 2)
     {
-      float points[3][4] = { {0.0, 0.0, 0.0, 0.0},
-                             {0.0, 0.0, 0.0, 0.0},
-                             {0.0, 0.0, 0.0, 0.0}};
+      float point0[4] = {0.0, 0.0, 0.0, 0.0};
+      float point1[4] = {0.0, 0.0, 0.0, 0.0};
 
-      points[1][scnAxle] = i * planeSize;
-      points[2][scnAxle] = i * planeSize;
+      point1[scnAxle] = i * planeSize;
 
-      g4dDrawTriangle(points, colors, 1);
+      g4dDrawLine(point0, point1, color0, color1, 2.0);
     }
   }
 }
@@ -213,7 +210,7 @@ void scnDisplay(void)
     g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
   }
 
-  scnDrawRotPlanes();
+  scnDrawRotAxis();
 
   // draw the menu
   if (menuActived())

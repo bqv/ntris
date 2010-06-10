@@ -28,9 +28,11 @@ extern void g3dInit(void);
 extern void g3dDrawPoly(float point[4][4],
                         float color[4],
                         int enableWire);
-extern void g3dDrawTriangle(float points[3][4],
-                            float colors[3][4],
-                            int mode);
+extern void g3dDrawLine(float point0[4],
+                        float point1[4],
+                        float color0[4],
+                        float color1[4],
+                        float linewidth);
 extern void g3dRenderString(double x, double y,
                            float color[4],
                            char *string);
