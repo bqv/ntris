@@ -78,20 +78,23 @@ static double g4dPerspFact(double w)
   return result;
 }
 
-/** Draws 4D triangle  */
-void g4dDrawTriangle(float points[3][4],
-                     float colors[3][4],
-                     int mode)
-{
-  int i, n;
+/** Draws 4D line */
+void g4dDrawLine(float point0[4],
+                 float point1[4],
+                 float color0[4],
+                 float color1[4],
+                 float linewidth){
+  int n;
 
-  for (i = 0; i < 3; i++)
   for (n = 0; n < 3; n++)
   {
-    points[i][n] = points[i][n] * g4dPerspFact(points[i][3]);
+    point0[n] = point0[n] * g4dPerspFact(point0[3]);
+    point1[n] = point1[n] * g4dPerspFact(point1[3]);
   }
 
-  g3dDrawTriangle(points, colors, mode);
+  g3dDrawLine(point0, point1,
+              color0, color1,
+              linewidth);
 }
 
 
