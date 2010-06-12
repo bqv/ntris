@@ -12,7 +12,6 @@
 #include <stdio.h>
 
 #include "4dt_m3d.h"
-
 #include "4dt_g3d.h"
 
 /*------------------------------------------------------------------------------
@@ -223,8 +222,8 @@ void g3dRenderString(double x, double y,
 }
 
 /** Draws 3D line */
-void g3dDrawLine(float point0[4],
-                 float point1[4],
+void g3dDrawLine(tM3dVector point0,
+                 tM3dVector point1,
                  float color0[4],
                  float color1[4],
                  float linewidth)
@@ -239,10 +238,10 @@ void g3dDrawLine(float point0[4],
   glBegin(GL_LINES);
 
   glColor4f(color0[0], color0[1], color0[2], color0[3]);
-  glVertex3d(point0[0], point0[1], point0[2]);
+  glVertex3d(point0.c[0], point0.c[1], point0.c[2]);
 
   glColor4f(color1[0], color1[1], color1[2], color1[3]);
-  glVertex3f(point1[0], point1[1], point1[2]);
+  glVertex3f(point1.c[0], point1.c[1], point1.c[2]);
 
   // Finish drawing.
   glEnd();
@@ -255,7 +254,7 @@ void g3dDrawLine(float point0[4],
 }
 
 /** \brief Draw quad with given coordinates, color, style. */
-void g3dDrawPoly(float points[4][4],
+void g3dDrawPoly(tM3dVector points[4],
                  float color[4],
                  int mode /**< 0: fill, 1: fill & wire, 2: wire */)
 {
@@ -263,21 +262,17 @@ void g3dDrawPoly(float points[4][4],
   int k;
   int transparent;
   // Normal vector of the actual facet.
-  double norm[3];
+  tM3dVector norm;
   // Vectors of two edge of the facet.
-  double v1[3];
-  double v2[3];
+  tM3dVector v1;
+  tM3dVector v2;
 
-  // For each coordinate
-  for (k = 0; k < 3; k++)
-  {
-    // calculate two vector of two edge from the points.
-    v1[k] = points[1][k] - points[0][k];
-    v2[k] = points[3][k] - points[0][k];
-  }
+  // calculate two vector of two edge from the points.
+  v1 = m3dSub(points[1], points[0]);
+  v2 = m3dSub(points[3], points[0]);
 
   // Calculate normal vector.
-  m3dCalcNormal(norm, v1, v2);
+  norm = m3dCalcNormal(v1, v2);
 
   // Set the color of the facet.
   glColor4d(color[0], color[1], color[2], color[3]);
@@ -295,15 +290,15 @@ void g3dDrawPoly(float points[4][4],
     // Start draw a quad.
     glBegin(GL_QUADS);
     // Set the normal vector.
-    glNormal3d(norm[0], norm[1], norm[2]);
+    glNormal3d(norm.c[0], norm.c[1], norm.c[2]);
 
     // For each point of the facet
     for (k = 0; k < 4; k++)
     {
       // set the points of the quad.
-      glVertex3d(points[k][0],
-                 points[k][1],
-                 points[k][2]);
+      glVertex3d(points[k].c[0],
+                 points[k].c[1],
+                 points[k].c[2]);
     }
     // Finish drawing.
     glEnd();
@@ -319,15 +314,15 @@ void g3dDrawPoly(float points[4][4],
     for (k = 0; k < 4; k++)
     {
       // set the points of the strip.
-      glVertex3d(points[k][0],
-                 points[k][1],
-                 points[k][2]);
+      glVertex3d(points[k].c[0],
+                 points[k].c[1],
+                 points[k].c[2]);
     }
 
     // Close the strip.
-    glVertex3d(points[0][0],
-               points[0][1],
-               points[0][2]);
+    glVertex3d(points[0].c[0],
+               points[0].c[1],
+               points[0].c[2]);
 
     // Finish drawing.
     glEnd();

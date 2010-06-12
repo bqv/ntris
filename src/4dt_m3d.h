@@ -14,10 +14,27 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+
+typedef enum
+{
+  eM3dAxisX  = 0,
+  eM3dAxisY  = 1,
+  eM3dAxisZ  = 2,
+  eM3dDimNum = 3
+} eM3dAxis;
+
+
+/** 3D vector container */
+typedef struct
+{
+  double c[eM3dDimNum];
+} tM3dVector;
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern void m3dCalcNormal(double *n, double v1[3], double v2[3]);
+extern tM3dVector m3dCalcNormal(tM3dVector v1, tM3dVector v2);
+extern tM3dVector m3dSub(tM3dVector target, tM3dVector source);
 
 #endif /* 4DT_M3D_H_ */

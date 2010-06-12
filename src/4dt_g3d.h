@@ -6,6 +6,9 @@
 #ifndef _4DT_G3D_H_
 #define _4DT_G3D_H_
 
+#ifndef _4DT_M3D_H_
+#error "please include 4dt_m3d.h first"
+#endif
 /*------------------------------------------------------------------------------
    MACROS
 ------------------------------------------------------------------------------*/
@@ -25,11 +28,11 @@ extern int g3dAutoRotationEnabled;
 
 
 extern void g3dInit(void);
-extern void g3dDrawPoly(float point[4][4],
+extern void g3dDrawPoly(tM3dVector points[4],
                         float color[4],
                         int enableWire);
-extern void g3dDrawLine(float point0[4],
-                        float point1[4],
+extern void g3dDrawLine(tM3dVector point0,
+                        tM3dVector point1,
                         float color0[4],
                         float color1[4],
                         float linewidth);

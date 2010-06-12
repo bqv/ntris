@@ -7,8 +7,9 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
-#include "4dt_g3d.h"
+#include "4dt_m3d.h"
 #include "4dt_m4d.h"
+#include "4dt_g3d.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -40,9 +41,11 @@ static double g4dMaxW;
 
 static double g4dPerspFact(double w);
 
-static void g4dDrawPoly(float points[4][4],
+static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
                         int enableWire);
+
+static tM3dVector g4dProject(tM4dVector vector);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -53,6 +56,20 @@ static void g4dDrawPoly(float points[4][4],
 void g4dCalibrate(double w_maximum)
 {
   g4dMaxW = w_maximum;
+}
+
+static tM3dVector g4dProject(tM4dVector vector)
+{
+  tM3dVector result;
+
+  eM3dAxis axis;
+
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  {
+    result.c[axis] = vector.c[axis] * g4dPerspFact(vector.c[eM4dAxisW]);
+  }
+
+  return(result);
 }
 
 /** \brief Calculates perspective projection factor of the 'level'
@@ -79,39 +96,33 @@ static double g4dPerspFact(double w)
 }
 
 /** Draws 4D line */
-void g4dDrawLine(float point0[4],
-                 float point1[4],
+void g4dDrawLine(tM4dVector point0,
+                 tM4dVector point1,
                  float color0[4],
                  float color1[4],
-                 float linewidth){
-  int n;
-
-  for (n = 0; n < 3; n++)
-  {
-    point0[n] = point0[n] * g4dPerspFact(point0[3]);
-    point1[n] = point1[n] * g4dPerspFact(point1[3]);
-  }
-
-  g3dDrawLine(point0, point1,
+                 float linewidth)
+{
+  g3dDrawLine(g4dProject(point0),
+              g4dProject(point1),
               color0, color1,
               linewidth);
 }
 
 
 /** \brief Draws 4D polygon */
-static void g4dDrawPoly(float points[4][4],
-                 float color[4],
-                 int mode)
+static void g4dDrawPoly(tM4dVector points[4],
+                        float color[4],
+                        int mode)
 {
-  int i, n;
+  tM3dVector points3D[4];
+  int i;
 
   for (i = 0; i < 4; i++)
-  for (n = 0; n < 3; n++)
   {
-    points[i][n] = points[i][n] * g4dPerspFact(points[i][3]);
+    points3D[i] = g4dProject(points[i]);
   }
 
-  g3dDrawPoly(points, color, mode);
+  g3dDrawPoly(points3D, color, mode);
 }
 
 
@@ -159,7 +170,7 @@ void g4dDraw4DCube(tM4dVector center,
   };
 
   // Loop counter.
-  int n, i, j, k;
+  int n, i, k;
   int facenum;
 
   // Move each point of the hypercube to its final position
@@ -175,12 +186,11 @@ void g4dDraw4DCube(tM4dVector center,
   // For each facet and
   for (i = 0; i < facenum; i++)
   {
-    float pointlist[4][4];
+    tM4dVector pointlist[4];
 
     for (k = 0; k < 4; k++)
-    for (j = 0; j < 4; j++)
     {
-      pointlist[k][j] = points[faces[i][k]].c[j];
+      pointlist[k] = points[faces[i][k]];
     }
 
     g4dDrawPoly(pointlist, color, mode);
