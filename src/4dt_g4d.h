@@ -26,8 +26,8 @@ extern void g4dDraw4DCube(tM4dVector center,
                           int dimension,
                           int mode);
 
-extern void g4dDrawLine(float point0[4],
-                        float point1[4],
+extern void g4dDrawLine(tM4dVector point0,
+                        tM4dVector point1,
                         float color0[4],
                         float color1[4],
                         float linewidth);

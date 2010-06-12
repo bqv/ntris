@@ -9,6 +9,8 @@
 
 #include <math.h>
 
+#include "4dt_m3d.h"
+
 /*------------------------------------------------------------------------------
    MACROS
 ------------------------------------------------------------------------------*/
@@ -29,47 +31,96 @@
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static void m3dCrossProduct(double *n, double v1[3], double v2[3]);
-static void m3dNormalise(double *v);
+static tM3dVector m3dMultiplySV(double scalar, tM3dVector vector);
+static double m3dAbs(tM3dVector vector);
+static tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2);
+static tM3dVector m3dNormalise(tM3dVector vector);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+/** Subctract source vector from target vector */
+tM3dVector m3dSub(tM3dVector target, tM3dVector source)
+{
+  tM3dVector result;
+  eM3dAxis axis;
+
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  {
+    result.c[axis] = target.c[axis] - source.c[axis];
+  }
+
+  return result;
+}
+
+
+/** Scalar-vector multiplication */
+static tM3dVector m3dMultiplySV(double scalar, tM3dVector vector)
+{
+  eM3dAxis axis;
+  tM3dVector result;
+
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  {
+    result.c[axis] = scalar * vector.c[axis];
+  }
+
+  return(result);
+}
+
+/** Calculate length of the vector */
+static double m3dAbs(tM3dVector vector)
+{
+  double abs = 0;
+  eM3dAxis axis;
+
+  // For each coordinate
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  {
+    // normalise the coordinate.
+    abs += vector.c[axis] * vector.c[axis];
+  }
+
+  abs = sqrt(abs);
+
+  return(abs);
+}
 
 /** \brief Calculates the crossProduct of v1 and v2 vector where
     'n' the result vector. */
-static void m3dCrossProduct(double *n, double v1[3], double v2[3])
+static tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2)
 {
+  tM3dVector cross;
+
   // Calculate crossproduct by coordinates.
-  n[0] = v1[1] * v2[2] - v2[1] * v1[2];
-  n[1] = v1[2] * v2[0] - v2[2] * v1[0];
-  n[2] = v1[0] * v2[1] - v2[0] * v1[1];
+  cross.c[0] = vector1.c[1] * vector2.c[2] - vector2.c[1] * vector1.c[2];
+  cross.c[1] = vector1.c[2] * vector2.c[0] - vector2.c[2] * vector1.c[0];
+  cross.c[2] = vector1.c[0] * vector2.c[1] - vector2.c[0] * vector1.c[1];
+
+  return (cross);
 }
 
-/** \brief Normalise a vector. */
-static void m3dNormalise(double *v)
+/** Normalise a vector. */
+static tM3dVector m3dNormalise(tM3dVector vector)
 {
-  // Local variables:
-  int i; // loop counter;
-  double l; // length of the vector.
-
   // Calculate length of the vector.
-  l = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+  double length = m3dAbs(vector);
 
-  // For each coordinate
-  for (i = 0; i < 3; i++)
-  {
-    // normalise the coordinate.
-    v[i] /= l;
-  }
+  // normalise the coordinates.
+  vector = m3dMultiplySV(1/length, vector);
+
+  return(vector);
 }
 
-/** \brief Calculate normal vector of the plane of v1, v2 vector. */
-void m3dCalcNormal(double *n, double v1[3], double v2[3])
+/** Calculate normal vector of the plane of v1, v2 vector. */
+tM3dVector m3dCalcNormal(tM3dVector v1, tM3dVector v2)
 {
-  // Calculate normal by crossproducting v1 and v2.
-  m3dCrossProduct(n, v1, v2);
-  // Normalise the normal vector.
-  m3dNormalise(n);
+  tM3dVector normal;
+
+  normal = m3dCrossProduct(v1, v2);
+
+  m3dNormalise(normal);
+
+  return(normal);
 }

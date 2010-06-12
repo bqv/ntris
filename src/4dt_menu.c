@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "4dt_m3d.h"
 #include "4dt_g3d.h"
 #include "4dt_ai.h"
 #include "4dt_eng.h"

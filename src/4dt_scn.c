@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_g3d.h"
@@ -113,10 +114,10 @@ static void scnDrawRotAxis(void)
   {
     for (i = -1; i <= 1; i += 2)
     {
-      float point0[4] = {0.0, 0.0, 0.0, 0.0};
-      float point1[4] = {0.0, 0.0, 0.0, 0.0};
+      tM4dVector point0 = m4dNullVector();
+      tM4dVector point1 = m4dUnitVector(scnAxle);
 
-      point1[scnAxle] = i * planeSize;
+      point1 = m4dMultiplySV(i * planeSize, point1);
 
       g4dDrawLine(point0, point1, color0, color1, 2.0);
     }
