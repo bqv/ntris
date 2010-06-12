@@ -289,6 +289,7 @@ static void menuNew(void)
 {
   // reset game engine
   engResetGame();
+  engGE.activeUser = 1;
 
   aiAutoGamerON = 0;
 

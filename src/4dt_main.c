@@ -139,6 +139,7 @@ static void engineTimerCallback(int value)
     {
       glutTimerFunc(rotationTimeStep, rotationTimerCallback, value);
       hstAddScore(engGE.score);
+      engGE.activeUser = 0;
       menuGotoItem(eMenuGameOver);
       gameOverDetected = 1;
     }

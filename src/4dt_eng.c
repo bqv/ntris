@@ -267,6 +267,7 @@ void engInitGame(void)
   // set options
   engGE.game_opts.diff = 2;
   engGE.animation.enable = 1;
+  engGE.activeUser = 0;
 
   // reset parameters
   engResetGame();
@@ -352,8 +353,11 @@ static void engKillFullLevels(void)
     // if full level found
     if (engEqLevel(engGE.space[t], engFullLevel))
     {
-      // increase score
-      engGE.score += engScoreStep[engGE.game_opts.diff];
+      // increase score if user plays
+      if (engGE.activeUser)
+      {
+        engGE.score += engScoreStep[engGE.game_opts.diff];
+      }
 
       // step down every higher level
       for (tn = t+1; tn < SPACELENGTH; tn++)

@@ -81,6 +81,8 @@ typedef struct
   int score;
   /** flag for indicate game over */
   int gameOver;
+  /** flag for indicate real user gameing (or autoplay) */
+  int activeUser;
   /** counter for used objects */
   int solidnum;
   /** engine locked while animation running */
