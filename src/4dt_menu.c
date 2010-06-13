@@ -221,7 +221,7 @@ void menuNavigate(eMenuEvent event)
       // Step out from a menu item
       if (1 == menuItems[menuItems[menuActItem].parent].enabled)
       {
-        menuActItem = menuItems[menuActItem].parent;
+        menuGotoItem(menuItems[menuActItem].parent);
         menuText = NULL;
       }
       break;
