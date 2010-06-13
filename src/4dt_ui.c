@@ -7,13 +7,15 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
-#include "stdlib.h"
-
+#include <stdlib.h>
+#include <math.h>
 
 #include "4dt_m3d.h"
+#include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_ai.h"
 #include "4dt_g3d.h"
+#include "4dt_g4d.h"
 #include "4dt_scn.h"
 #include "4dt_menu.h"
 
@@ -30,6 +32,9 @@
 /*------------------------------------------------------------------------------
    CONSTANTS
 ------------------------------------------------------------------------------*/
+
+/** Angle of rotation on viewport by one keypress [rad] */
+static const double uiViewportRotAngle = 15.0 * M_PI / 180.0;
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -88,28 +93,28 @@ void uiKeyPress(int key)
       case UI_KEY_UP:
         // rotate viewport around x axis
         // to positive direction.
-        g3dAngleX += g3dDAngle;
+        g4dRotateViewport(eM4dAxisY, eM4dAxisZ, -uiViewportRotAngle);
       break;
 
       // If up arrow then
       case UI_KEY_LEFT:
         // rotate viewport around z axis
         // to negative direction.
-        g3dAngleZ += g3dDAngle;
+        g4dRotateViewport(eM4dAxisX, eM4dAxisY, -uiViewportRotAngle);
       break;
 
       // If up arrow then
       case UI_KEY_DOWN:
         // rotate viewport around x axis
         // to positive direction.
-        g3dAngleX -= g3dDAngle;
+        g4dRotateViewport(eM4dAxisY, eM4dAxisZ, uiViewportRotAngle);
       break;
 
       // If up arrow then
       case UI_KEY_RIGHT:
         // rotate viewport around z axis
         // to negative direction.
-        g3dAngleZ -= g3dDAngle;
+        g4dRotateViewport(eM4dAxisX, eM4dAxisY, uiViewportRotAngle);
       break;
 
       // If 'z' then

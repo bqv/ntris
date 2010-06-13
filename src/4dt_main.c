@@ -90,7 +90,7 @@ static void processARGV(int argc, char *argv[]);
 /** Timer for view rotation when no player */
 static void rotationTimerCallback(int value)
 {
-  if (m3dRotateViewport())
+  if (g4dAutoRotateViewport())
   {
     glutTimerFunc(rotationTimeStep, rotationTimerCallback, value);
 
@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
   g3dInit();
 
   // initialise 4D drawing modul
-  g4dCalibrate(SPACELENGTH);
+  g4dInit(SPACELENGTH);
 
   // Set the display function.
   glutDisplayFunc(scnDisplay);

@@ -11,7 +11,9 @@
 #include <stdio.h>
 
 #include "4dt_m3d.h"
+#include "4dt_m4d.h"
 #include "4dt_g3d.h"
+#include "4dt_g4d.h"
 #include "4dt_ai.h"
 #include "4dt_eng.h"
 #include "4dt_hst.h"
@@ -273,7 +275,7 @@ void menuDraw(void)
 
 static void menuGameOver(void)
 {
-  g3dAutoRotationEnabled = 1;
+  g4dSwitchAutoRotation(1);
   menuText = menuGameOverText;
   menuItems[eMenuBackToGame].enabled = 0;
   menuItems[eMenuOFF].enabled = 0;
@@ -299,8 +301,8 @@ static void menuNew(void)
   menuItems[eMenuBackToGame].enabled = 1;
   menuItems[eMenuOFF].enabled = 1;
 
-  g3dResetViewport();
-  g3dAutoRotationEnabled = 0;
+  g4dReset();
+  g4dSwitchAutoRotation(0);
 
   menuNavigate(eMenuBack);
   menuNavigate(eMenuBack);
