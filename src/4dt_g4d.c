@@ -7,9 +7,12 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
+#include <math.h>
+
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_g3d.h"
+#include "4dt_g4d.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -35,6 +38,12 @@ static const double g4dMaxSize = 2.0;
 /** Maximal coordinate on 4th axis */
 static double g4dMaxW;
 
+/** Viewport orientation matrix */
+static tM4dMatrix g4dViewport;
+
+/** Enable flag for auto viewprot rotation */
+static int g4dAutoRotationEnabled = 1;
+
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
@@ -52,17 +61,60 @@ static tM3dVector g4dProject(tM4dVector vector);
 ------------------------------------------------------------------------------*/
 
 
-/** Calibrate/initialize the 4D drawing unit. */
-void g4dCalibrate(double w_maximum)
+/** Initialize the 4D drawing unit. */
+void g4dInit(double w_maximum)
 {
   g4dMaxW = w_maximum;
+
+  g4dReset();
 }
+
+/** Reset 4D draving unit */
+void g4dReset(void)
+{
+  g4dViewport = m4dUnitMatrix();
+}
+
+void g4dSwitchAutoRotation(int enable)
+{
+  g4dAutoRotationEnabled = enable;
+}
+
+/** View rotation procedure. Should be triggered. */
+int g4dAutoRotateViewport(void)
+{
+  if (g4dAutoRotationEnabled)
+  {
+    g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisY, eM4dAxisZ,
+                                             0.25 * M_PI / 180),
+                                g4dViewport);
+
+    g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
+                                             0.20 * M_PI / 180),
+                                g4dViewport);
+    return(1);
+  }
+  else
+  {
+    return(0);
+  }
+}
+
+/** Rotates viewport with givel angle */
+void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle)
+{
+  g4dViewport = m4dMultiplyMM(m4dRotMatrix(axis1, axis2, angle),
+                              g4dViewport);
+}
+
 
 static tM3dVector g4dProject(tM4dVector vector)
 {
   tM3dVector result;
 
   eM3dAxis axis;
+
+  vector = m4dMultiplyMV(g4dViewport, vector);
 
   for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
   {
