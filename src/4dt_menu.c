@@ -76,6 +76,7 @@ static void menuGameOverOff(void);
 static tMenuItem menuItems[eMenuItemNum] =
 {
 /* en, caption,         activate,      deact., parent,            submenus */
+  {0, "",               NULL,          NULL,   eMenuNull,         {eMenuNull}},
   {0, "",               NULL,          NULL,   eMenuOFF,          {eMenuRoot, eMenuNull}},
   {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
@@ -167,7 +168,8 @@ static int menuSubNum(eMenuItem item)
 /** Set menu item active */
 void menuGotoItem(eMenuItem menuItem)
 {
-  if (menuItem != menuActItem)
+  if (   (menuItem != menuActItem)
+      && (menuItem != eMenuNull) )
   {
     if (NULL != menuItems[menuActItem].deactivate)
     {
@@ -187,10 +189,8 @@ void menuGotoItem(eMenuItem menuItem)
 void menuNavigate(eMenuEvent event)
 {
   int subMenuNum;    // number of submenus in actual menu item
-  eMenuItem subItem; // actual selected menu item
 
   subMenuNum = menuSubNum(menuActItem);
-  subItem = menuItems[menuActItem].submenus[menuSelItems[menuActItem]];
 
   switch(event)
   {
@@ -211,12 +211,17 @@ void menuNavigate(eMenuEvent event)
       }
       break;
     case eMenuForward:
+    {
       // Step in to a menu item
-      if (1 == menuItems[subItem].enabled)
+      eMenuItem subItem = menuItems[menuActItem].submenus[menuSelItems[menuActItem]];
+
+      if (   (subItem != eMenuNull)
+          && (1 == menuItems[subItem].enabled))
       {
         menuGotoItem(subItem);
       }
       break;
+    }
     case eMenuBack:
       // Step out from a menu item
       if (1 == menuItems[menuItems[menuActItem].parent].enabled)
