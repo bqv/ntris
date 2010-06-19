@@ -61,8 +61,6 @@
 --------------------------------------------------------------------------------
 */
 
-const int animationTimeStep = 25;
-
 static int debugmode = 0;
 /*
 --------------------------------------------------------------------------------
@@ -72,9 +70,6 @@ static int debugmode = 0;
 
 static void specialKeyPress(int key, int x, int y);
 static void keyPress(unsigned char key, int x, int y);
-static void engineTimerCallback(int value);
-static void autoplayTimerCallback(int value);
-static void animationTimerCallback(int value);
 static void processARGV(int argc, char *argv[]);
 
 /*
@@ -98,82 +93,6 @@ void setTimerCallback(int time, void (*callback)(int))
 void refresh(void)
 {
   glutPostRedisplay();
-}
-
-/** Timer for animations */
-static void animationTimerCallback(int value)
-{
-  int moreCallNeeded;
-
-  // apply animation step
-  moreCallNeeded = engAnimation();
-
-  // set call back again
-  if (moreCallNeeded)
-  {
-    glutTimerFunc(animationTimeStep, animationTimerCallback, value);
-  }
-
-  // Force drawing
-  glutPostRedisplay();
-}
-
-/** Timer function for Game engine. */
-static void engineTimerCallback(int value)
-{
-  static int gameOverDetected = 0;
-
-  if (engGE.gameOver == 0)
-  {
-    gameOverDetected = 0;
-
-    if (!menuActived() || aiAutoGamerON)
-    {
-      if (debugmode) { engPrintSpace(); }
-
-      // lower the solid and
-      engLowerSolid();
-    }
-  }
-  else
-  {
-    if (gameOverDetected != 1)
-    {
-      g4dSwitchAutoRotation(1);
-      hstAddScore(engGE.score);
-      engGE.activeUser = 0;
-      menuGotoItem(eMenuGameOver);
-      gameOverDetected = 1;
-    }
-  }
-
-  // Force drawing
-  glutPostRedisplay();
-
-  // set call back again
-  glutTimerFunc(engGetTimestep(), engineTimerCallback, value);
-
-  // set animation callback
-  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
-}
-
-/** Timer function for Autoplayer. */
-static void autoplayTimerCallback(int value)
-{
-  if ((engGE.gameOver == 0) && (aiAutoGamerON))
-  {
-    if (debugmode) { engPrintSpace(); }
-    aiDoStep();
-  }
-
-  // Force drawing
-  glutPostRedisplay();
-
-  // set call back again
-  glutTimerFunc(aiTimeStep, autoplayTimerCallback, value);
-
-  // set animation callback
-  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 /** Eventhandler of special key pressing. */
@@ -200,9 +119,6 @@ static void specialKeyPress(int key, int x, int y)
 
   // Refresh the display.
   glutPostRedisplay();
-
-  // set animation callback
-  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 /** Eventhandler of key pressing. */
@@ -212,9 +128,6 @@ static void keyPress(unsigned char key, int x, int y)
 
   // Refresh the display.
   glutPostRedisplay();
-
-  // set animation callback
-  glutTimerFunc(animationTimeStep, animationTimerCallback, 0);
 }
 
 /** Process command line arguments */
@@ -243,9 +156,6 @@ int main(int argc, char *argv[])
 
   // Set random colors for game levels
   scnInit();
-
-  // Initialize the game engine.
-  engInitGame();
 
   // Set the size of the window.
   glutInitWindowSize(640,480);
@@ -280,9 +190,11 @@ int main(int argc, char *argv[])
   // Set the special keypress event handler function.
   glutSpecialFunc(specialKeyPress);
 
-  // set timer callbacks
-  glutTimerFunc(engGetTimestep(), engineTimerCallback, 0);
-  glutTimerFunc(aiTimeStep, autoplayTimerCallback, 0);
+  // Initialize the game engine.
+  engInitGame();
+
+  // start autoplayer
+  aiSetActive(1);
 
   // Start glut's main loop.
   glutMainLoop();

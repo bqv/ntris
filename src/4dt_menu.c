@@ -147,7 +147,7 @@ static char **menuText = NULL;        /**< Actual menu text for display       */
 ------------------------------------------------------------------------------*/
 
 /** Get function for query menu active state. */
-int menuActived(void)
+int menuIsActived(void)
 {
   return(menuActItem != eMenuOFF);
 }
@@ -289,17 +289,16 @@ static void menuGameOver(void)
 static void menuGameOverOff(void)
 {
   menuText = NULL;
-  aiAutoGamerON = 1;
   engResetGame();
+  aiSetActive(1);
 }
 
 static void menuNew(void)
 {
   // reset game engine
+  aiSetActive(0);
   engResetGame();
   engGE.activeUser = 1;
-
-  aiAutoGamerON = 0;
 
   menuItems[eMenuAutoPlayer].caption = "Auto Player - OFF";
 
@@ -325,9 +324,9 @@ static void menuMusic(void)
 
 static void menuAuto(void)
 {
-  aiAutoGamerON = !aiAutoGamerON;
+  aiSetActive(aiIsActive() ? 0 : 1);
 
-  menuItems[eMenuAutoPlayer].caption = (aiAutoGamerON)
+  menuItems[eMenuAutoPlayer].caption = (aiIsActive())
                                    ? "Auto Player - ON"
                                    : "Auto Player - OFF";
   menuNavigate(eMenuBack);
@@ -361,7 +360,7 @@ static void menuHelp(void)
 
 static void menuScores(void)
 {
-  hstPrintScoreTab(&menuText, TEXTLINENUM);
+  hstGetScoreTab(&menuText, TEXTLINENUM);
 }
 
 static void menuAbout(void)

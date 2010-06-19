@@ -18,7 +18,7 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern void hstPrintScoreTab(char ***textTab, int scoreNum);
+extern void hstGetScoreTab(char ***textTab, int scoreNum);
 extern void hstAddScore(int score);
 extern void hstInit(void);
 

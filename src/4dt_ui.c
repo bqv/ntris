@@ -53,7 +53,7 @@ static const double uiViewportRotAngle = 15.0 * M_PI / 180.0;
 void uiKeyPress(int key)
 {
   // if game menu is activated
-  if(menuActived())
+  if(menuIsActived())
   {
     // Forward user action to menu module
     // Check which key pressed.
@@ -191,7 +191,7 @@ void uiKeyPress(int key)
 
       case 'a':
         // Switch the autoplayer on.
-        aiAutoGamerON = !aiAutoGamerON;
+        aiSetActive(aiIsActive() ? 0 : 1);
       break;
 
       case UI_KEY_F1:

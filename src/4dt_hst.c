@@ -79,7 +79,7 @@ static tHstScore hstCreateScore(int score);
 ------------------------------------------------------------------------------*/
 
 /** Print score table to string array. */
-void hstPrintScoreTab(char ***textTab, int scoreNum)
+void hstGetScoreTab(char ***textTab, int scoreNum)
 {
   int n;
   char str[256];

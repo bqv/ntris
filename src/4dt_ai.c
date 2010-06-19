@@ -9,8 +9,10 @@
 
 #include <stdlib.h>
 
+#include "4dt_main.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
+#include "4dt_ai.h"
 
 /*------------------------------------------------------------------------------
    CONSTANTS
@@ -24,10 +26,10 @@ static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 ------------------------------------------------------------------------------*/
 
 /** flag for auto gamer */
-int aiAutoGamerON = 1;
+static int aiAutoGamerON = 0;
 
 /** Time step for autoplayer in msec */
-int aiTimeStep = 150;
+static int aiTimeStep = 150;
 
 /** Array of the number of turns by axises needed to the best situation. */
 static int aiNeededTurns[4];
@@ -45,13 +47,52 @@ static int aiTurns[4 * 4 * 4 * 4];
 static int aiFindBestSolution(void);
 static double aiProcessSitu(void);
 static int aiSearchBestSitu(void);
+static void aiDoStep(void);
+static void aiTimer(int value);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+/** Get function for auto player enabled flag*/
+int aiIsActive(void)
+{
+  return(aiAutoGamerON);
+}
+
+void aiSetActive(int active)
+{
+  int timerMustStarted = (active && !aiAutoGamerON);
+
+  aiAutoGamerON = active;
+
+  if (timerMustStarted)
+  {
+    aiTimer(0);
+  }
+}
+
+/** Timer function for Autoplayer. */
+static void aiTimer(int value)
+{
+  if (aiAutoGamerON)
+  {
+    if (engGE.gameOver == 0)
+    {
+      aiDoStep();
+
+      setTimerCallback(aiTimeStep, &aiTimer);
+      refresh();
+    }
+    else
+    {
+      aiAutoGamerON = 0;
+    }
+  }
+}
+
 /** Trigger the AI to make a turn. */
-void aiDoStep(void)
+static void aiDoStep(void)
 {
   // Local variables:
   char stepMade = 0; // inditcator of turn already made;
@@ -118,7 +159,7 @@ static int aiFindBestSolution(void)
         for (x[0] = 0; x[0] < 4; x[0]++)
   {
     // Back up the actual situation.
-    backup_ge = engCopyGameEngine(engGE);
+    backup_ge = engGE;
 
     engGE.animation.enable = 0;
 
@@ -153,7 +194,7 @@ static int aiFindBestSolution(void)
     // Calculate number of turns made.
     aiTurns[n] = x[0] + x[1] + x[2] + x[3];
     // Restore the actual situation.
-    engGE = engCopyGameEngine(backup_ge);
+    engGE = backup_ge;
 
   }
 
