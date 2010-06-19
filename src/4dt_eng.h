@@ -112,17 +112,7 @@ extern void engResetGame(void);
 extern void engInitGame(void);
 extern int engLowerSolid(void);
 extern int engTurn(char ax1, char ax2);
-extern tEngGame engCopyGameEngine(tEngGame inGameEngine);
 extern void engPrintSpace(void);
-extern tEngSolid engObject2Solid(tEngObject object);
-extern int engAnimation(void);
-
-/** time step, while the solid steps one level down in msec; */
-static inline int engGetTimestep(void)
-{
-  // calculate timestep depending on actual score
-  return(10000/(4+engGE.score/10000));
-}
 
 /** get the cell of the level at x, y, z from
     the game space empty or full */

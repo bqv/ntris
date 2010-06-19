@@ -15,7 +15,11 @@
 #include <math.h>
 #include <math.h>
 
+#include "4dt_main.h"
+#include "4dt_menu.h"
 #include "4dt_m4d.h"
+#include "4dt_hst.h"
+#include "4dt_g4d.h"
 #include "4dt_eng.h"
 #include "4dt_scn.h"
 
@@ -29,6 +33,9 @@
 /*------------------------------------------------------------------------------
 // CONSTANTS
 ------------------------------------------------------------------------------*/
+
+/** Time step for animation [msec] */
+static const int engAnimationTimeStep = 15;
 
 /** Empty solid */
 static const tEngSolid engEmptySolid =
@@ -84,14 +91,55 @@ static int engOverlapping(void);
 static void engKillFullLevels(void);
 static int engEqLevel(tEngLevel level1, tEngLevel level2);
 static void engCopyLevel(tEngLevel target, tEngLevel source);
+static void engAnimation(int num);
+static tEngSolid engObject2Solid(tEngObject object);
+static int engGetTimestep(void);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+
+/** time step, while the solid steps one level down in msec; */
+static int engGetTimestep(void)
+{
+  // calculate timestep depending on actual score
+  return(10000/(4+engGE.score/10000));
+}
+
+
+/** Timer function for Game engine. */
+static void engTimer(int value)
+{
+  if (engGE.gameOver == 0)
+  {
+    if (!menuIsActived())
+    {
+      engLowerSolid();
+    }
+
+    refresh();
+
+    setTimerCallback(engGetTimestep(), &engTimer);
+  }
+}
+
+/** Game over handling */
+static void engGameOver(void)
+{
+  engGE.gameOver = 1;
+  engGE.activeUser = 0;
+
+  g4dSwitchAutoRotation(1);
+
+  hstAddScore(engGE.score);
+
+  menuGotoItem(eMenuGameOver);
+}
+
 /** Performing the queued transformation, return flag indicates if more
  *  call needed (1), or queue empty (0). */
-int engAnimation(void)
+static void engAnimation(int num)
 {
   if (engGE.animation.num > 0)
   {
@@ -106,16 +154,17 @@ int engAnimation(void)
   if (engGE.animation.num <= 0)
   {
     engGE.lock = 0;
-    return(0);
   }
   else
   {
-    return(1);
+    setTimerCallback(engAnimationTimeStep, &engAnimation);
   }
+
+  refresh();
 }
 
 /** Render/convert an object to gamespace array */
-tEngSolid engObject2Solid(tEngObject object)
+static tEngSolid engObject2Solid(tEngObject object)
 {
   int i;
   tEngSolid solid;
@@ -210,25 +259,6 @@ static void engClearLevel(tEngLevel level)
   }
 }
 
-/** duplicates the game engine */
-tEngGame engCopyGameEngine(tEngGame inGameEngine)
-{
-  int w;
-  tEngGame result; // duplicated game engine;
-  
-  // Copy the input game engine to the result one.
-  result = inGameEngine;
-  
-  // Copy the gamespace to the result.
-  for (w = 0; w < SPACELENGTH; w++)
-  {
-    engCopyLevel(result.space[w], inGameEngine.space[w]);
-  }
-  
-  // return with the result gamespace
-  return result;
-}
-
 /** Reset game variables */
 void engResetGame(void)
 {
@@ -255,6 +285,8 @@ void engResetGame(void)
   engGE.lock = 0;
   engGE.animation.posDecrease = 0;
   engGE.animation.transform   = m4dUnitMatrix();
+
+  engTimer(0);
 }
 
 
@@ -401,6 +433,7 @@ int engLowerSolid(void)
         engGE.animation.num  = 2.0;
         engGE.animation.posDecrease  = 1.0 / 2.0;
         engGE.animation.transform   = m4dUnitMatrix();
+        engAnimation(0);
       }
     }
 
@@ -424,7 +457,11 @@ int engLowerSolid(void)
       engNewSolid();
 
       // check new solid already overlapped
-      engGE.gameOver = engOverlapping();
+      if (engOverlapping())
+      {
+        engGameOver();
+      }
+
       return (engGE.gameOver);
     }
   }
@@ -446,6 +483,7 @@ int engTurn(char ax1, char ax2)
   engGE.object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, M_PI / 2.0),
                                       engGE.object.axices);
 
+  // TODO: do not write scnAxle here, move to AI modul
   // Calc and set turn axis in scene drawing from axices defines the turning
   // plane. Fortunately this simple empiric equation does the trick
   scnAxle = abs(3 - ax1 - ax2);
@@ -470,6 +508,7 @@ int engTurn(char ax1, char ax2)
         engGE.animation.num  = 5;
         engGE.animation.posDecrease  = 0.0;
         engGE.animation.transform  = m4dRotMatrix(ax1, ax2, M_PI / 2.0 / 5.0);
+        engAnimation(0);
       }
     }
   }

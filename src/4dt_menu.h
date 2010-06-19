@@ -61,7 +61,7 @@ eMenuEvent;
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern int  menuActived(void);
+extern int  menuIsActived(void);
 extern void menuDraw(void);
 extern void menuNavigate(eMenuEvent event);
 extern void menuGotoItem(eMenuItem menuItem);

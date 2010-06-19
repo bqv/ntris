@@ -228,7 +228,7 @@ void scnDisplay(void)
   scnDrawRotAxis();
 
   // draw the menu
-  if (menuActived())
+  if (menuIsActived())
   {
     menuDraw();
   }

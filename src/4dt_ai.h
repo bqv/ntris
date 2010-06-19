@@ -11,8 +11,8 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern int aiAutoGamerON;
-extern int aiTimeStep;
-extern void aiDoStep(void);
+extern int aiIsActive(void);
+extern void aiSetActive(int active);
+
 
 #endif
