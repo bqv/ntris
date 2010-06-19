@@ -36,7 +36,7 @@
 ------------------------------------------------------------------------------*/
 
 /** Color of the 4D cube. */
-static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.15};
+static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.08};
 
 /** array of the colors of game space levels. */
 static float scnLevelColors[SPACELENGTH][4];
@@ -119,9 +119,15 @@ static void scnDrawRotAxis(void)
 
       point1 = m4dMultiplySV(i * planeSize, point1);
 
+      point0.c[eM4dAxisW] = point1.c[eM4dAxisW] = engGE.object.pos.c[eM4dAxisW];
+
       g4dDrawLine(point0, point1, color0, color1, 2.0);
     }
   }
+
+  g4dDrawLine(m4dNullVector(),
+              m4dMultiplySV(12, m4dUnitVector(eM4dAxisW)),
+              color0, color1, 2.0);
 }
 
 /** Initialize the scene */
@@ -164,7 +170,9 @@ void scnDisplay(void)
     {
       // space which has no cube above (so it is visible)
       // gets rid of Z-fighting
-      if (mask[x][y][z] == 0)
+      if (
+1 ||
+          mask[x][y][z] == 0)
       {
         // if the cell is not empty then
         if (engGetSpaceCell(l, x, y, z))
@@ -175,6 +183,12 @@ void scnDisplay(void)
                         scnLevelColors[l], 4, 0);
 
           mask[x][y][z] = 1;
+        }
+        else
+        {
+//          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+//                        m4dUnitMatrix(),
+//                        scn4DCubeColor, 4, 2);
         }
       }
     }

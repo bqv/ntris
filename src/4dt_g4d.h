@@ -14,12 +14,20 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+typedef enum
+{
+  eG4d1PointProjection,
+  eG4d2PointProjection,
+}
+tG4dViewType;
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
 extern void g4dInit(double w_maximum);
 extern void g4dReset(void);
+extern void g4dSetViewType(tG4dViewType viewType);
 
 extern void g4dSwitchAutoRotation(int enable);
 extern int  g4dAutoRotateViewport(void);

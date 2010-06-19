@@ -193,6 +193,14 @@ void uiKeyPress(int key)
         // Switch the autoplayer on.
         aiAutoGamerON = !aiAutoGamerON;
       break;
+
+      case UI_KEY_F1:
+        g4dSetViewType(eG4d1PointProjection);
+      break;
+
+      case UI_KEY_F2:
+        g4dSetViewType(eG4d2PointProjection);
+      break;
     }
   }
 }

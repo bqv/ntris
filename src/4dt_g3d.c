@@ -328,7 +328,7 @@ void g3dInit(void)
   glClearColor(g3dBgColor[0], g3dBgColor[1], g3dBgColor[2], g3dBgColor[3]);
 
   // Enable cull face.
-  glEnable(GL_CULL_FACE);
+ // glEnable(GL_CULL_FACE);
   // Set Cull face.
   glCullFace(GL_BACK);
 
