@@ -21,6 +21,8 @@
 /** Enums for each menu item */
 typedef enum
 {
+eMenuNull,
+
 eMenuOFF,
   eMenuRoot,
     eMenuNewGame,
@@ -41,8 +43,7 @@ eMenuOFF,
     eMenuBackToGame,
     eMenuQuit,
     eMenuGameOver,
-    eMenuItemNum,
-    eMenuNull
+    eMenuItemNum
 }
 eMenuItem;
 
