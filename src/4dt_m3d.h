@@ -41,6 +41,8 @@ extern tM3dVector m3dMultiplySV(double scalar, tM3dVector vector);
 extern double m3dAbs(tM3dVector vector);
 extern tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2);
 extern tM3dVector m3dNormalise(tM3dVector vector);
+extern tM3dVector m3dInterpolate(tM3dVector vector1, tM3dVector vector2,
+                                 double factor);
 
 
 #endif /* 4DT_M3D_H_ */

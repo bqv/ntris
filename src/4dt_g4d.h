@@ -16,8 +16,8 @@
 
 typedef enum
 {
-  eG4d1PointProjection,
-  eG4d2PointProjection,
+  eG4d1PointProjection = 0,
+  eG4d2PointProjection = 1,
 }
 tG4dViewType;
 
@@ -30,7 +30,6 @@ extern void g4dReset(void);
 extern void g4dSetViewType(tG4dViewType viewType);
 
 extern void g4dSwitchAutoRotation(int enable);
-extern int  g4dAutoRotateViewport(void);
 extern void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle);
 
 extern void g4dDraw4DCube(tM4dVector center,

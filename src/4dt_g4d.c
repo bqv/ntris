@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "4dt_main.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_g3d.h"
@@ -32,6 +33,20 @@ static const double g4dBaseSize = 0.75;
 /** Size of cube represent the highest level. */
 static const double g4dMaxSize = 2.0;
 
+/** 4D W axis (projected to 1 point) coordinates in 3D
+ *  when 1 point projection used */
+static const tM3dVector g4dW     = {{ 0, 0, 0}};
+/** 4D Origo coordinates in 3D when 2 point projection used */
+static const tM3dVector g4dW0    = {{ 4, 0, 0}};
+/** 4D end of W axis coordinates in 3D when 2 point projection used */
+static const tM3dVector g4dWInf  = {{-20, 15, 0}};
+/** Step of interpolation factor between viewmodes */
+static const double g4dViewInterpolStep = 0.25;
+/** Time between steps of viewmode change animation [msec] */
+static const int g4dViewmodeTimeStep = 25;
+/** Time steps of auto rotation [msec] */
+static const int g4dRotationTimeStep = 25;
+
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
@@ -47,6 +62,8 @@ static int g4dAutoRotationEnabled = 1;
 
 /** Actual View type (projection mode from 4D to 3D) */
 static tG4dViewType g4dViewType = eG4d1PointProjection;
+/** Interpolation factor between view modes. (used for animated mode changes) */
+static double g4dViewInterpol = 0.0;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
@@ -60,8 +77,10 @@ static void g4dDrawPoly(tM4dVector points[4],
 
 static tM3dVector g4dProject(tM4dVector vector);
 
-static tM3dVector g4d1PointProject(tM4dVector vector);
 static tM3dVector g4d2PointProject(tM4dVector vector);
+
+static void g4dStepViewModeChange(int num);
+static void g4dAutoRotateViewport(int num);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -74,6 +93,8 @@ void g4dInit(double w_maximum)
   g4dMaxW = w_maximum;
 
   g4dReset();
+
+  g4dAutoRotateViewport(0);
 }
 
 /** Reset 4D draving unit */
@@ -85,10 +106,11 @@ void g4dReset(void)
 void g4dSwitchAutoRotation(int enable)
 {
   g4dAutoRotationEnabled = enable;
+  g4dAutoRotateViewport(0);
 }
 
 /** View rotation procedure. Should be triggered. */
-int g4dAutoRotateViewport(void)
+static void g4dAutoRotateViewport(int num)
 {
   if (g4dAutoRotationEnabled)
   {
@@ -99,12 +121,42 @@ int g4dAutoRotateViewport(void)
     g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
                                              0.20 * M_PI / 180),
                                 g4dViewport);
-    return(1);
+
+    setTimerCallback(g4dRotationTimeStep, &g4dAutoRotateViewport);
+    refresh();
   }
-  else
+}
+
+/** View rotation procedure. Should be triggered. */
+static void g4dStepViewModeChange(int num)
+{
+  switch(g4dViewType)
   {
-    return(0);
+    case eG4d1PointProjection:
+    {
+      g4dViewInterpol -= g4dViewInterpolStep;
+      if (g4dViewInterpol < 0.0) { g4dViewInterpol = 0.0; }
+      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange); }
+      break;
+    }
+    case eG4d2PointProjection:
+    {
+      g4dViewInterpol += g4dViewInterpolStep;
+      if (g4dViewInterpol > 1.0) { g4dViewInterpol = 1.0; }
+      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange); }
+      break;
+    }
   }
+
+  refresh();
+}
+
+/** Set function for view type */
+void g4dSetViewType(tG4dViewType viewType)
+{
+  g4dViewType = viewType;
+
+  setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange);
 }
 
 /** Rotates viewport with givel angle */
@@ -143,14 +195,17 @@ void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle)
  */
 static tM3dVector g4d2PointProject(tM4dVector vector)
 {
-  tM3dVector O = {{ 2, 0, 0}};
-  tM3dVector Q = {{-10, 0, 0}};
+  tM3dVector O;
+  tM3dVector Q;
   tM3dVector C = {{ 0, 0, 20}};
   tM3dVector W;
   tM3dVector OQ;
   tM3dVector result;
   eM3dAxis axis;
   double Ww, dQC, temp;
+
+  Q = m3dInterpolate(g4dW, g4dWInf, g4dViewInterpol);
+  O = m3dInterpolate(g4dW, g4dW0,   g4dViewInterpol);
 
   OQ = m3dSub(Q, O);
 
@@ -171,25 +226,6 @@ static tM3dVector g4d2PointProject(tM4dVector vector)
   return (result);
 }
 
-static tM3dVector g4d1PointProject(tM4dVector vector)
-{
-  tM3dVector result;
-  eM3dAxis axis;
-
-  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
-   {
-     result.c[axis] = vector.c[axis] * g4dPerspFact(vector.c[eM4dAxisW]);
-   }
-
-   return(result);
-}
-
-/** Set function for view type */
-void g4dSetViewType(tG4dViewType viewType)
-{
-  g4dViewType = viewType;
-}
-
 /** Project 4D point to the 3D space. */
 static tM3dVector g4dProject(tM4dVector vector)
 {
@@ -198,18 +234,7 @@ static tM3dVector g4dProject(tM4dVector vector)
   // Rotate coordinate system to the viewport coord system
   vector = m4dMultiplyMV(g4dViewport, vector);
 
-  if (g4dViewType == eG4d1PointProjection)
-  {
-    result = g4d1PointProject(vector);
-  }
-  else if (g4dViewType == eG4d2PointProjection)
-  {
-    result = g4d2PointProject(vector);
-  }
-  else
-  {
-    exit(1);
-  }
+  result = g4d2PointProject(vector);
 
   return(result);
 }
