@@ -126,8 +126,8 @@ static void scnDrawRotAxis(void)
   }
 
   g4dDrawLine(m4dNullVector(),
-              m4dMultiplySV(12, m4dUnitVector(eM4dAxisW)),
-              color0, color1, 2.0);
+              m4dMultiplySV(10, m4dUnitVector(eM4dAxisW)),
+              color0, color1, 1.0);
 }
 
 /** Initialize the scene */

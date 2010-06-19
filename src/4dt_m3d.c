@@ -133,3 +133,15 @@ tM3dVector m3dCalcNormal(tM3dVector v1, tM3dVector v2)
 
   return(normal);
 }
+
+/** Interpolates between the two given vector */
+tM3dVector m3dInterpolate(tM3dVector vector1, tM3dVector vector2,
+                                 double factor)
+{
+  tM3dVector result;
+
+  result = m3dAdd(m3dMultiplySV(1.0 - factor, vector1),
+                  m3dMultiplySV(factor, vector2));
+
+  return(result);
+}

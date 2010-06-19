@@ -53,6 +53,7 @@
 #include "4dt_ui.h"
 #include "4dt_menu.h"
 #include "4dt_hst.h"
+#include "4dt_main.h"
 
 /*
 --------------------------------------------------------------------------------
@@ -61,7 +62,6 @@
 */
 
 const int animationTimeStep = 25;
-const int rotationTimeStep = 25;
 
 static int debugmode = 0;
 /*
@@ -75,7 +75,6 @@ static void keyPress(unsigned char key, int x, int y);
 static void engineTimerCallback(int value);
 static void autoplayTimerCallback(int value);
 static void animationTimerCallback(int value);
-static void rotationTimerCallback(int value);
 static void processARGV(int argc, char *argv[]);
 
 /*
@@ -88,16 +87,17 @@ static void processARGV(int argc, char *argv[]);
     Event handlers
 */
 
-/** Timer for view rotation when no player */
-static void rotationTimerCallback(int value)
+/** Sets a timer to call back the function passed after given time (msec) */
+void setTimerCallback(int time, void (*callback)(int))
 {
-  if (g4dAutoRotateViewport())
-  {
-    glutTimerFunc(rotationTimeStep, rotationTimerCallback, value);
+  glutTimerFunc(time, callback, 0);
+}
 
-    // Force drawing
-    glutPostRedisplay();
-  }
+
+/** Redraw */
+void refresh(void)
+{
+  glutPostRedisplay();
 }
 
 /** Timer for animations */
@@ -139,7 +139,7 @@ static void engineTimerCallback(int value)
   {
     if (gameOverDetected != 1)
     {
-      glutTimerFunc(rotationTimeStep, rotationTimerCallback, value);
+      g4dSwitchAutoRotation(1);
       hstAddScore(engGE.score);
       engGE.activeUser = 0;
       menuGotoItem(eMenuGameOver);
@@ -283,7 +283,6 @@ int main(int argc, char *argv[])
   // set timer callbacks
   glutTimerFunc(engGetTimestep(), engineTimerCallback, 0);
   glutTimerFunc(aiTimeStep, autoplayTimerCallback, 0);
-  glutTimerFunc(rotationTimeStep, rotationTimerCallback, 0);
 
   // Start glut's main loop.
   glutMainLoop();
