@@ -31,11 +31,6 @@
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static tM3dVector m3dMultiplySV(double scalar, tM3dVector vector);
-static double m3dAbs(tM3dVector vector);
-static tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2);
-static tM3dVector m3dNormalise(tM3dVector vector);
-
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
@@ -54,9 +49,23 @@ tM3dVector m3dSub(tM3dVector target, tM3dVector source)
   return result;
 }
 
+/** Adds two vector */
+tM3dVector m3dAdd(tM3dVector vector1, tM3dVector vector2)
+{
+  tM3dVector result;
+  eM3dAxis axis;
+
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  {
+    result.c[axis] = vector1.c[axis] + vector2.c[axis];
+  }
+
+  return result;
+}
+
 
 /** Scalar-vector multiplication */
-static tM3dVector m3dMultiplySV(double scalar, tM3dVector vector)
+tM3dVector m3dMultiplySV(double scalar, tM3dVector vector)
 {
   eM3dAxis axis;
   tM3dVector result;
@@ -70,7 +79,7 @@ static tM3dVector m3dMultiplySV(double scalar, tM3dVector vector)
 }
 
 /** Calculate length of the vector */
-static double m3dAbs(tM3dVector vector)
+double m3dAbs(tM3dVector vector)
 {
   double abs = 0;
   eM3dAxis axis;
@@ -89,7 +98,7 @@ static double m3dAbs(tM3dVector vector)
 
 /** \brief Calculates the crossProduct of v1 and v2 vector where
     'n' the result vector. */
-static tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2)
+tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2)
 {
   tM3dVector cross;
 
@@ -102,7 +111,7 @@ static tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2)
 }
 
 /** Normalise a vector. */
-static tM3dVector m3dNormalise(tM3dVector vector)
+tM3dVector m3dNormalise(tM3dVector vector)
 {
   // Calculate length of the vector.
   double length = m3dAbs(vector);

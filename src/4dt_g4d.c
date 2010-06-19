@@ -7,6 +7,7 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
+#include <stdlib.h>
 #include <math.h>
 
 #include "4dt_m3d.h"
@@ -44,6 +45,9 @@ static tM4dMatrix g4dViewport;
 /** Enable flag for auto viewprot rotation */
 static int g4dAutoRotationEnabled = 1;
 
+/** Actual View type (projection mode from 4D to 3D) */
+static tG4dViewType g4dViewType = eG4d1PointProjection;
+
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
@@ -55,6 +59,9 @@ static void g4dDrawPoly(tM4dVector points[4],
                         int enableWire);
 
 static tM3dVector g4dProject(tM4dVector vector);
+
+static tM3dVector g4d1PointProject(tM4dVector vector);
+static tM3dVector g4d2PointProject(tM4dVector vector);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -107,18 +114,101 @@ void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle)
                               g4dViewport);
 }
 
+/**
+  Picture of point on W axis             Known:
+  --------------------------             O' - picture of the origo [0,0,0,0]
+               \                         Q' - picture of the end of W axis
+                \W axis                       [0,0,0,oo]
+                 \                       W  - point on W axis [0,0,0,Ww]
+                  \ W
+                   o----+                Question:
+          \        .\   |                W' - picture of the W point
+           \        .\  | Picture of
+            \       . \ | origo (O')
+             \       .t\|/               (1) O'Q'CQ" - parallelogram
+     <---//---o<-----o--O--- Projection
+             / \    /.  |\     plane     (2) WW'O' ~ WCQ"
+   picture of   \  / .  | \
+   end of W axis \/   . |  \                 WO'    WQ"    WQ"
+   (Q')          /\   . |   =            (3) ---- = ---- = ----
+                /  \  . |    \               O'W'    Q"C   O'Q'
+      picture of    =  .|     \                           ___         ___
+      W point        \ .|      \             ___          O'Q'   Ww * O'Q'
+      (W')            \.|       \        (4) O'W' = WO' * ---- = ---------
+                       \|        \                        WQ"    Ww + O'Q"
+                        o---//----+                         ___
+                       /           Q"        _    _    Ww * O'Q'
+                  view                   (5) W' = O' + ---------
+                 point (C)                             Ww + Q'C
+ */
+static tM3dVector g4d2PointProject(tM4dVector vector)
+{
+  tM3dVector O = {{ 2, 0, 0}};
+  tM3dVector Q = {{-10, 0, 0}};
+  tM3dVector C = {{ 0, 0, 20}};
+  tM3dVector W;
+  tM3dVector OQ;
+  tM3dVector result;
+  eM3dAxis axis;
+  double Ww, dQC, temp;
 
+  OQ = m3dSub(Q, O);
+
+  dQC = m3dAbs(m3dSub(Q, C));
+
+  Ww = 12 - vector.c[eM4dAxisW];
+
+  temp = Ww / (Ww + dQC);
+
+  W = m3dAdd(O, m3dMultiplySV(temp, OQ));
+
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  {
+    result.c[axis] = W.c[axis]
+                     + vector.c[axis] * g4dPerspFact(vector.c[eM4dAxisW]);
+  }
+
+  return (result);
+}
+
+static tM3dVector g4d1PointProject(tM4dVector vector)
+{
+  tM3dVector result;
+  eM3dAxis axis;
+
+  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+   {
+     result.c[axis] = vector.c[axis] * g4dPerspFact(vector.c[eM4dAxisW]);
+   }
+
+   return(result);
+}
+
+/** Set function for view type */
+void g4dSetViewType(tG4dViewType viewType)
+{
+  g4dViewType = viewType;
+}
+
+/** Project 4D point to the 3D space. */
 static tM3dVector g4dProject(tM4dVector vector)
 {
   tM3dVector result;
 
-  eM3dAxis axis;
-
+  // Rotate coordinate system to the viewport coord system
   vector = m4dMultiplyMV(g4dViewport, vector);
 
-  for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
+  if (g4dViewType == eG4d1PointProjection)
   {
-    result.c[axis] = vector.c[axis] * g4dPerspFact(vector.c[eM4dAxisW]);
+    result = g4d1PointProject(vector);
+  }
+  else if (g4dViewType == eG4d2PointProjection)
+  {
+    result = g4d2PointProject(vector);
+  }
+  else
+  {
+    exit(1);
   }
 
   return(result);
