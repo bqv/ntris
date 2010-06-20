@@ -81,7 +81,7 @@ static void aiTimer(int value)
     {
       aiDoStep();
 
-      setTimerCallback(aiTimeStep, &aiTimer);
+      setTimerCallback(aiTimeStep, &aiTimer, 0);
       refresh();
     }
     else

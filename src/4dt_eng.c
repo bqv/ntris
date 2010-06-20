@@ -120,7 +120,7 @@ static void engTimer(int value)
 
     refresh();
 
-    setTimerCallback(engGetTimestep(), &engTimer);
+    setTimerCallback(engGetTimestep(), &engTimer, 0);
   }
 }
 
@@ -157,7 +157,7 @@ static void engAnimation(int num)
   }
   else
   {
-    setTimerCallback(engAnimationTimeStep, &engAnimation);
+    setTimerCallback(engAnimationTimeStep, &engAnimation, 0);
   }
 
   refresh();

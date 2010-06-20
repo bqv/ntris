@@ -201,6 +201,10 @@ void uiKeyPress(int key)
       case UI_KEY_F2:
         g4dSetViewType(eG4d2PointProjection);
       break;
+
+      case UI_KEY_BACKSPACE:
+        g4dRotateViewportAngle(180);
+      break;
     }
   }
 }
