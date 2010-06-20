@@ -223,7 +223,8 @@ void g3dDrawLine(tM3dVector point0,
 /** \brief Draw quad with given coordinates, color, style. */
 void g3dDrawPoly(tM3dVector points[4],
                  float color[4],
-                 int mode /**< 0: fill, 1: fill & wire, 2: wire */)
+                 int mode /**< 0: fill, 1: fill & wire, 2: wire */,
+                 int sideVisible[4])
 {
   // loop counters
   int k;
@@ -274,25 +275,24 @@ void g3dDrawPoly(tM3dVector points[4],
   // if enabled wire draw
   if (mode > 0)
   {
-    // Start draw a line strip.
-    glBegin(GL_LINE_STRIP);
-
     // For each point of the facet
     for (k = 0; k < 4; k++)
     {
-      // set the points of the strip.
-      glVertex3d(points[k].c[0],
-                 points[k].c[1],
-                 points[k].c[2]);
+      if ((sideVisible == NULL) || (sideVisible[k] == 1))
+      {
+        glBegin(GL_LINE);
+
+        glVertex3d(points[k].c[0],
+                   points[k].c[1],
+                   points[k].c[2]);
+
+        glVertex3d(points[(k+1) % 4].c[0],
+                   points[(k+1) % 4].c[1],
+                   points[(k+1) % 4].c[2]);
+
+        glEnd();
+      }
     }
-
-    // Close the strip.
-    glVertex3d(points[0].c[0],
-               points[0].c[1],
-               points[0].c[2]);
-
-    // Finish drawing.
-    glEnd();
   }
 
   if (transparent)

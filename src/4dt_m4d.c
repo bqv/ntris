@@ -69,7 +69,6 @@ tM4dVector m4dVector(double x, double y, double z, double w)
   return vector;
 }
 
-
 /** Creates a null matrix. */
 tM4dMatrix m4dNullMatrix()
 {
@@ -125,6 +124,22 @@ tM4dVector m4dAddVectors(tM4dVector vector1, tM4dVector vector2)
 
   return(result);
 }
+
+/** Subtract two vector */
+tM4dVector m4dSubVectors(tM4dVector vector1, tM4dVector vector2)
+{
+  eM4dAxis axis;
+  tM4dVector result;
+
+  for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
+  {
+    result.c[axis] = vector1.c[axis] - vector2.c[axis];
+  }
+
+  return(result);
+}
+
+
 
 /** Scalar-vector multiplication */
 tM4dVector m4dMultiplySV(double scalar, tM4dVector vector)

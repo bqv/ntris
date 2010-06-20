@@ -68,7 +68,7 @@ static void menuQuit(void);
 static void menuAnimation(void);
 static void menuGameOver(void);
 static void menuGameOverOff(void);
-static void menuHypercubes(void);
+static void menuDrawmode(void);
 
 /*------------------------------------------------------------------------------
    CONSTANTS
@@ -83,9 +83,9 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
   {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuHypercubes, eMenuNull} },
+  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuDrawmode, eMenuNull} },
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
-  {1, "Draw hypercubes",menuHypercubes,NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "Draw hypercubes",menuDrawmode,NULL,   eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
@@ -392,14 +392,29 @@ static void menuAnimation(void)
   menuNavigate(eMenuBack);
 }
 
-static void menuHypercubes(void)
+static void menuDrawmode(void)
 {
-  scnSetEnableHypercubeDraw(!scnGetEnableHypercubeDraw());
+  const struct
+  {
+    tMenuString caption;
+    int hypercubedraw;
+    int separateBlockDraw;
+  }
+  states[3] =
+  {
+    { "Draw connected hypercubes", 1, 0},
+    { "Draw separate hypercubes",  1, 1},
+    { "Draw separate cubes",       0, 1}
+  };
 
-  menuItems[eMenuHypercubes].caption = scnGetEnableHypercubeDraw()
-                                   ? "Draw hypercubes"
-                                   : "Draw cubes";
+  static int state = 0;
+
+  state = (state + 1) % 3;
+
+  scnSetEnableHypercubeDraw(states[state].hypercubedraw);
+  scnSetEnableSeparateBlockDraw(states[state].separateBlockDraw);
+
+  menuItems[eMenuDrawmode].caption = states[state].caption;
   menuNavigate(eMenuBack);
-
 }
 

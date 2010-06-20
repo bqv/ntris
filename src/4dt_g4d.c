@@ -73,7 +73,8 @@ static double g4dPerspFact(double w);
 
 static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
-                        int enableWire);
+                        int enableWire,
+                        int sideVisible[4]);
 
 static tM3dVector g4dProject(tM4dVector vector);
 
@@ -301,7 +302,8 @@ void g4dDrawLine(tM4dVector point0,
 /** \brief Draws 4D polygon */
 static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
-                        int mode)
+                        int mode,
+                        int sideVisible[4])
 {
   tM3dVector points3D[4];
   int i;
@@ -311,7 +313,7 @@ static void g4dDrawPoly(tM4dVector points[4],
     points3D[i] = g4dProject(points[i]);
   }
 
-  g3dDrawPoly(points3D, color, mode);
+  g3dDrawPoly(points3D, color, mode, sideVisible);
 }
 
 
@@ -320,7 +322,8 @@ void g4dDraw4DCube(tM4dVector center,
                    tM4dMatrix orientation,
                    float color[4],
                    int dimension,
-                   int mode)
+                   int mode,
+                   int sideVisible[eM4dDimNum][2])
 {
   // Array contains the points of a 4D hypercube.
   tM4dVector points[16] =
@@ -364,27 +367,49 @@ void g4dDraw4DCube(tM4dVector center,
   // Move each point of the hypercube to its final position
   for (n = 0; n < 16; n++)
   {
+    visible[n] = 1;
+
+    if ((sideVisible != NULL) && (dimension == 4))
+    {
+      for(i = eM4dAxisX; i < eM4dDimNum; i++)
+      {
+        visible[n] &= ((points[n].c[i] < 0) && (sideVisible[i][0] == 0)) ? 0 : 1;
+        visible[n] &= ((points[n].c[i] > 0) && (sideVisible[i][1] == 0)) ? 0 : 1;
+      }
+    }
+
     points[n] = m4dMultiplyMV(orientation, points[n]);
-    visible[n] = (dimension == 4) || (points[n].c[eM4dAxisW] > 0);
+
+    visible[n] &= (dimension == 3) && (points[n].c[eM4dAxisW] < 0) ? 0 : 1;
+
     points[n] = m4dAddVectors(points[n], center);
   }
 
   // For each facet and
   for (i = 0; i < 24; i++)
   {
-    int facetVisible = 1;
+    int sideVisible[4];
+    int visiblePointNum = 0;
+    int facetVisible = 0;
 
     tM4dVector pointlist[4];
 
     for (k = 0; k < 4; k++)
     {
+      visiblePointNum += visible[faces[i][k]] ? 1 : 0;
+
       pointlist[k] = points[faces[i][k]];
-      facetVisible &= visible[faces[i][k]];
+
+      sideVisible[k] = visible[faces[i][k]];
     }
+
+    facetVisible = (dimension == 3)
+                   ? visiblePointNum == 4
+                   : visiblePointNum > 0;
 
     if (facetVisible)
     {
-      g4dDrawPoly(pointlist, color, mode);
+      g4dDrawPoly(pointlist, color, mode, sideVisible);
     }
   }
 }

@@ -24,7 +24,8 @@
 extern void g3dInit(void);
 extern void g3dDrawPoly(tM3dVector points[4],
                         float color[4],
-                        int enableWire);
+                        int enableWire,
+                        int sideVisible[4]);
 extern void g3dDrawLine(tM3dVector point0,
                         tM3dVector point1,
                         float color0[4],
