@@ -85,7 +85,7 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
   {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuDrawmode, eMenuNull} },
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
-  {1, "Draw hypercubes",menuDrawmode,NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "Draw connected hypercubes",menuDrawmode,NULL,eMenuVideoOptions,{eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },

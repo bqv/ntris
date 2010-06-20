@@ -39,7 +39,7 @@
 static int scnEnableHypercubeDraw = 1;
 
 /** Flag indicates if block should be drawn separated */
-static int scnEnableSeparateBlockDraw = 1;
+static int scnEnableSeparateBlockDraw = 0;
 
 /** Color of the 4D cube. */
 static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.08};
