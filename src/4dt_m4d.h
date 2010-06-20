@@ -46,6 +46,7 @@ extern tM4dVector m4dVector(double x, double y, double z, double w);
 
 extern tM4dMatrix m4dNullMatrix();
 extern tM4dMatrix m4dUnitMatrix();
+extern tM4dMatrix m4dRandUnitMatrix();
 extern tM4dMatrix m4dRotMatrix(eM4dAxis axis1, eM4dAxis axis2, double angle);
 
 extern tM4dVector m4dAddVectors(tM4dVector vector1, tM4dVector vector2);

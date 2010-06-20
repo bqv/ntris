@@ -92,6 +92,26 @@ tM4dMatrix m4dUnitMatrix()
   return unit;
 }
 
+/** Creates a random oriented unit matrix. */
+tM4dMatrix m4dRandUnitMatrix()
+{
+  int vars[6][3] = {{0,1,2},{0,2,1},{1,0,2},{1,2,0},{2,0,1},{2,1,0}};
+  tM4dMatrix result = m4dNullMatrix();
+  int i;
+  int num;
+
+  num = rand() % 6;
+
+  for (i = 0; i <= 2; i++)
+  {
+    result.c[i][vars[num][i]] = ((rand() % 2) == 0) ? 1 : -1;
+  }
+
+  result.c[3][3] = 1;
+
+  return result;
+}
+
 /** adds two vector */
 tM4dVector m4dAddVectors(tM4dVector vector1, tM4dVector vector2)
 {

@@ -305,40 +305,49 @@ void engInitGame(void)
   engResetGame();
 }
 
+/** get random object index based on difficulty level */
+static int engRandSolidnum(void)
+{
+  // probability
+  int prob;
+  // sum of probabilities
+  int sum = 0;
+  // loop counter / index of random object
+  int i;
+
+  // for every solid type
+  for (i = 0; i < OBJECTTYPES; i++)
+  {
+     // summarize the probability
+     sum += engProbs[engGE.game_opts.diff][i];
+  }
+
+  // initialize loop counter
+  i = 0;
+
+  // get a random probability
+  prob = (long int) (sum * (rand() / (RAND_MAX + 1.0) ));
+
+  int prb = engProbs[engGE.game_opts.diff][i];
+
+  while (!(prob < prb))
+  {
+    i++;
+    prb += engProbs[engGE.game_opts.diff][i];
+  }
+
+  return(i);
+}
+
+
 /** get a new random solid */
 static void engNewSolid(void)
 {
-   // probability
-   int prob;
-   // sum of probabilities
-   int sum = 0;
-   // loop counter
-   int i;
+  int index = engRandSolidnum();
 
-   // for every solid type
-   for (i = 0; i < OBJECTTYPES; i++)
-   {
-      // summarize the probability
-      sum += engProbs[engGE.game_opts.diff][i];
-   }
+   engGE.object.axices = m4dRandUnitMatrix();
 
-   // initialize loop counter
-   i = 0;
-
-   // get a random probability
-   prob = (long int) (sum * (rand() / (RAND_MAX + 1.0) ));
-
-   int prb = engProbs[engGE.game_opts.diff][i];
-
-   while (!(prob < prb))
-   {
-     i++;
-     prb += engProbs[engGE.game_opts.diff][i];
-   }
-
-   engGE.object.axices = m4dUnitMatrix();
-
-   engGE.object.block = engObjects[i];
+   engGE.object.block = engObjects[index];
 
    // position the new solid to the
    // top 2 level of the space
