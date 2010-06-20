@@ -26,4 +26,7 @@ extern void scnDisplay(void);
 extern void scnSetEnableHypercubeDraw(int enable);
 extern int scnGetEnableHypercubeDraw(void);
 
+extern void scnSetEnableSeparateBlockDraw(int enable);
+extern int scnGetEnableSeparateBlockDraw(void);
+
 #endif /* _4DT_SCN_H_ */

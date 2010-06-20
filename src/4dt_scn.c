@@ -38,8 +38,13 @@
 /** Flag indicates if hypercube should be drawn or only the "top side" cube */
 static int scnEnableHypercubeDraw = 1;
 
+/** Flag indicates if block should be drawn separated */
+static int scnEnableSeparateBlockDraw = 1;
+
 /** Color of the 4D cube. */
 static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.08};
+/** Color of the 4D grid. */
+static float scn4DGridColor[4] = {0.4, 0.4, 0.6, 0.015};
 
 /** array of the colors of game space levels. */
 static float scnLevelColors[SPACELENGTH][4];
@@ -55,22 +60,21 @@ static void scnDrawBG(void);
 static void scnWriteScore(void);
 static void scnInitLevelColors(void);
 static void scnDrawRotAxis(void);
+static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2]);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
 /** Set function for hypercube draw enable flag */
-void scnSetEnableHypercubeDraw(int enable)
-{
-  scnEnableHypercubeDraw = enable;
-}
-
+void scnSetEnableHypercubeDraw(int enable) { scnEnableHypercubeDraw = enable; }
 /** Get function for hypercube draw enable flag */
-int scnGetEnableHypercubeDraw(void)
-{
-  return(scnEnableHypercubeDraw);
-}
+int scnGetEnableHypercubeDraw(void) { return(scnEnableHypercubeDraw); }
+
+/** Set function for separate block draw enable flag */
+void scnSetEnableSeparateBlockDraw(int enable) { scnEnableSeparateBlockDraw = enable; }
+/** Get function for separate block draw enable flag */
+int scnGetEnableSeparateBlockDraw(void) { return(scnEnableSeparateBlockDraw); }
 
 /** \brief Set random colors for game levels */
 static void scnInitLevelColors(void)
@@ -156,6 +160,47 @@ void scnInit(void)
   scnInitLevelColors();
 }
 
+/**  Check, which side of the block should not be drawn because have neighbor.
+ * n - index of the block in object
+ * visibleSides - return array */
+static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2])
+{
+  int i;
+
+  for (i = eM4dAxisX; i < eM4dDimNum; i++)
+  {
+    (*visibleSides)[i][0] = 1;
+    (*visibleSides)[i][1] = 1;
+  }
+
+  for (i = 0; i < engGE.object.block.num; i++)
+  {
+    /* indicates, which orientation 'i' block is neighbor with 'n'
+       -1 = not found, -2 = no neighbor */
+    eM4dAxis orientation = -1;
+    eM4dAxis axis;
+
+    tM4dVector sub =
+      m4dSubVectors(engGE.object.block.c[i],engGE.object.block.c[n]);
+
+    for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
+    {
+      if (abs(sub.c[axis]) >= 0.5)
+      {
+        orientation = (orientation == -1)
+                      ? axis
+                      : -2;
+      }
+    }
+
+    if (orientation >= 0)
+    {
+      (*visibleSides)[orientation]
+                     [(sub.c[orientation] > 0) ? 1 : 0] = 0;
+    }
+  }
+}
+
 /** Main drawing function. */
 void scnDisplay(void)
 {
@@ -196,7 +241,7 @@ void scnDisplay(void)
           g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
                         m4dUnitMatrix(),
                         scnLevelColors[l],
-                        scnEnableHypercubeDraw ? 4 : 3, 0);
+                        scnEnableHypercubeDraw ? 4 : 3, 0, NULL);
 
           mask[x][y][z] = 1;
         }
@@ -204,7 +249,7 @@ void scnDisplay(void)
         {
 //          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
 //                        m4dUnitMatrix(),
-//                        scn4DCubeColor, 4, 2);
+//                        scn4DGridColor, 4, 2, NULL);
         }
       }
     }
@@ -222,7 +267,7 @@ void scnDisplay(void)
     {
       g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
                     m4dUnitMatrix(),
-                    scn4DCubeColor, 3, 1);
+                    scn4DCubeColor, 3, 1, NULL);
     }
   }
 
@@ -232,6 +277,9 @@ void scnDisplay(void)
   for (n = 0; n < engGE.object.block.num; n++)
   {
     tM4dVector pos;
+    int visibleSides[eM4dDimNum][2];
+
+    scnVisibleSides(n, &visibleSides);
 
     pos = m4dAddVectors(engGE.object.pos,
                         m4dMultiplyMV(engGE.object.axices,
@@ -239,7 +287,8 @@ void scnDisplay(void)
 
     // draw the hypercube.
     g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor,
-                  scnEnableHypercubeDraw ? 4 : 3, 1);
+                  scnEnableHypercubeDraw ? 4 : 3, 1,
+                  scnEnableSeparateBlockDraw ? NULL : visibleSides);
   }
 
   scnDrawRotAxis();
