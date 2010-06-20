@@ -23,4 +23,7 @@ extern int scnAxle;
 extern void scnInit(void);
 extern void scnDisplay(void);
 
+extern void scnSetEnableHypercubeDraw(int enable);
+extern int scnGetEnableHypercubeDraw(void);
+
 #endif /* _4DT_SCN_H_ */

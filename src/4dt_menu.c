@@ -16,6 +16,7 @@
 #include "4dt_g4d.h"
 #include "4dt_ai.h"
 #include "4dt_eng.h"
+#include "4dt_scn.h"
 #include "4dt_hst.h"
 
 #include "4dt_menu.h"
@@ -67,6 +68,7 @@ static void menuQuit(void);
 static void menuAnimation(void);
 static void menuGameOver(void);
 static void menuGameOverOff(void);
+static void menuHypercubes(void);
 
 /*------------------------------------------------------------------------------
    CONSTANTS
@@ -81,8 +83,9 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
   {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuNull} },
+  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuHypercubes, eMenuNull} },
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "Draw hypercubes",menuHypercubes,NULL,   eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
@@ -389,5 +392,14 @@ static void menuAnimation(void)
   menuNavigate(eMenuBack);
 }
 
+static void menuHypercubes(void)
+{
+  scnSetEnableHypercubeDraw(!scnGetEnableHypercubeDraw());
 
+  menuItems[eMenuHypercubes].caption = scnGetEnableHypercubeDraw()
+                                   ? "Draw hypercubes"
+                                   : "Draw cubes";
+  menuNavigate(eMenuBack);
+
+}
 
