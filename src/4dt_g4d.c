@@ -358,30 +358,33 @@ void g4dDraw4DCube(tM4dVector center,
 { 0xC, 0xD,   5,   4}, {   8,   9,   1,   0}, { 0xA, 0xB,   3,   2}, { 0xE, 0xF,   7,   6}
   };
 
-  // Loop counter.
-  int n, i, k;
-  int facenum;
+  int visible[16];  // visibility flag for points
+  int n, i, k; // Loop counter.
 
   // Move each point of the hypercube to its final position
   for (n = 0; n < 16; n++)
   {
     points[n] = m4dMultiplyMV(orientation, points[n]);
+    visible[n] = (dimension == 4) || (points[n].c[eM4dAxisW] > 0);
     points[n] = m4dAddVectors(points[n], center);
   }
 
-  // Determine number of facets which has to be drawn
-  facenum = (dimension == 3) ? 6 : 24;
-
   // For each facet and
-  for (i = 0; i < facenum; i++)
+  for (i = 0; i < 24; i++)
   {
+    int facetVisible = 1;
+
     tM4dVector pointlist[4];
 
     for (k = 0; k < 4; k++)
     {
       pointlist[k] = points[faces[i][k]];
+      facetVisible &= visible[faces[i][k]];
     }
 
-    g4dDrawPoly(pointlist, color, mode);
+    if (facetVisible)
+    {
+      g4dDrawPoly(pointlist, color, mode);
+    }
   }
 }

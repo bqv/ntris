@@ -35,6 +35,9 @@
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
 
+/** Flag indicates if hypercube should be drawn or only the "top side" cube */
+static int scnEnableHypercubeDraw = 1;
+
 /** Color of the 4D cube. */
 static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.08};
 
@@ -56,6 +59,18 @@ static void scnDrawRotAxis(void);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Set function for hypercube draw enable flag */
+void scnSetEnableHypercubeDraw(int enable)
+{
+  scnEnableHypercubeDraw = enable;
+}
+
+/** Get function for hypercube draw enable flag */
+int scnGetEnableHypercubeDraw(void)
+{
+  return(scnEnableHypercubeDraw);
+}
 
 /** \brief Set random colors for game levels */
 static void scnInitLevelColors(void)
@@ -180,7 +195,8 @@ void scnDisplay(void)
           // draw the cube.
           g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
                         m4dUnitMatrix(),
-                        scnLevelColors[l], 4, 0);
+                        scnLevelColors[l],
+                        scnEnableHypercubeDraw ? 4 : 3, 0);
 
           mask[x][y][z] = 1;
         }
@@ -222,7 +238,8 @@ void scnDisplay(void)
                                       engGE.object.block.c[n]));
 
     // draw the hypercube.
-    g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
+    g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor,
+                  scnEnableHypercubeDraw ? 4 : 3, 1);
   }
 
   scnDrawRotAxis();
