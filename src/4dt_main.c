@@ -83,9 +83,9 @@ static void processARGV(int argc, char *argv[]);
 */
 
 /** Sets a timer to call back the function passed after given time (msec) */
-void setTimerCallback(int time, void (*callback)(int))
+void setTimerCallback(int time, void (*callback)(int), int value)
 {
-  glutTimerFunc(time, callback, 0);
+  glutTimerFunc(time, callback, value);
 }
 
 

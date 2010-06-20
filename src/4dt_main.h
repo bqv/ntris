@@ -18,7 +18,7 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern void setTimerCallback(int time, void (*callback)(int));
+extern void setTimerCallback(int time, void (*callback)(int), int value);
 extern void refresh(void);
 
 

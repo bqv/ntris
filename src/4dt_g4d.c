@@ -109,6 +109,28 @@ void g4dSwitchAutoRotation(int enable)
   g4dAutoRotateViewport(0);
 }
 
+/** Rotates the view port with angle deg in more steps */
+void g4dRotateViewportAngle(int angle)
+{
+  int anglestep = 30;
+
+  if (angle > 0)
+  {
+    angle -= anglestep;
+    if (angle < 0)
+    {
+      anglestep -= -angle;
+    }
+
+    g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
+                                             anglestep * M_PI / 180),
+                                g4dViewport);
+
+    setTimerCallback(g4dRotationTimeStep, &g4dRotateViewportAngle, angle);
+    refresh();
+  }
+}
+
 /** View rotation procedure. Should be triggered. */
 static void g4dAutoRotateViewport(int num)
 {
@@ -122,7 +144,7 @@ static void g4dAutoRotateViewport(int num)
                                              0.20 * M_PI / 180),
                                 g4dViewport);
 
-    setTimerCallback(g4dRotationTimeStep, &g4dAutoRotateViewport);
+    setTimerCallback(g4dRotationTimeStep, &g4dAutoRotateViewport, 0);
     refresh();
   }
 }
@@ -136,14 +158,14 @@ static void g4dStepViewModeChange(int num)
     {
       g4dViewInterpol -= g4dViewInterpolStep;
       if (g4dViewInterpol < 0.0) { g4dViewInterpol = 0.0; }
-      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange); }
+      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0); }
       break;
     }
     case eG4d2PointProjection:
     {
       g4dViewInterpol += g4dViewInterpolStep;
       if (g4dViewInterpol > 1.0) { g4dViewInterpol = 1.0; }
-      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange); }
+      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0); }
       break;
     }
   }
@@ -156,7 +178,7 @@ void g4dSetViewType(tG4dViewType viewType)
 {
   g4dViewType = viewType;
 
-  setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange);
+  setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0);
 }
 
 /** Rotates viewport with givel angle */
