@@ -107,6 +107,15 @@ static int engGetTimestep(void)
   return(10000/(4+engGE.score/10000));
 }
 
+/** Timer function for Game engine. */
+void engDropSolid(int value)
+{
+  if (engLowerSolid())
+  {
+    setTimerCallback(0.25, &engDropSolid, 0);
+  }
+}
+
 
 /** Timer function for Game engine. */
 static void engTimer(int value)
@@ -475,7 +484,7 @@ int engLowerSolid(void)
     }
   }
 
-  return(0);
+  return(!onFloor);
 }
 
 /** turns the solid from axis 1 to axis 2

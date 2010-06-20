@@ -205,6 +205,10 @@ void uiKeyPress(int key)
       case UI_KEY_BACKSPACE:
         g4dRotateViewportAngle(180);
       break;
+
+      case UI_KEY_ENTER:
+        engDropSolid(0);
+      break;
     }
   }
 }

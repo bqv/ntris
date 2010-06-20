@@ -111,6 +111,7 @@ extern tEngGame engGE;
 extern void engResetGame(void);
 extern void engInitGame(void);
 extern int engLowerSolid(void);
+extern void engDropSolid(int value);
 extern int engTurn(char ax1, char ax2);
 extern void engPrintSpace(void);
 
