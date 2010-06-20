@@ -244,9 +244,9 @@ void menuDraw(void)
   float linespace = 0.1; // portion of vert. display size between lines
 
   // colors for different menu item states
-  float colorDisable[4] = {0.6, 0.6, 0.8, 0.2};
-  float colorNormal[4]  = {0.2, 0.2, 0.4, 0.8};
-  float colorSelect[4]  = {1.0, 0.2, 0.4, 0.8};
+  float colorDisable[4] = {0.8, 0.8, 0.9, 1.0};
+  float colorNormal[4]  = {0.3, 0.3, 0.5, 1.0};
+  float colorSelect[4]  = {1.0, 0.2, 0.4, 1.0};
 
   // for each submenu in active menu item
   for (i = 0; i < menuSubNum(menuActItem); i++)
