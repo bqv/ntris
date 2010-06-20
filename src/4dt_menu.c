@@ -69,6 +69,7 @@ static void menuAnimation(void);
 static void menuGameOver(void);
 static void menuGameOverOff(void);
 static void menuDrawmode(void);
+static void menuGrid(void);
 
 /*------------------------------------------------------------------------------
    CONSTANTS
@@ -83,9 +84,10 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
   {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuDrawmode, eMenuNull} },
+  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuDrawmode, eMenuGrid, eMenuNull} },
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
   {1, "Draw connected hypercubes",menuDrawmode,NULL,eMenuVideoOptions,{eMenuNull} },
+  {1, "Grid - OFF",     menuGrid,      NULL,   eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
@@ -418,3 +420,12 @@ static void menuDrawmode(void)
   menuNavigate(eMenuBack);
 }
 
+static void menuGrid(void)
+{
+  scnSetEnableGridDraw(!scnGetEnableGridDraw());
+
+  menuItems[eMenuGrid].caption = scnGetEnableGridDraw()
+                                 ? "Grid - ON"
+                                 : "Grid - OFF";
+  menuNavigate(eMenuBack);
+}
