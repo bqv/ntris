@@ -103,12 +103,12 @@ static tMenuItem menuItems[eMenuItemNum] =
 tMenuString menuHelpText[TEXTLINENUM] =
 {
   "Game Controls:",
-  " - arrow keys - rotate the view port",
+  " - arrow keys, backspace - rotate/turn the view port",
   " - z, x, c, v - turn the blocks around the 4 axis",
   " - 1, 2, 3 - select rotation axles",
   " - +, -, pgdn, pgup - rotate around selected axle",
   " - home, end - rot. around selected and 4th axle",
-  " - backspace - turn viewport with 180 deg",
+  " - space, enter - step down/drop the object",
   " - F1 - F2 - switch view mode"
 };
 
