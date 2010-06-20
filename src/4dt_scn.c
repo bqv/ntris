@@ -41,6 +41,9 @@ static int scnEnableHypercubeDraw = 1;
 /** Flag indicates if block should be drawn separated */
 static int scnEnableSeparateBlockDraw = 0;
 
+/** Flag indicates if grid has to be drawn */
+static int scnEnableGridDraw = 0;
+
 /** Color of the 4D cube. */
 static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.08};
 /** Color of the 4D grid. */
@@ -75,6 +78,11 @@ int scnGetEnableHypercubeDraw(void) { return(scnEnableHypercubeDraw); }
 void scnSetEnableSeparateBlockDraw(int enable) { scnEnableSeparateBlockDraw = enable; }
 /** Get function for separate block draw enable flag */
 int scnGetEnableSeparateBlockDraw(void) { return(scnEnableSeparateBlockDraw); }
+
+/** Set function for grid draw enable flag */
+void scnSetEnableGridDraw(int enable) { scnEnableGridDraw = enable; }
+/** Get function for grid draw enable flag */
+int scnGetEnableGridDraw(void) { return(scnEnableGridDraw); }
 
 /** \brief Set random colors for game levels */
 static void scnInitLevelColors(void)
@@ -247,9 +255,12 @@ void scnDisplay(void)
         }
         else
         {
-//          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-//                        m4dUnitMatrix(),
-//                        scn4DGridColor, 4, 2, NULL);
+          if (scnEnableGridDraw)
+          {
+            g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+                          m4dUnitMatrix(),
+                          scn4DGridColor, 4, 2, NULL);
+          }
         }
       }
     }

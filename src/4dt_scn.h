@@ -29,4 +29,7 @@ extern int scnGetEnableHypercubeDraw(void);
 extern void scnSetEnableSeparateBlockDraw(int enable);
 extern int scnGetEnableSeparateBlockDraw(void);
 
+extern void scnSetEnableGridDraw(int enable);
+extern int scnGetEnableGridDraw(void);
+
 #endif /* _4DT_SCN_H_ */
