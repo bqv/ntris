@@ -22,6 +22,7 @@
 #include "4dt_g4d.h"
 #include "4dt_eng.h"
 #include "4dt_scn.h"
+#include "4dt_ai.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -139,7 +140,7 @@ static void engGameOver(void)
   engGE.gameOver = 1;
   engGE.activeUser = 0;
 
-  g4dSwitchAutoRotation(1);
+  aiSetActive(0);
 
   hstAddScore(engGE.score);
 
