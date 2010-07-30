@@ -27,10 +27,15 @@
 ------------------------------------------------------------------------------*/
 
 /** Constant light parameters */
-static const GLfloat g3dLightAmbient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+/*static const GLfloat g3dLightAmbient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 static const GLfloat g3dLightDiffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
 static const GLfloat g3dLightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+static const GLfloat g3dLightPosition[] = { 2.0f, -5.0f, 2.5f, 1.0f };*/
+static const GLfloat g3dLightAmbient[]  = { 0.0f, 0.0f, 0.0f, 0.0f }; //MOD - Reflection makes it hard to see in stereo; twiddled with the numbers.
+static const GLfloat g3dLightDiffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+static const GLfloat g3dLightSpecular[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 static const GLfloat g3dLightPosition[] = { 2.0f, -5.0f, 2.5f, 1.0f };
+
 
 /** Constant material parameters */
 static const GLfloat g3dMatAmbient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -69,6 +74,32 @@ void g3dBeginDraw(void)
 
   // Place and orient the viewport.
   glTranslated(0, 0, -6);
+  glRotated(-75.0, 1, 0, 0);
+  glRotated(20.0, 0, 0, 1);
+}
+
+void g3dBeginDrawTranslated(int x, int y, int z) { //MOD
+  // Clear the display buffer.
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glPushMatrix();
+  glLoadIdentity();
+
+  // Place and orient the viewport.
+  glTranslated(x, y, z);
+  glRotated(-75.0, 1, 0, 0);
+  glRotated(20.0, 0, 0, 1);
+}
+
+void g3dBeginDrawTranslatedNoClear(int x, int y, int z) { //MOD
+  // Clear the display buffer.
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glPushMatrix();
+  glLoadIdentity();
+
+  // Place and orient the viewport.
+  glTranslated(x, y, z);
   glRotated(-75.0, 1, 0, 0);
   glRotated(20.0, 0, 0, 1);
 }
@@ -314,7 +345,8 @@ void g3dResize(int width, int height)
   glMatrixMode(GL_PROJECTION);
 
   glLoadIdentity();
-  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 10.0);
+//  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 10.0);
+  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 16.0);
 
   // Set Matrixmode.
   glMatrixMode(GL_MODELVIEW);

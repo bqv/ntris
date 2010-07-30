@@ -107,6 +107,9 @@ void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle)
                               g4dViewport);
 }
 
+//void g4dAddToViewport(int Col, int Row, double Value) { //MOD
+//  g4dViewport.c[Col][Row] += Value;
+//}
 
 static tM3dVector g4dProject(tM4dVector vector)
 {

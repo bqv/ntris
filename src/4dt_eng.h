@@ -97,6 +97,9 @@ typedef struct
     double posDecrease;   /** position decreasion to be performed */
   } animation;
 
+  /** MOD - Stereoscopic viewpoint variables (just the one, for now) */
+  int stereoEnable;
+
   /** struct of game options */
   tEngGameOptions game_opts;
 
@@ -121,7 +124,8 @@ extern int engAnimation(void);
 static inline int engGetTimestep(void)
 {
   // calculate timestep depending on actual score
-  return(10000/(4+engGE.score/10000));
+//  return(10000/(4+engGE.score/10000));
+  return(10000/(4+engGE.score/2000)); //MOD (It didn't increase very fast, before.)
 }
 
 /** get the cell of the level at x, y, z from
