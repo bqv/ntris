@@ -1,0 +1,193 @@
+# Hungarian translation for 4dtris.
+#
+# Copyright (C) 2010 Laszlo Simon <laszlo.simon@gmail.com>
+# This file is distributed under the same license as the 4dtris package.
+# Laszlo Simon <laszlo.simon@gmail.com>, 2010.
+#
+#: src/4dt_eng.c:209 src/4dt_hst.c:102 src/4dt_menu.c:82 src/4dt_menu.c:83
+#: src/4dt_menu.c:104 src/4dt_menu.c:129 src/4dt_menu.c:130 src/4dt_menu.c:136
+#: src/4dt_menu.c:138
+#, fuzzy, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: Laszlo Simon <laszlo.simon@gmail.com>\n"
+"POT-Creation-Date: 2010-08-27 14:41+0200\n"
+"PO-Revision-Date: 2010-08-27 14:41+0200\n"
+"Last-Translator: Laszlo Simon <laszlo.simon@gmail.com>\n"
+"Language-Team: Hungarian <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/4dt_hst.c:155
+#, c-format
+msgid ":info: No %s found, it will be created.\n"
+msgstr ":info: %s nem találató, létrehozásra kerül.\n"
+
+#: src/4dt_hst.c:188
+#, c-format
+msgid ":warning: Can not read file %s\n"
+msgstr "warning: %s fájl nem olvasható.\n"
+
+#: src/4dt_hst.c:216
+#, c-format
+msgid ":Warning: Can not write file %s, data won't be stored.\n"
+msgstr "warning: %s fájl nem írható, az adatok nem kerünek tárolásra.\n"
+
+#: src/4dt_hst.c:242
+msgid "Me"
+msgstr "Én"
+
+#: src/4dt_menu.c:84
+msgid "Main menu"
+msgstr "Főmenü"
+
+#: src/4dt_menu.c:85
+msgid "New Game"
+msgstr "Új játék"
+
+#: src/4dt_menu.c:86
+msgid "Options"
+msgstr "Beállítások"
+
+#: src/4dt_menu.c:87
+msgid "Video Options"
+msgstr "Megjelenítés"
+
+#: src/4dt_menu.c:88 src/4dt_menu.c:392
+msgid "Animation - ON"
+msgstr "Animáció - ON"
+
+#: src/4dt_menu.c:89 src/4dt_menu.c:407
+msgid "Draw connected hypercubes"
+msgstr "Összefüggő hyperkockák rajzolása"
+
+#: src/4dt_menu.c:90 src/4dt_menu.c:429
+msgid "Grid - OFF"
+msgstr "Rács - OFF"
+
+#: src/4dt_menu.c:91
+msgid "Audio Options"
+msgstr "Hang beállítás"
+
+#: src/4dt_menu.c:92
+msgid "Sound"
+msgstr "Hang"
+
+#: src/4dt_menu.c:93
+msgid "Music"
+msgstr "Zene"
+
+#: src/4dt_menu.c:94
+msgid "Game Options"
+msgstr "Játék beállítás"
+
+#: src/4dt_menu.c:95 src/4dt_menu.c:335
+msgid "Auto Player - ON"
+msgstr "Autómata játékos - ON"
+
+#: src/4dt_menu.c:96 src/4dt_menu.c:346
+msgid "Diff. Level - Hard"
+msgstr "Nehézségi szint - Nehéz"
+
+#: src/4dt_menu.c:97
+msgid "Controls"
+msgstr "Irányítás"
+
+#: src/4dt_menu.c:98
+msgid "Help"
+msgstr "Súgó"
+
+#: src/4dt_menu.c:99
+msgid "Help Page"
+msgstr "Súgó lap"
+
+#: src/4dt_menu.c:100
+msgid "High Scores"
+msgstr "Eredménytábla"
+
+#: src/4dt_menu.c:101
+msgid "About"
+msgstr "Rólunk"
+
+#: src/4dt_menu.c:102
+msgid "Back To Game"
+msgstr "Vissza a játékba"
+
+#: src/4dt_menu.c:103
+msgid "Quit"
+msgstr "Kilép"
+
+#: src/4dt_menu.c:110
+msgid "Game Controls:"
+msgstr "Játék irányítás"
+
+#: src/4dt_menu.c:111
+msgid " - arrow keys, backspace - rotate/turn the view port"
+msgstr " - kurzor gombok, backspace - nézőpont forgatása"
+
+#: src/4dt_menu.c:112
+msgid " - z, x, c, v - turn the blocks around the 4 axis"
+msgstr " - z, x, c, v - blokkok forgatása a 4 tengely körül"
+
+#: src/4dt_menu.c:113
+msgid " - 1, 2, 3 - select rotation axles"
+msgstr " - 1, 2, 3 - forgatási tengelyek kiválasztása"
+
+#: src/4dt_menu.c:114
+msgid " - +, -, pgdn, pgup - rotate around selected axle"
+msgstr " - +, -, pgdn, pgup - választott tengely körüli forgatás"
+
+#: src/4dt_menu.c:115
+msgid " - home, end - rot. around selected and 4th axle"
+msgstr " - home, end - forgatás a 4. tengely felé"
+
+#: src/4dt_menu.c:116
+msgid " - space, enter - step down/drop the object"
+msgstr " - space, enter - objektum léptetése, leejtése"
+
+#: src/4dt_menu.c:117
+msgid " - F1 - F2 - switch view mode"
+msgstr " - F1 - F2 - Nézet váltása"
+
+#: src/4dt_menu.c:124
+msgid "Tetris like game in four dimension"
+msgstr "Tetris négy dimenzióban"
+
+#: src/4dt_menu.c:137
+msgid "Game over."
+msgstr "Vége."
+
+#: src/4dt_menu.c:308 src/4dt_menu.c:336
+msgid "Auto Player - OFF"
+msgstr "Autómata játékos - OFF"
+
+#: src/4dt_menu.c:344
+msgid "Diff. Level - Easy"
+msgstr "Nehézségi szint - Könnyű"
+
+#: src/4dt_menu.c:345
+msgid "Diff. Level - Medium"
+msgstr "Nehézségi szint - Közepes"
+
+#: src/4dt_menu.c:393
+msgid "Animation - OFF"
+msgstr "Animáció - OFF"
+
+#: src/4dt_menu.c:408
+msgid "Draw separate hypercubes"
+msgstr "Különálló hyperkockák"
+
+#: src/4dt_menu.c:409
+msgid "Draw separate cubes"
+msgstr "Különálló kockák"
+
+#: src/4dt_menu.c:428
+msgid "Grid - ON"
+msgstr "Rács - OFF"
+
+#: src/4dt_scn.c:115
+#, c-format
+msgid "Score: %i"
+msgstr "Pontszám: %i"
