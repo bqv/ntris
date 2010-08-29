@@ -114,7 +114,7 @@ tMenuString menuHelpText[TEXTLINENUM] =
   " - +, -, pgdn, pgup - rotate around selected axle",
   " - home, end - rot. around selected and 4th axle",
   " - space, enter - step down/drop the object",
-  " - F1 - F2 - switch view mode"
+  " - F1, F2, F10 - switch view mode"
 };
 
 /** Text of help page */

@@ -25,13 +25,16 @@ extern int scnStereoEnable;
 extern void scnInit(void);
 extern void scnDisplay(void);
 
+extern void scnSetStereoMode(int enable);
+extern int  scnGetStereoMode(void);
+
 extern void scnSetEnableHypercubeDraw(int enable);
-extern int scnGetEnableHypercubeDraw(void);
+extern int  scnGetEnableHypercubeDraw(void);
 
 extern void scnSetEnableSeparateBlockDraw(int enable);
-extern int scnGetEnableSeparateBlockDraw(void);
+extern int  scnGetEnableSeparateBlockDraw(void);
 
 extern void scnSetEnableGridDraw(int enable);
-extern int scnGetEnableGridDraw(void);
+extern int  scnGetEnableGridDraw(void);
 
 #endif /* _4DT_SCN_H_ */
