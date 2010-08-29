@@ -44,9 +44,6 @@ static tM4dMatrix g4dViewport;
 /** Enable flag for auto viewprot rotation */
 static int g4dAutoRotationEnabled = 1;
 
-/** temporary switch for stereo view */
-int stereoEnable = 0; // todo: should be merged to viewset enum
-
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
