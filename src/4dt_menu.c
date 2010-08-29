@@ -17,6 +17,7 @@
 #include "4dt_ai.h"
 #include "4dt_eng.h"
 #include "4dt_hst.h"
+#include "4dt_scn.h"
 
 #include "4dt_menu.h"
 
@@ -389,9 +390,9 @@ static void menuAnimation(void)
 
 static void menuStereo(void)
 {
-  stereoEnable = !stereoEnable;
+  scnStereoEnable = !scnStereoEnable;
 
-  menuItems[eMenuStereo].caption = (stereoEnable)
+  menuItems[eMenuStereo].caption = (scnStereoEnable)
                                    ? "Stereo - ON"
                                    : "Stereo - OFF";
   menuNavigate(eMenuBack);

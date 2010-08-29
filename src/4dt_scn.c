@@ -44,6 +44,9 @@ static float scnLevelColors[SPACELENGTH][4];
 /** selected axle for rotation */
 int scnAxle = 0;
 
+/** temporary switch for stereo view */
+int scnStereoEnable = 0; // todo: should be merged to viewset enum
+
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
@@ -148,7 +151,7 @@ void scnDisplay(void)
   double camx, camz;
   int pic, maxpic;
 
-  maxpic = (stereoEnable) ? 2 : 1;
+  maxpic = (scnStereoEnable) ? 2 : 1;
 
   for (pic = 0; pic < maxpic; pic++)
   {
@@ -159,7 +162,7 @@ void scnDisplay(void)
       mask[x][y][z] = 0;
     }
 
-    if (stereoEnable)
+    if (scnStereoEnable)
     {
       camx = (pic == 0) ? -2 : 2;
       camz = -12;
