@@ -94,7 +94,7 @@ void uiKeyPress(int key)
         // rotate viewport around x axis
         // to positive direction.
         g4dRotateViewport(eM4dAxisY, eM4dAxisZ, -uiViewportRotAngle);
-		break;
+      break;
 
       // If up arrow then
       case UI_KEY_LEFT:
@@ -116,57 +116,6 @@ void uiKeyPress(int key)
         // to negative direction.
         g4dRotateViewport(eM4dAxisX, eM4dAxisY, uiViewportRotAngle);
       break;
-
-	  //****   MOD - Just fiddling around with rotations  ****//
-	  case 'q':
-        // rotate viewport around y axis
-        // to positive direction.
-        g4dRotateViewport(eM4dAxisX, eM4dAxisZ, -uiViewportRotAngle);
-		break;
-
-	  case 'a':
-        // rotate viewport around y axis
-        // to negative direction.
-        g4dRotateViewport(eM4dAxisX, eM4dAxisZ, uiViewportRotAngle);
-		break;
-
-	  case 'w':
-        // rotate viewport around w axis(?)
-        // to positive direction.
-        g4dRotateViewport(eM4dAxisX, eM4dAxisW, -uiViewportRotAngle);
-		break;
-
-	  case 's':
-        // rotate viewport around w axis(?)
-        // to negative direction.
-        g4dRotateViewport(eM4dAxisX, eM4dAxisW, uiViewportRotAngle);
-		break;
-
-	  case 'e':
-        // rotate viewport around w axis(?)
-        // to positive direction.
-        g4dRotateViewport(eM4dAxisY, eM4dAxisW, -uiViewportRotAngle);
-		break;
-
-	  case 'd':
-        // rotate viewport around w axis(?)
-        // to negative direction.
-        g4dRotateViewport(eM4dAxisY, eM4dAxisW, uiViewportRotAngle);
-		break;
-
-	  case 'r':
-        // rotate viewport around w axis(?)
-        // to positive direction.
-        g4dRotateViewport(eM4dAxisZ, eM4dAxisW, -uiViewportRotAngle);
-		break;
-
-	  case 'f':
-        // rotate viewport around w axis(?)
-        // to negative direction.
-        g4dRotateViewport(eM4dAxisZ, eM4dAxisW, uiViewportRotAngle);
-		break;
-
-		//**** END MOD ****//
 
       // If 'z' then
       case 'z':
@@ -240,7 +189,7 @@ void uiKeyPress(int key)
         engTurn(3, scnAxle);
       break;
 
-      case 'A':
+      case 'a':
         // Switch the autoplayer on.
         aiAutoGamerON = !aiAutoGamerON;
       break;
