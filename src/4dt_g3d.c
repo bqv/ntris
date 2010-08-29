@@ -59,16 +59,19 @@ static void g3dSwitchTo3D(void);
 ------------------------------------------------------------------------------*/
 
 /** \brief Starts the actual frame drawing */
-void g3dBeginDraw(void)
+void g3dBeginDraw(int x, int y, int z, int clear)
 {
   // Clear the display buffer.
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  if (clear)
+  {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
 
   glPushMatrix();
   glLoadIdentity();
 
   // Place and orient the viewport.
-  glTranslated(0, 0, -6);
+  glTranslated(x, y, z);
   glRotated(-75.0, 1, 0, 0);
   glRotated(20.0, 0, 0, 1);
 }
@@ -314,7 +317,7 @@ void g3dResize(int width, int height)
   glMatrixMode(GL_PROJECTION);
 
   glLoadIdentity();
-  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 10.0);
+  glFrustum(-ar, ar, -1.0, 1.0, 2.0, 16.0);
 
   // Set Matrixmode.
   glMatrixMode(GL_MODELVIEW);

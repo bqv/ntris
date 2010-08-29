@@ -41,7 +41,7 @@ extern void g3dRenderText(double x, double y,
                           double lineSpace);
 extern void g3dDrawRectangle(float x0, float y0, float x1, float y1,
                       float color1[4], float color2[4]);
-extern void g3dBeginDraw(void);
+extern void g3dBeginDraw(int x, int y, int z, int clear);
 extern void g3dEndDraw(void);
 extern void g3dResize(int width, int height);
 
