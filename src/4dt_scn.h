@@ -19,6 +19,8 @@
 ------------------------------------------------------------------------------*/
 
 extern int scnAxle;
+// todo: remove
+extern int scnStereoEnable;
 
 extern void scnInit(void);
 extern void scnDisplay(void);
