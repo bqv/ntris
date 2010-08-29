@@ -27,7 +27,7 @@ eMenuOFF,
     eMenuOptions,
       eMenuVideoOptions,
         eMenuAnimation,
-		eMenuStereo, //MOD
+        eMenuStereo,
       eMenuAudioOptions,
         eMenuSound,
         eMenuMusic,

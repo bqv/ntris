@@ -65,7 +65,7 @@ static void menuAbout(void);
 static void menuBack(void);
 static void menuQuit(void);
 static void menuAnimation(void);
-static void menuStereo(void); //MOD
+static void menuStereo(void);
 static void menuGameOver(void);
 static void menuGameOverOff(void);
 
@@ -81,9 +81,9 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
   {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuStereo, eMenuNull} }, //MOD
+  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuStereo, eMenuNull} },
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
-  {1, "Stereo - OFF",   menuStereo,    NULL,   eMenuVideoOptions, {eMenuNull} }, //MOD
+  {1, "Stereo - OFF",   menuStereo,    NULL,   eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
@@ -389,9 +389,9 @@ static void menuAnimation(void)
 
 static void menuStereo(void)
 {
-  engGE.stereoEnable = !engGE.stereoEnable;
+  stereoEnable = !stereoEnable;
 
-  menuItems[eMenuStereo].caption = (engGE.stereoEnable)
+  menuItems[eMenuStereo].caption = (stereoEnable)
                                    ? "Stereo - ON"
                                    : "Stereo - OFF";
   menuNavigate(eMenuBack);
