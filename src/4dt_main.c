@@ -110,9 +110,9 @@ static void specialKeyPress(int key, int x, int y)
   case GLUT_KEY_PAGE_DOWN: uiKey = UI_KEY_PGDOWN; break;
   case GLUT_KEY_HOME:      uiKey = UI_KEY_HOME;   break;
   case GLUT_KEY_END:       uiKey = UI_KEY_END;    break;
-  case GLUT_KEY_F1:        uiKey = UI_KEY_F1;    break;
-  case GLUT_KEY_F2:        uiKey = UI_KEY_F2;    break;
-
+  case GLUT_KEY_F1:        uiKey = UI_KEY_F1;     break;
+  case GLUT_KEY_F2:        uiKey = UI_KEY_F2;     break;
+  case GLUT_KEY_F10:       uiKey = UI_KEY_F10;    break;
   }
 
   uiKeyPress(uiKey);

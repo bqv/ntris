@@ -56,7 +56,7 @@ static float scnLevelColors[SPACELENGTH][4];
 int scnAxle = 0;
 
 /** temporary switch for stereo view */
-int scnStereoEnable = 0; // todo: should be merged to viewset enum
+static int scnStereoEnable = 0; // todo: should be merged to viewset enum
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
@@ -71,6 +71,11 @@ static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2]);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Set function for stereoscope view enable flag */
+void scnSetStereoMode(int enable) { scnStereoEnable = enable; }
+/** Get function for stereoscope view draw enable flag */
+int scnGetStereoMode(void) { return(scnStereoEnable); }
 
 /** Set function for hypercube draw enable flag */
 void scnSetEnableHypercubeDraw(int enable) { scnEnableHypercubeDraw = enable; }
