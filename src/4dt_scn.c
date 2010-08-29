@@ -138,261 +138,121 @@ void scnInit(void)
 /** Main drawing function. */
 void scnDisplay(void)
 {
-  if (engGE.stereoEnable) { //MOD - Stereo rendering
-//	g4dRotateViewport(eM4dAxisX, eM4dAxisY, -0.261799 / 2);
   // Local variables:
   int n, l, x, y, z;        // loop counter;
 
   // mask indicates which block space
   // hidden by upper blocks
-  int mask[2][2][2] = {{{0,0},{0,0}},{{0,0},{0,0}}};
+  int mask[2][2][2];
 
-  //MOD - Render the first angle
-  g3dBeginDrawTranslated(-2, 0, -12);
+  double camx, camz;
+  int pic, maxpic;
 
-  scnDrawBG();
+  maxpic = (stereoEnable) ? 2 : 1;
 
-  // Write out the game score.
-  scnWriteScore();
-
-  // Draw the gamespace.
-
-  // For each level from top
-  for (l = SPACELENGTH - 1; l >= 0; l--)
+  for (pic = 0; pic < maxpic; pic++)
   {
-    // For each cell of the level
+    for (x = 0; x <= 1; x++) 
+    for (y = 0; y <= 1; y++) 
+    for (z = 0; z <= 1; z++) 
+    {
+      mask[x][y][z] = 0;
+    }
+
+    if (stereoEnable)
+    {
+      camx = (pic == 0) ? -2 : 2;
+      camz = -12;
+    }
+    else
+    {
+      camx = 0;
+      camz = -6;
+    }
+
+    g3dBeginDraw(camx, 0, camz, (pic == 0) ? 1 : 0);
+
+    if (pic == 0)
+    {
+      scnDrawBG();
+    }
+
+    // Draw the gamespace.
+
+    // For each level from top
+    for (l = SPACELENGTH - 1; l >= 0; l--)
+    {
+      // For each cell of the level
+      for (x = 0; x <= 1; x++)
+      for (y = 0; y <= 1; y++)
+      for (z = 0; z <= 1; z++)
+      {
+        // space which has no cube above (so it is visible)
+        // gets rid of Z-fighting
+        if (mask[x][y][z] == 0)
+        {
+          // if the cell is not empty then
+          if (engGetSpaceCell(l, x, y, z))
+          {
+            // draw the cube.
+            g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+                          m4dUnitMatrix(),
+                          scnLevelColors[l], 4, 0);
+
+            mask[x][y][z] = 1;
+          }
+        }
+      }
+    }
+
+    // Draw the bottom level.
+
+    // For each cell of the level do:
     for (x = 0; x <= 1; x++)
     for (y = 0; y <= 1; y++)
     for (z = 0; z <= 1; z++)
     {
       // space which has no cube above (so it is visible)
-      // gets rid of Z-fighting
       if (mask[x][y][z] == 0)
       {
-        // if the cell is not empty then
-        if (engGetSpaceCell(l, x, y, z))
-        {
-          // draw the cube.
-          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                        m4dUnitMatrix(),
-                        scnLevelColors[l], 4, 0);
+        g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
+                      m4dUnitMatrix(),
+                      scn4DCubeColor, 3, 1);
+      }
+    }
 
-          mask[x][y][z] = 1;
-        }
+    // Draw the actual solid.
+
+    // For each cell
+    for (n = 0; n < engGE.object.block.num; n++)
+    {
+      tM4dVector pos;
+
+      pos = m4dAddVectors(engGE.object.pos,
+                          m4dMultiplyMV(engGE.object.axices,
+                                        engGE.object.block.c[n]));
+
+      // draw the hypercube.
+      g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
+    }
+
+    scnDrawRotAxis();
+
+    if (pic == maxpic-1)
+    {
+      // Write out the game score.
+      scnWriteScore();
+
+      // draw the menu
+      if (menuActived())
+      {
+        menuDraw();
+      }
+
+      for (n = 0; n < maxpic; n++)
+      {
+        g3dEndDraw();
       }
     }
   }
-
-  // Draw the bottom level.
-
-  // For each cell of the level do:
-  for (x = 0; x <= 1; x++)
-  for (y = 0; y <= 1; y++)
-  for (z = 0; z <= 1; z++)
-  {
-    // space which has no cube above (so it is visible)
-    if (mask[x][y][z] == 0)
-    {
-      g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
-                    m4dUnitMatrix(),
-                    scn4DCubeColor, 3, 1);
-    }
-  }
-
-  // Draw the actual solid.
-
-  // For each cell
-  for (n = 0; n < engGE.object.block.num; n++)
-  {
-    tM4dVector pos;
-
-    pos = m4dAddVectors(engGE.object.pos,
-                        m4dMultiplyMV(engGE.object.axices,
-                                      engGE.object.block.c[n]));
-
-    // draw the hypercube.
-    g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
-  }
-
-  scnDrawRotAxis();
-
-  //g3dEndDraw();
-
-//  	g4dRotateViewport(eM4dAxisX, eM4dAxisY, 0.261799 / 2);
-  
-  // mask indicates which block space
-  // hidden by upper blocks
-  for (x = 0; x <= 1; x++) {
-  for (y = 0; y <= 1; y++) {
-  for (z = 0; z <= 1; z++) {
-	mask[x][y][z] = 0;
-  }
-  }
-  }
-  
-  //MOD - Render the other angle, without clearing the screen
-  g3dBeginDrawTranslatedNoClear(2, 0, -12);
-//	glTranslated(6, 0, -8);
-
-  //glLoadIdentity();
-
-  // Place and orient the viewport.
-  //glTranslated(6, 0, -8);  
-  //glRotated(-75.0, 1, 0, 0);
-  //glRotated(20.0, 0, 0, 1);
-	
-  // Draw the gamespace.
-
-  // For each level from top
-  for (l = SPACELENGTH - 1; l >= 0; l--)
-  {
-    // For each cell of the level
-    for (x = 0; x <= 1; x++)
-    for (y = 0; y <= 1; y++)
-    for (z = 0; z <= 1; z++)
-    {
-      // space which has no cube above (so it is visible)
-      // gets rid of Z-fighting
-      if (mask[x][y][z] == 0)
-      {
-        // if the cell is not empty then
-        if (engGetSpaceCell(l, x, y, z))
-        {
-          // draw the cube.
-          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                        m4dUnitMatrix(),
-                        scnLevelColors[l], 4, 0);
-
-          mask[x][y][z] = 1;
-        }
-      }
-    }
-  }
-
-  // Draw the bottom level.
-
-  // For each cell of the level do:
-  for (x = 0; x <= 1; x++)
-  for (y = 0; y <= 1; y++)
-  for (z = 0; z <= 1; z++)
-  {
-    // space which has no cube above (so it is visible)
-    if (mask[x][y][z] == 0)
-    {
-      g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
-                    m4dUnitMatrix(),
-                    scn4DCubeColor, 3, 1);
-    }
-  }
-
-  // Draw the actual solid.
-
-  // For each cell
-  for (n = 0; n < engGE.object.block.num; n++)
-  {
-    tM4dVector pos;
-
-    pos = m4dAddVectors(engGE.object.pos,
-                        m4dMultiplyMV(engGE.object.axices,
-                                      engGE.object.block.c[n]));
-
-    // draw the hypercube.
-    g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
-  }
-
-  scnDrawRotAxis();
-
-  // draw the menu
-  if (menuActived())
-  {
-    menuDraw();
-  }
-
-  g3dEndDraw();
-  g3dEndDraw();
-
-  } else { //MOD - Normal rendering
-  // Local variables:
-  int n, l, x, y, z;        // loop counter;
-
-  // mask indicates which block space
-  // hidden by upper blocks
-  int mask[2][2][2] = {{{0,0},{0,0}},{{0,0},{0,0}}};
-
-  g3dBeginDraw();
-
-  scnDrawBG();
-
-  // Write out the game score.
-  scnWriteScore();
-
-  // Draw the gamespace.
-
-  // For each level from top
-  for (l = SPACELENGTH - 1; l >= 0; l--)
-  {
-    // For each cell of the level
-    for (x = 0; x <= 1; x++)
-    for (y = 0; y <= 1; y++)
-    for (z = 0; z <= 1; z++)
-    {
-      // space which has no cube above (so it is visible)
-      // gets rid of Z-fighting
-      if (mask[x][y][z] == 0)
-      {
-        // if the cell is not empty then
-        if (engGetSpaceCell(l, x, y, z))
-        {
-          // draw the cube.
-          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                        m4dUnitMatrix(),
-                        scnLevelColors[l], 4, 0);
-
-          mask[x][y][z] = 1;
-        }
-      }
-    }
-  }
-
-  // Draw the bottom level.
-
-  // For each cell of the level do:
-  for (x = 0; x <= 1; x++)
-  for (y = 0; y <= 1; y++)
-  for (z = 0; z <= 1; z++)
-  {
-    // space which has no cube above (so it is visible)
-    if (mask[x][y][z] == 0)
-    {
-      g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
-                    m4dUnitMatrix(),
-                    scn4DCubeColor, 3, 1);
-    }
-  }
-
-  // Draw the actual solid.
-
-  // For each cell
-  for (n = 0; n < engGE.object.block.num; n++)
-  {
-    tM4dVector pos;
-
-    pos = m4dAddVectors(engGE.object.pos,
-                        m4dMultiplyMV(engGE.object.axices,
-                                      engGE.object.block.c[n]));
-
-    // draw the hypercube.
-    g4dDraw4DCube(pos, engGE.object.axices, scn4DCubeColor, 4, 1);
-  }
-
-  scnDrawRotAxis();
-
-  // draw the menu
-  if (menuActived())
-  {
-    menuDraw();
-  }
-
-  g3dEndDraw();
-}
 }
