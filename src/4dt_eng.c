@@ -105,7 +105,7 @@ static int engGetTimestep(void);
 static int engGetTimestep(void)
 {
   // calculate timestep depending on actual score
-  return(10000/(4+engGE.score/10000));
+  return(10000/(4+engGE.score/2000));
 }
 
 /** Timer function for Game engine. */
