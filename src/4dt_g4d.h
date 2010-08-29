@@ -18,6 +18,9 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+// todo: remove
+extern int stereoEnable;
+
 extern void g4dInit(double w_maximum);
 extern void g4dReset(void);
 
