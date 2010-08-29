@@ -28,8 +28,6 @@ extern void g4dSwitchAutoRotation(int enable);
 extern int  g4dAutoRotateViewport(void);
 extern void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle);
 
-//extern void g4dAddToViewport(int Col, int Row, double Value); //MOD
-
 extern void g4dDraw4DCube(tM4dVector center,
                           tM4dMatrix orientation,
                           float color[4],
