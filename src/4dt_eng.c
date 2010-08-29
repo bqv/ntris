@@ -255,7 +255,6 @@ void engResetGame(void)
   engGE.lock = 0;
   engGE.animation.posDecrease = 0;
   engGE.animation.transform   = m4dUnitMatrix();
-
 }
 
 
@@ -268,7 +267,6 @@ void engInitGame(void)
   // set options
   engGE.game_opts.diff = 2;
   engGE.animation.enable = 1;
-  engGE.stereoEnable = 0; //MOD
   engGE.activeUser = 0;
 
   // reset parameters
