@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include <math.h>
 
 #include "4dt_main.h"
 #include "4dt_menu.h"
@@ -73,9 +72,6 @@ static const int engProbs[DIFFLEVELS][OBJECTTYPES] =
  { 5, 3, 2, 1, 1, 1},
  { 2, 1, 1, 1, 1, 1}};
 
-/** Score points for filling a level in different difficulty levels */
-static const int engScoreStep[DIFFLEVELS] = { 100, 200, 400};
-
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
@@ -95,10 +91,36 @@ static void engCopyLevel(tEngLevel target, tEngLevel source);
 static void engAnimation(int num);
 static tEngSolid engObject2Solid(tEngObject object);
 static int engGetTimestep(void);
+static void engUpdateScore(int clearedLevels);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Calculates scores for cleared levels */
+static void engUpdateScore(int clearedLevels)
+{
+  int score = 100;
+  int clearSpace = 1;
+  int level;
+
+  for(level = 0; level < SPACELENGTH; level++)
+  {
+    clearSpace &= engEqLevel(engGE.space[level], engEmptyLevel);
+  }
+
+  if (clearSpace) { score *= 2; }
+
+  score *= pow(2, engGE.game_opts.diff);
+
+  score *= pow(clearedLevels, 2);
+
+  // increase score if user plays
+  if (engGE.activeUser)
+  {
+    engGE.score += score;
+  }
+}
 
 
 /** time step, while the solid steps one level down in msec; */
@@ -397,6 +419,7 @@ static void engKillFullLevels(void)
 {
   // loop counter
   int t, tn;
+  int clearedLevels = 0;
 
   // for every level
   for(t = 0; t < SPACELENGTH; t++)
@@ -404,12 +427,6 @@ static void engKillFullLevels(void)
     // if full level found
     if (engEqLevel(engGE.space[t], engFullLevel))
     {
-      // increase score if user plays
-      if (engGE.activeUser)
-      {
-        engGE.score += engScoreStep[engGE.game_opts.diff];
-      }
-
       // step down every higher level
       for (tn = t+1; tn < SPACELENGTH; tn++)
       {
@@ -418,13 +435,14 @@ static void engKillFullLevels(void)
       } // end of every level
      // 0 on the top level
      engClearLevel(engGE.space[SPACELENGTH-1]);
+     clearedLevels++;
 
      // step back with the loop counter to get the same level checked again
      t--;
-    } // end of if full
-
+    }
   } // end of every level
 
+  engUpdateScore(clearedLevels);
 } //end of checkFullLevels
 
 /** lower the solid with one level
