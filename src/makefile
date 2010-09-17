@@ -20,7 +20,7 @@ objects = $(sources:.c=.o)
 
 cflags = -Wall -Wextra
 
-libs = -lglut -lGL
+libs = -lGLU -lglut -lGL
 
 all : $(bin)
 
