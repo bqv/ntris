@@ -45,9 +45,10 @@ static int scnEnableSeparateBlockDraw = 0;
 static int scnEnableGridDraw = 0;
 
 /** Color of the 4D cube. */
-static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.08};
+static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.35};
+static float scn4DWireColor[4] = {0.8, 0.8, 0.9, 1.00};
 /** Color of the 4D grid. */
-static float scn4DGridColor[4] = {0.4, 0.4, 0.6, 0.015};
+static float scn4DGridColor[4] = {0.7, 0.7, 0.8, 0.015};
 
 /** array of the colors of game space levels. */
 static float scnLevelColors[SPACELENGTH][4];
@@ -129,11 +130,12 @@ static void scnWriteScore(void)
 /** Draw background for scene */
 static void scnDrawBG(void)
 {
-  float color1[4] = {1.0, 1.0, 1.0, 1.0};
-  float color2[4] = {0.8, 0.8, 0.8, 1.0};
+  float color1[4] = {0.3, 0.3, 0.4, 1.0};
+  float color2[4] = {0.0, 0.0, 0.0, 1.0};
 
   // Draw background
-  g3dDrawRectangle(0.0, 0.0, 1.0, 1.0, color1, color2);
+  g3dDrawRectangle(0.0, 0.0, 1.0, 0.5, color1, color2);
+  g3dDrawRectangle(0.0, 0.5, 1.0, 1.0, color2, color2);
 }
 
 /** draws the rotation axis selected */
@@ -142,8 +144,8 @@ static void scnDrawRotAxis(void)
   int i;
   const double planeSize = 3.5;
 
-  float color0[4] = {0.0, 0.0, 0.0, 0.8};
-  float color1[4] = {0.0, 0.0, 0.0, 0.0};
+  float color0[4] = {1.0, 1.0, 1.0, 0.8};
+  float color1[4] = {1.0, 1.0, 1.0, 0.0};
 
   if ((scnAxle <= 2) && (scnAxle >= 0))
   {
@@ -156,7 +158,7 @@ static void scnDrawRotAxis(void)
 
       point0.c[eM4dAxisW] = point1.c[eM4dAxisW] = engGE.object.pos.c[eM4dAxisW];
 
-      g4dDrawLine(point0, point1, color0, color1, 2.0);
+      g4dDrawLine(point0, point1, color0, color1, 2.5);
     }
   }
 
@@ -271,8 +273,8 @@ void scnDisplay(void)
       {
         // space which has no cube above (so it is visible)
         // gets rid of Z-fighting
-      if (
-1 ||
+        if (
+//1 ||
           mask[x][y][z] == 0)
         {
           // if the cell is not empty then
@@ -282,7 +284,12 @@ void scnDisplay(void)
             g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
                           m4dUnitMatrix(),
                         scnLevelColors[l],
-                        scnEnableHypercubeDraw ? 4 : 3, 0, NULL);
+                        scnEnableHypercubeDraw ? 4 : 3, 1, NULL);
+
+            g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+                          m4dUnitMatrix(),
+                        scnLevelColors[l],
+                        scnEnableHypercubeDraw ? 4 : 3, 3, NULL);
 
             mask[x][y][z] = 1;
           }
@@ -297,6 +304,42 @@ void scnDisplay(void)
           }
         }
       }
+    }
+
+    // Draw the bottom level wire.
+
+    // For each cell of the level do:
+    for (x = 0; x <= 1; x++)
+    for (y = 0; y <= 1; y++)
+    for (z = 0; z <= 1; z++)
+    {
+      // space which has no cube above (so it is visible)
+      if (mask[x][y][z] == 0)
+      {
+        g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
+                      m4dUnitMatrix(),
+                    scn4DCubeColor, 3, 3, NULL);
+      }
+    }
+
+    // Draw the actual solid wire.
+
+    // For each cell
+    for (n = 0; n < engGE.object.block.num; n++)
+    {
+      tM4dVector pos;
+      int visibleSides[eM4dDimNum][2];
+
+      scnVisibleSides(n, &visibleSides);
+
+      pos = m4dAddVectors(engGE.object.pos,
+                          m4dMultiplyMV(engGE.object.axices,
+                                        engGE.object.block.c[n]));
+
+      // draw the hypercube.
+      g4dDraw4DCube(pos, engGE.object.axices, scn4DWireColor,
+                    scnEnableHypercubeDraw ? 4 : 3, 3,
+                    scnEnableSeparateBlockDraw ? NULL : visibleSides);
     }
 
     // Draw the bottom level.
