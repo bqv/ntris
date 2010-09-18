@@ -14,19 +14,27 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+typedef enum
+{
+  eScnViewMono,
+  eScnViewStereogram,
+  eScnViewAnaglyph,
+  eScnViewModeNum
+}
+tScnViewMode;
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+// TODO: remove
 extern int scnAxle;
-// todo: remove
-extern int scnStereoEnable;
 
 extern void scnInit(void);
 extern void scnDisplay(void);
 
-extern void scnSetStereoMode(int enable);
-extern int  scnGetStereoMode(void);
+extern void scnSetViewMode(tScnViewMode mode);
+extern tScnViewMode scnGetViewMode(void);
 
 extern void scnSetEnableHypercubeDraw(int enable);
 extern int  scnGetEnableHypercubeDraw(void);

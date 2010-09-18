@@ -27,6 +27,7 @@ tG4dViewType;
 
 extern void g4dInit(double w_maximum);
 extern void g4dReset(void);
+extern tG4dViewType g4dGetViewType(void);
 extern void g4dSetViewType(tG4dViewType viewType);
 
 extern void g4dSwitchAutoRotation(int enable);

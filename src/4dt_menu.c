@@ -89,7 +89,7 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
   {1, "Draw connected hypercubes",menuDrawmode,NULL,eMenuVideoOptions,{eMenuNull} },
   {1, "Grid - OFF",     menuGrid,      NULL,   eMenuVideoOptions, {eMenuNull} },
-  {1, "Stereo view - OFF", menuStereo, NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "View mode - Mono", menuStereo, NULL,   eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
@@ -116,7 +116,7 @@ tMenuString menuHelpText[TEXTLINENUM] =
   " - +, -, pgdn, pgup - rotate around selected axle",
   " - home, end - rot. around selected and 4th axle",
   " - space, enter - step down/drop the object",
-  " - F1, F2, F10 - switch view mode"
+  " - F1, F2 - switch view mode"
 };
 
 /** Text of help page */
@@ -434,10 +434,16 @@ static void menuGrid(void)
 
 static void menuStereo(void)
 {
-  scnSetStereoMode(!scnGetStereoMode());
+  char* captions[eScnViewModeNum] =
+  {
+    "View mode - Mono",
+    "View mode - Stereogramm",
+    "View mode - Anaglyph"
+  };
 
-  menuItems[eMenuStereo].caption = (scnGetStereoMode())
-                                   ? "Stereo view - ON"
-                                   : "Stereo view - OFF";
+  scnSetViewMode( (scnGetViewMode()+1) % eScnViewModeNum );
+
+  menuItems[eMenuStereo].caption = captions[scnGetViewMode()];
+
   menuNavigate(eMenuBack);
 }
