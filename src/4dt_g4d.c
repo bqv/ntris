@@ -384,6 +384,9 @@ void g4dDraw4DCube(tM4dVector center,
       }
     }
 
+    // Dirty hack to get rid of Z-fighting between top cube and act. object
+    points[n] = m4dMultiplySV(1.001, points[n]);
+
     points[n] = m4dMultiplyMV(orientation, points[n]);
 
     visible[n] &= (dimension == 3) && (points[n].c[eM4dAxisW] < 0) ? 0 : 1;
