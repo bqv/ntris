@@ -120,7 +120,7 @@ static void scnWriteScore(void)
 {
   // Local variables:
   char text[30];     // buffer for the full text;
-  float color[4] = {0.3, 0.3, 0.5, 1.0};
+  float color[4] = {0.8, 0.8, 0.9, 1.0};
 
   // Create the score character array.
   sprintf(text, "Score: %i", engGE.score);
