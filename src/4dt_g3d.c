@@ -14,6 +14,7 @@
 
 #include "4dt_m3d.h"
 #include "4dt_g3d.h"
+#include "4dt_scn.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -60,12 +61,29 @@ static void g3dSwitchTo3D(void);
 ------------------------------------------------------------------------------*/
 
 /** \brief Starts the actual frame drawing */
-void g3dBeginDraw(int x, int y, int z, int clear)
+void g3dBeginDraw(int x, int y, int z, int picnum)
 {
   // Clear the display buffer.
-  if (clear)
+  if (picnum == 0)
   {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
+  }
+
+  if ((picnum == 0) || (scnGetViewMode() == eScnViewAnaglyph))
+  {
+    glClear(GL_DEPTH_BUFFER_BIT);
+  }
+
+  if (scnGetViewMode() == eScnViewAnaglyph)
+  {
+    if (picnum == 0)
+    {
+      glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
+    }
+    else
+    {
+      glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+    }
   }
 
   glPushMatrix();
@@ -73,8 +91,14 @@ void g3dBeginDraw(int x, int y, int z, int clear)
 
   // Place and orient the viewport.
   glTranslated(x, y, z);
+
   glRotated(-75.0, 1, 0, 0);
   glRotated(20.0, 0, 0, 1);
+
+  if (scnGetViewMode() == eScnViewAnaglyph)
+  {
+    glRotated((picnum == 0) ? 0 : -4, 0, 0, 1);
+  }
 }
 
 /** Switch the projection to 2D mode for window coordinate draw
@@ -142,6 +166,8 @@ void g3dDrawRectangle(float x0, float y0, float x1, float y1,
 /** \brief Close the actual frame drawing */
 void g3dEndDraw(void)
 {
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
   glPopMatrix();
 
   // Swap the buffers.

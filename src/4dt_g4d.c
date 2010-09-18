@@ -182,6 +182,12 @@ void g4dSetViewType(tG4dViewType viewType)
   setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0);
 }
 
+/** Set function for view type */
+tG4dViewType g4dGetViewType(void)
+{
+  return(g4dViewType);
+}
+
 /** Rotates viewport with givel angle */
 void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle)
 {

@@ -19,6 +19,8 @@
 #include "4dt_g4d.h"
 #include "4dt_menu.h"
 
+#include "4dt_scn.h"
+
 /*------------------------------------------------------------------------------
    MACROS
 ------------------------------------------------------------------------------*/
@@ -57,7 +59,7 @@ static float scnLevelColors[SPACELENGTH][4];
 int scnAxle = 0;
 
 /** temporary switch for stereo view */
-static int scnStereoEnable = 0; // todo: should be merged to viewset enum
+static tScnViewMode scnViewMode = eScnViewMono;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
@@ -74,9 +76,9 @@ static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2]);
 ------------------------------------------------------------------------------*/
 
 /** Set function for stereoscope view enable flag */
-void scnSetStereoMode(int enable) { scnStereoEnable = enable; }
+void scnSetViewMode(tScnViewMode mode) { scnViewMode = mode; }
 /** Get function for stereoscope view draw enable flag */
-int scnGetStereoMode(void) { return(scnStereoEnable); }
+tScnViewMode scnGetViewMode(void) { return(scnViewMode); }
 
 /** Set function for hypercube draw enable flag */
 void scnSetEnableHypercubeDraw(int enable) { scnEnableHypercubeDraw = enable; }
@@ -232,7 +234,7 @@ void scnDisplay(void)
   double camx, camz;
   int pic, maxpic;
 
-  maxpic = (scnStereoEnable) ? 2 : 1;
+  maxpic = (scnViewMode > eScnViewMono) ? 2 : 1;
 
   for (pic = 0; pic < maxpic; pic++)
   {
@@ -243,7 +245,7 @@ void scnDisplay(void)
       mask[x][y][z] = 0;
     }
 
-    if (scnStereoEnable)
+    if (scnViewMode == eScnViewStereogram)
     {
       camx = (pic == 0) ? -2 : 2;
       camz = -12;
@@ -254,9 +256,10 @@ void scnDisplay(void)
       camz = -6;
     }
 
-    g3dBeginDraw(camx, 0, camz, (pic == 0) ? 1 : 0);
+    g3dBeginDraw(camx, 0, camz, pic);
 
-    if (pic == 0)
+    if ((pic == 0)
+        || (scnViewMode == eScnViewAnaglyph))
     {
       scnDrawBG();
     }
@@ -273,9 +276,8 @@ void scnDisplay(void)
       {
         // space which has no cube above (so it is visible)
         // gets rid of Z-fighting
-        if (
-//1 ||
-          mask[x][y][z] == 0)
+        if (   (mask[x][y][z] == 0)
+            || (g4dGetViewType() == eG4d2PointProjection) )
         {
           // if the cell is not empty then
           if (engGetSpaceCell(l, x, y, z))
@@ -380,7 +382,8 @@ void scnDisplay(void)
 
     scnDrawRotAxis();
 
-    if (pic == maxpic-1)
+    if ((pic == maxpic-1)
+        || (scnViewMode == eScnViewAnaglyph))
     {
       // Write out the game score.
       scnWriteScore();
@@ -390,7 +393,10 @@ void scnDisplay(void)
       {
         menuDraw();
       }
+    }
 
+    if (pic == maxpic-1)
+    {
       for (n = 0; n < maxpic; n++)
       {
         g3dEndDraw();
