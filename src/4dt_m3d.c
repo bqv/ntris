@@ -35,6 +35,62 @@
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+/** Calculates scalar multiplication for 2 vector */
+double m3dMultiplyVV(tM3dVector vector1, tM3dVector vector2)
+{
+  double result;
+
+  result =   vector1.c[0] * vector2.c[0]
+           + vector1.c[1] * vector2.c[1]
+           + vector1.c[2] * vector2.c[2];
+
+  return(result);
+}
+
+/** Creates a vector with the given coordinates */
+tM3dVector m3dVector(double x, double y, double z)
+{
+  tM3dVector vector;
+
+  vector.c[eM3dAxisX] = x;
+  vector.c[eM3dAxisY] = y;
+  vector.c[eM3dAxisZ] = z;
+
+  return(vector);
+}
+
+/** Calculates the transformation matrix which rotates Z axis to base vector */
+tM3dMatrix m3dTransformMatrixV(tM3dVector base)
+{
+  tM3dMatrix result;
+  tM3dVector normals[3];
+
+  normals[0] = m3dNormalise(base);
+
+  normals[1] = m3dNormalise(m3dVector(base.c[1]/base.c[0], 1, 0));
+
+  normals[2] = m3dCrossProduct(normals[0], normals[1]);
+
+  result = m3dMatrixV3(normals);
+
+  return(result);
+}
+
+/** Creates matrix from 3 vector */
+tM3dMatrix m3dMatrixV3(tM3dVector v[3])
+{
+  tM3dMatrix result;
+  eM3dAxis axis1, axis2;
+
+  for (axis1 = eM3dAxisX; axis1 < eM3dDimNum; axis1++)
+    for (axis2 = eM3dAxisX; axis2 < eM3dDimNum; axis2++)
+  {
+    result.c[axis1][axis2] = v[axis1].c[axis2];
+  }
+
+  return(result);
+}
+
 /** Subctract source vector from target vector */
 tM3dVector m3dSub(tM3dVector target, tM3dVector source)
 {

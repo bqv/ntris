@@ -11,6 +11,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "4dt_m3d.h"
 #include "4dt_g3d.h"
@@ -55,6 +56,10 @@ static const GLfloat g3dBgColor[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 extern void g3dResize(int width, int height);
 static void g3dSwitchTo2D(void);
 static void g3dSwitchTo3D(void);
+static void g3dDrawCylinder(tM3dVector v1,
+                            tM3dVector v2,
+                            float radius);
+static void g3dDrawSphere(tM3dVector o, double radius);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -250,56 +255,49 @@ void g3dDrawLine(tM3dVector point0,
   glEnable(GL_LIGHTING);
 }
 
-void renderCylinder(float x1, float y1, float z1, float x2,float y2, float z2,
-                    float radius,int subdivisions,GLUquadricObj *quadric)
+static void g3dDrawCylinder(tM3dVector v1,
+                            tM3dVector v2,
+                            float radius)
 {
-  float vx = x2-x1;
-  float vy = y2-y1;
-  float vz = z2-z1;
+  int resolution = 4;
+  GLUquadricObj *quadric = gluNewQuadric();
+  tM3dVector v12, z0, z1, rotaxle;
+  double angle, length, sin, cos;
 
-  //handle the degenerate case of z1 == z2 with an approximation
-  if(vz == 0)
-      vz = .0001;
+  z0      = m3dVector(0.0, 0.0, 1.0);
+  v12     = m3dSub(v2,v1);
+  z1      = m3dNormalise(v12);
+  length  = m3dAbs(v12);
+  rotaxle = m3dCrossProduct(z0, z1);
+  cos     = m3dMultiplyVV(z0, z1);
+  sin     = m3dAbs(rotaxle);
+  angle   = atan2(sin, cos) * 180 / M_PI;
 
-  float v = sqrt( vx*vx + vy*vy + vz*vz );
-  float ax = 57.2957795*acos( vz/v );
-  if ( vz < 0.0 )
-      ax = -ax;
-  float rx = -vy*vz;
-  float ry = vx*vz;
+  if (fabs(sin) == 0.0) { rotaxle.c[0] = 1;}
+  rotaxle = m3dNormalise(rotaxle);
+
+  gluQuadricNormals(quadric, GLU_SMOOTH);
   glPushMatrix();
-
-  //draw the cylinder body
-  glTranslatef( x1,y1,z1 );
-  glRotatef(ax, rx, ry, 0.0);
+  glTranslatef(v1.c[0], v1.c[1], v1.c[2]);
+  glRotatef(angle, rotaxle.c[0], rotaxle.c[1], rotaxle.c[2]);
   gluQuadricOrientation(quadric,GLU_OUTSIDE);
-  gluCylinder(quadric, radius, radius, v, subdivisions, 1);
-
+  gluCylinder(quadric, radius, radius, length, resolution, 1);
   glPopMatrix();
-}
-void renderCylinder_convenient(float x1, float y1, float z1, float x2,float y2, float z2, float radius,int subdivisions)
-{
-    //the same quadric can be re-used for drawing many cylinders
-    GLUquadricObj *quadric=gluNewQuadric();
-    gluQuadricNormals(quadric, GLU_SMOOTH);
-    renderCylinder(x1,y1,z1,x2,y2,z2,radius,subdivisions,quadric);
-    gluDeleteQuadric(quadric);
+  gluDeleteQuadric(quadric);
 }
 
-void renderSphere(float x, float y, float z, float radius,int subdivisions,GLUquadricObj *quadric)
+static void g3dDrawSphere(tM3dVector o, double radius)
 {
-    glPushMatrix();
-    glTranslatef( x,y,z );
-    gluSphere(quadric, radius, subdivisions,subdivisions);
-    glPopMatrix();
-}
-void renderSphere_convenient(float x, float y, float z, float radius,int subdivisions)
-{
-    //the same quadric can be re-used for drawing many spheres
-    GLUquadricObj *quadric=gluNewQuadric();
-    gluQuadricNormals(quadric, GLU_SMOOTH);
-    renderSphere(x,y,z,radius,subdivisions,quadric);
-    gluDeleteQuadric(quadric);
+  int resolution = 4;
+
+  GLUquadricObj *quadric=gluNewQuadric();
+
+  gluQuadricNormals(quadric, GLU_SMOOTH);
+  glPushMatrix();
+  glTranslatef(o.c[0], o.c[1], o.c[2]);
+  gluSphere(quadric, radius, resolution, resolution);
+  glPopMatrix();
+  gluDeleteQuadric(quadric);
 }
 
 /** \brief Draw quad with given coordinates, color, style. */
@@ -367,16 +365,11 @@ void g3dDrawPoly(tM3dVector points[4],
           glDepthMask(GL_TRUE);
           glDisable(GL_BLEND);
 
-          renderSphere_convenient(points[k].c[0], points[k].c[1], points[k].c[2],
-                                  0.02, 8);
+          g3dDrawSphere(points[k], 0.02);
 
-          renderCylinder_convenient(points[k].c[0],
-                                    points[k].c[1],
-                                    points[k].c[2],
-                                    points[(k+1) % 4].c[0],
-                                    points[(k+1) % 4].c[1],
-                                    points[(k+1) % 4].c[2],
-                                    0.02, 8);
+          g3dDrawCylinder(points[k],
+                          points[(k+1) % 4],
+                          0.02);
         }
         else
         {
