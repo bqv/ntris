@@ -13,6 +13,7 @@
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_g3d.h"
+#include "4dt_gtxt.h"
 #include "4dt_g4d.h"
 #include "4dt_ai.h"
 #include "4dt_eng.h"
@@ -261,7 +262,7 @@ void menuDraw(void)
     subItem = menuItems[menuActItem].submenus[i];
 
     // Render the menu caption.
-    g3dRenderString(0.1, (1-linespace) - i * linespace,
+    g3dRenderString(0.1, 1 - (i+1.5) * linespace,
                     (i == menuSelItems[menuActItem])
                     ? colorSelect
                     : (0 == menuItems[subItem].enabled)
@@ -274,7 +275,7 @@ void menuDraw(void)
   if (menuText != NULL)
   {
     // display the text
-    g3dRenderText(0.1, 1-linespace, colorNormal,
+    g3dRenderText(0.1, 1 - 1.5 * linespace, colorNormal,
                   menuText, TEXTLINENUM, linespace);
   }
 

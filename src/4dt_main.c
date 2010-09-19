@@ -43,8 +43,8 @@
 #include <string.h>
 
 #include <GL/gl.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"

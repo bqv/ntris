@@ -129,7 +129,7 @@ int g4dRotateViewportAngle(int interval, void *angle)
                                 g4dViewport);
 
     refresh();
-    return(interval);
+    return(g4dRotationTimeStep);
   }
   else
   {

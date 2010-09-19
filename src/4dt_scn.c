@@ -16,6 +16,7 @@
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_g3d.h"
+#include "4dt_gtxt.h"
 #include "4dt_g4d.h"
 #include "4dt_menu.h"
 
@@ -126,7 +127,7 @@ static void scnWriteScore(void)
   sprintf(text, "Score: %i", engGE.score);
 
   // Render the text.
-  g3dRenderString(0.1, 0.1, color, text);
+  g3dRenderString(0.1, 0.05, color, text);
 }
 
 /** Draw background for scene */

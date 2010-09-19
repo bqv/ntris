@@ -203,11 +203,11 @@ void uiKeyPress(int key)
       break;
 
       case UI_KEY_BACKSPACE:
-        g4dRotateViewportAngle(180);
+        g4dRotateViewportAngle(0,180);
       break;
 
       case UI_KEY_ENTER:
-        engDropSolid(0);
+        engDropSolid(0,0);
       break;
     }
   }
