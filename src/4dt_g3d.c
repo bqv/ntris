@@ -7,11 +7,13 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <stdio.h>
 #include <math.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 #include "4dt_m3d.h"
 #include "4dt_g3d.h"
@@ -168,15 +170,19 @@ void g3dDrawRectangle(float x0, float y0, float x1, float y1,
   g3dSwitchTo3D();
 }
 
-/** \brief Close the actual frame drawing */
-void g3dEndDraw(void)
+/** \brief Close the actual frame part drawing */
+void g3dEndDrawPic(void)
 {
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
   glPopMatrix();
+}
 
+/** \brief Close the actual frame drawing */
+void g3dEndDraw(void)
+{
   // Swap the buffers.
-  glutSwapBuffers();
+  SDL_GL_SwapBuffers();
 }
 
 /** Draw bitmap text to the specified coordinates and font. */
@@ -199,28 +205,24 @@ void g3dRenderString(double x, double y,
                     float color[4],
                     char *string)
 {
-  // Local variables:
-  char *c; // actual character.
-
-  void *font =  GLUT_BITMAP_HELVETICA_18;
-
-  g3dSwitchTo2D();
-
-  // Set color for the text.
-  glColor4d(color[0], color[1], color[2], color[3]);
-
-  // Set position.
-  glRasterPos2f(x, y);
-
-
-  // For each character of the string
-  for (c=string; *c != '\0'; c++)
-  {
-    // draw the character.
-    glutBitmapCharacter(font, *c);
-  }
-
-  g3dSwitchTo3D();
+  /*
+  SDL_Surface* screen,
+  char* string,
+  int size,
+  int x, int y,
+  int fR, int fG, int fB,
+  int bR, int bG, int bB)
+  */
+  int size = 16;
+  TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf", size);
+  SDL_Color foregroundColor = { 255, 255, 255 };
+  SDL_Color backgroundColor = { 0, 0, 0 };
+  SDL_Surface* textSurface = TTF_RenderText_Shaded(font, string,
+                             foregroundColor, backgroundColor);
+  SDL_Rect textLocation = { (int)(x*640), (int)(y*480), 0, 0 };
+  SDL_BlitSurface(textSurface, NULL, (SDL_Surface *)getSDLScreen(), &textLocation);
+  SDL_FreeSurface(textSurface);
+  TTF_CloseFont(font);
 }
 
 /** Draws 3D line */

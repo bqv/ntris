@@ -80,8 +80,8 @@ static tM3dVector g4dProject(tM4dVector vector);
 
 static tM3dVector g4d2PointProject(tM4dVector vector);
 
-static void g4dStepViewModeChange(int num);
-static void g4dAutoRotateViewport(int num);
+static int g4dAutoRotateViewport(int interval, void *param);
+static int g4dStepViewModeChange(int interval, void *param);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -95,7 +95,7 @@ void g4dInit(double w_maximum)
 
   g4dReset();
 
-  g4dAutoRotateViewport(0);
+  setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
 }
 
 /** Reset 4D draving unit */
@@ -107,33 +107,38 @@ void g4dReset(void)
 void g4dSwitchAutoRotation(int enable)
 {
   g4dAutoRotationEnabled = enable;
-  g4dAutoRotateViewport(0);
+
+  setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
 }
 
 /** Rotates the view port with angle deg in more steps */
-void g4dRotateViewportAngle(int angle)
+int g4dRotateViewportAngle(int interval, void *angle)
 {
   int anglestep = 30;
 
-  if (angle > 0)
+  if ((*(int *)angle) > 0)
   {
-    angle -= anglestep;
-    if (angle < 0)
+    (*(int *)angle) -= anglestep;
+    if ((*(int *)angle) < 0)
     {
-      anglestep -= -angle;
+      anglestep -= - (*(int *)angle);
     }
 
     g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
                                              anglestep * M_PI / 180),
                                 g4dViewport);
 
-    setTimerCallback(g4dRotationTimeStep, &g4dRotateViewportAngle, angle);
     refresh();
+    return(interval);
+  }
+  else
+  {
+    return(0);
   }
 }
 
 /** View rotation procedure. Should be triggered. */
-static void g4dAutoRotateViewport(int num)
+static int g4dAutoRotateViewport(int interval, void *param)
 {
   if (g4dAutoRotationEnabled)
   {
@@ -145,33 +150,53 @@ static void g4dAutoRotateViewport(int num)
                                              0.20 * M_PI / 180),
                                 g4dViewport);
 
-    setTimerCallback(g4dRotationTimeStep, &g4dAutoRotateViewport, 0);
     refresh();
+
+    return(interval);
+  }
+  else
+  {
+    return(0);
   }
 }
 
 /** View rotation procedure. Should be triggered. */
-static void g4dStepViewModeChange(int num)
+static int g4dStepViewModeChange(int interval, void *param)
 {
+  int newinterval = 0;
+
   switch(g4dViewType)
   {
     case eG4d1PointProjection:
     {
       g4dViewInterpol -= g4dViewInterpolStep;
-      if (g4dViewInterpol < 0.0) { g4dViewInterpol = 0.0; }
-      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0); }
+      if (g4dViewInterpol < 0.0)
+      {
+        g4dViewInterpol = 0.0;
+      }
+      else
+      {
+        newinterval = interval;
+      }
       break;
     }
     case eG4d2PointProjection:
     {
       g4dViewInterpol += g4dViewInterpolStep;
-      if (g4dViewInterpol > 1.0) { g4dViewInterpol = 1.0; }
-      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0); }
+      if (g4dViewInterpol > 1.0)
+      {
+        g4dViewInterpol = 1.0;
+      }
+      else
+      {
+        newinterval = interval;
+      }
       break;
     }
   }
 
   refresh();
+  return(newinterval);
 }
 
 /** Set function for view type */
@@ -385,7 +410,7 @@ void g4dDraw4DCube(tM4dVector center,
     }
 
     // Dirty hack to get rid of Z-fighting between top cube and act. object
-    points[n] = m4dMultiplySV(1.001, points[n]);
+    points[n] = m4dMultiplySV(1.01, points[n]);
 
     points[n] = m4dMultiplyMV(orientation, points[n]);
 

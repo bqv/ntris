@@ -41,7 +41,10 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <GL/glut.h>
+
+#include <GL/gl.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
@@ -62,14 +65,15 @@
 */
 
 static int debugmode = 0;
+
+SDL_Surface *screen;
+
 /*
 --------------------------------------------------------------------------------
    PROTOTYPES
 --------------------------------------------------------------------------------
 */
 
-static void specialKeyPress(int key, int x, int y);
-static void keyPress(unsigned char key, int x, int y);
 static void processARGV(int argc, char *argv[]);
 
 /*
@@ -78,56 +82,25 @@ static void processARGV(int argc, char *argv[]);
 --------------------------------------------------------------------------------
 */
 
+void *getSDLScreen(void) { return((void *)screen); }
+
 /*------------------------------------------------------------------------------
     Event handlers
 */
 
 /** Sets a timer to call back the function passed after given time (msec) */
-void setTimerCallback(int time, void (*callback)(int), int value)
+void setTimerCallback(int time,
+                      int (*callback)(int interval, void *param),
+                      void *param)
 {
-  glutTimerFunc(time, callback, value);
+  SDL_AddTimer(time, callback, param);
 }
 
 
 /** Redraw */
 void refresh(void)
 {
-  glutPostRedisplay();
-}
-
-/** Eventhandler of special key pressing. */
-static void specialKeyPress(int key, int x, int y)
-{
-  int uiKey;
-
-  switch (key)
-  {
-  case GLUT_KEY_UP:        uiKey = UI_KEY_UP;     break;
-  case GLUT_KEY_LEFT:      uiKey = UI_KEY_LEFT;   break;
-  case GLUT_KEY_DOWN:      uiKey = UI_KEY_DOWN;   break;
-  case GLUT_KEY_RIGHT:     uiKey = UI_KEY_RIGHT;  break;
-  case GLUT_KEY_PAGE_UP:   uiKey = UI_KEY_PGUP;   break;
-  case GLUT_KEY_PAGE_DOWN: uiKey = UI_KEY_PGDOWN; break;
-  case GLUT_KEY_HOME:      uiKey = UI_KEY_HOME;   break;
-  case GLUT_KEY_END:       uiKey = UI_KEY_END;    break;
-  case GLUT_KEY_F1:        uiKey = UI_KEY_F1;     break;
-  case GLUT_KEY_F2:        uiKey = UI_KEY_F2;     break;
-  case GLUT_KEY_F10:       uiKey = UI_KEY_F10;    break;
-  }
-
-  uiKeyPress(uiKey);
-
-  // Refresh the display.
-  glutPostRedisplay();
-}
-
-/** Eventhandler of key pressing. */
-static void keyPress(unsigned char key, int x, int y)
-{
-  uiKeyPress(key);
-
-  // Refresh the display.
-  glutPostRedisplay();
+//  scnDisplay();
 }
 
 /** Process command line arguments */
@@ -149,6 +122,10 @@ static void processARGV(int argc, char *argv[])
 /** Main function of the software */
 int main(int argc, char *argv[])
 {
+  int done;
+  Uint8 *keys;
+  int uiKey;
+
   processARGV(argc, argv);
 
   // Initialize/load High Score table
@@ -157,23 +134,17 @@ int main(int argc, char *argv[])
   // Set random colors for game levels
   scnInit();
 
-  // Set the size of the window.
-  glutInitWindowSize(640,480);
+  SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
 
-  // Set the position of the window's top left corner.
-  glutInitWindowPosition(50,50);
-
-  // Initialise Glut.
-  glutInit(&argc, argv);
-
-  // Set Glut display mode.
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-
-  // Create the window with the specified title.
-  glutCreateWindow("4DTris");
-
-  // Set the reshape function.
-  glutReshapeFunc(g3dResize);
+  screen = SDL_SetVideoMode(640, 480, 16, SDL_OPENGL|SDL_RESIZABLE);
+  if (!screen)
+  {
+    fprintf(stderr, "Couldn't set GL video mode: %s\n", SDL_GetError());
+    SDL_Quit();
+    exit(2);
+  }
+  SDL_WM_SetCaption("4DTris", "4dtris");
+  TTF_Init();
 
   // initialise 3D drawing modul
   g3dInit();
@@ -181,23 +152,72 @@ int main(int argc, char *argv[])
   // initialise 4D drawing modul
   g4dInit(SPACELENGTH);
 
-  // Set the display function.
-  glutDisplayFunc(scnDisplay);
-
-  // Set the keypress event handler function.
-  glutKeyboardFunc(keyPress);
-
-  // Set the special keypress event handler function.
-  glutSpecialFunc(specialKeyPress);
-
   // Initialize the game engine.
   engInitGame();
 
   // start autoplayer
   aiSetActive(1);
 
-  // Start glut's main loop.
-  glutMainLoop();
+  g3dResize(screen->w, screen->h);
+  done = 0;
+  while ( ! done ) {
+    SDL_Event event;
+
+    while ( SDL_PollEvent(&event) )
+    {
+      switch(event.type)
+      {
+        case SDL_VIDEORESIZE:
+        {
+          screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 16,
+                                    SDL_OPENGL|SDL_RESIZABLE);
+          if ( screen )
+          {
+            g3dResize(screen->w, screen->h);
+          }
+          break;
+        }
+        case SDL_QUIT:
+        {
+          done = 1;
+          break;
+        }
+        case SDL_KEYDOWN:
+        {
+          keys = SDL_GetKeyState(NULL);
+          uiKey = 0;
+          if(keys[SDLK_UP])        { uiKey = UI_KEY_UP;       }
+          if(keys[SDLK_LEFT])      { uiKey = UI_KEY_LEFT;     }
+          if(keys[SDLK_DOWN])      { uiKey = UI_KEY_DOWN;     }
+          if(keys[SDLK_RIGHT])     { uiKey = UI_KEY_RIGHT;    }
+          if(keys[SDLK_PAGEUP])    { uiKey = UI_KEY_PGUP;     }
+          if(keys[SDLK_PAGEDOWN])  { uiKey = UI_KEY_PGDOWN;   }
+          if(keys[SDLK_HOME])      { uiKey = UI_KEY_HOME;     }
+          if(keys[SDLK_END])       { uiKey = UI_KEY_END;      }
+          if(keys[SDLK_F1])        { uiKey = UI_KEY_F1;       }
+          if(keys[SDLK_F2])        { uiKey = UI_KEY_F2;       }
+          if(keys[SDLK_ESCAPE])    { uiKey = UI_KEY_ESC;      }
+          if(keys[SDLK_BACKSPACE]) { uiKey = UI_KEY_BACKSPACE;}
+          if(keys[SDLK_TAB])       { uiKey = UI_KEY_TAB;      }
+          if(keys[SDLK_RETURN])    { uiKey = UI_KEY_ENTER;    }
+          if(keys[SDLK_SPACE])     { uiKey = ' ';             }
+          if(keys[SDLK_a])         { uiKey = 'a';             }
+          if(keys[SDLK_z])         { uiKey = 'z';             }
+          if(keys[SDLK_x])         { uiKey = 'x';             }
+          if(keys[SDLK_c])         { uiKey = 'c';             }
+          if(keys[SDLK_v])         { uiKey = 'v';             }
+          if(keys[SDLK_1])         { uiKey = '1';             }
+          if(keys[SDLK_2])         { uiKey = '2';             }
+          if(keys[SDLK_3])         { uiKey = '3';             }
+          if(uiKey != 0) { uiKeyPress(uiKey); }
+        }
+      }
+    }
+
+    scnDisplay();
+  }
+  TTF_Quit();
+  SDL_Quit();
 
   // Return with successed exit constant.
   return EXIT_SUCCESS;

@@ -88,7 +88,8 @@ static int engOverlapping(void);
 static void engKillFullLevels(void);
 static int engEqLevel(tEngLevel level1, tEngLevel level2);
 static void engCopyLevel(tEngLevel target, tEngLevel source);
-static void engAnimation(int num);
+static int engAnimation(int interval, void *param);
+static int engTimer(int interval, void *param);
 static tEngSolid engObject2Solid(tEngObject object);
 static int engGetTimestep(void);
 static void engUpdateScore(int clearedLevels);
@@ -131,17 +132,20 @@ static int engGetTimestep(void)
 }
 
 /** Timer function for Game engine. */
-void engDropSolid(int value)
+int engDropSolid(int interval, void *param)
 {
   if (engLowerSolid())
   {
-    setTimerCallback(0.25, &engDropSolid, 0);
+    return(interval);
+  }
+  else
+  {
+    return(0);
   }
 }
 
-
 /** Timer function for Game engine. */
-static void engTimer(int value)
+static int engTimer(int interval, void *param)
 {
   if (engGE.gameOver == 0)
   {
@@ -152,7 +156,11 @@ static void engTimer(int value)
 
     refresh();
 
-    setTimerCallback(engGetTimestep(), &engTimer, 0);
+    return(engGetTimestep());
+  }
+  else
+  {
+    return(0);
   }
 }
 
@@ -171,7 +179,7 @@ static void engGameOver(void)
 
 /** Performing the queued transformation, return flag indicates if more
  *  call needed (1), or queue empty (0). */
-static void engAnimation(int num)
+static int engAnimation(int interval, void *param)
 {
   if (engGE.animation.num > 0)
   {
@@ -183,16 +191,17 @@ static void engAnimation(int num)
     engGE.animation.num--;
   }
 
+  refresh();
+
   if (engGE.animation.num <= 0)
   {
     engGE.lock = 0;
+    return(0);
   }
   else
   {
-    setTimerCallback(engAnimationTimeStep, &engAnimation, 0);
+    return(interval);
   }
-
-  refresh();
 }
 
 /** Render/convert an object to gamespace array */
@@ -318,7 +327,7 @@ void engResetGame(void)
   engGE.animation.posDecrease = 0;
   engGE.animation.transform   = m4dUnitMatrix();
 
-  engTimer(0);
+  setTimerCallback(engGetTimestep(), engTimer, NULL);
 }
 
 
@@ -470,7 +479,8 @@ int engLowerSolid(void)
         engGE.animation.num  = 2.0;
         engGE.animation.posDecrease  = 1.0 / 2.0;
         engGE.animation.transform   = m4dUnitMatrix();
-        engAnimation(0);
+
+        setTimerCallback(engAnimationTimeStep, engAnimation, NULL);
       }
     }
 
@@ -545,7 +555,8 @@ int engTurn(char ax1, char ax2)
         engGE.animation.num  = 5;
         engGE.animation.posDecrease  = 0.0;
         engGE.animation.transform  = m4dRotMatrix(ax1, ax2, M_PI / 2.0 / 5.0);
-        engAnimation(0);
+
+        setTimerCallback(engAnimationTimeStep, engAnimation, NULL);
       }
     }
   }

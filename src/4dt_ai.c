@@ -48,7 +48,7 @@ static int aiFindBestSolution(void);
 static double aiProcessSitu(void);
 static int aiSearchBestSitu(void);
 static void aiDoStep(void);
-static void aiTimer(int value);
+static int aiTimer(int interval, void *param);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -68,25 +68,25 @@ void aiSetActive(int active)
 
   if (timerMustStarted)
   {
-    aiTimer(0);
+    setTimerCallback(aiTimeStep, aiTimer, NULL);
   }
 }
 
 /** Timer function for Autoplayer. */
-static void aiTimer(int value)
+static int aiTimer(int interval, void *param)
 {
   if (aiAutoGamerON)
   {
     if (engGE.gameOver == 0)
     {
       aiDoStep();
-
-      setTimerCallback(aiTimeStep, &aiTimer, 0);
       refresh();
+      return(aiTimeStep);
     }
     else
     {
       aiAutoGamerON = 0;
+      return(0);
     }
   }
 }

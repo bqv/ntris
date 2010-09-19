@@ -399,8 +399,9 @@ void scnDisplay(void)
     {
       for (n = 0; n < maxpic; n++)
       {
-        g3dEndDraw();
+        g3dEndDrawPic();
       }
     }
+    g3dEndDraw();
   }
 }
