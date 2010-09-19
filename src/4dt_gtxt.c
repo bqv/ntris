@@ -30,16 +30,10 @@
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-
-int myround(double x)
-{
-        return (int)(x + 0.5);
-}
-
 int nextpoweroftwo(int x)
 {
-        double logbase2 = log(x) / log(2);
-        return myround(pow(2,ceil(logbase2)));
+  double logbase2 = log(x) / log(2);
+  return round(pow(2,ceil(logbase2)));
 }
 
 
@@ -187,6 +181,9 @@ void g3dRenderText(double x, double y,
 
   for (i = 0; i < lineNum; i++)
   {
-    g3dRenderString(x, y - i * lineSpace, color, strings[i]);
+    if (strings[i][0] != '\0')
+    {
+      g3dRenderString(x, y - i * lineSpace, color, strings[i]);
+    }
   }
 }
