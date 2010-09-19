@@ -20,7 +20,8 @@ objects = $(sources:.c=.o)
 
 cflags = -Wall -Wextra
 
-libs = -lGLU -lglut -lGL
+libs = -lGLU -lGL -lSDL -lSDL_ttf
+incl = -I/usr/include/SDL
 
 all : $(bin)
 
@@ -34,4 +35,4 @@ $(bin) : $(objects)
 	$(cc) $(cflags) -o $(bin) $(objects) $(libs)
 
 %.o : %.c
-	$(cc) $(cflags) -c -o $@ $<
+	$(cc) $(cflags) $(incl) -c -o $@ $<

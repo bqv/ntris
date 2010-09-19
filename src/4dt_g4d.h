@@ -32,7 +32,7 @@ extern void g4dSetViewType(tG4dViewType viewType);
 
 extern void g4dSwitchAutoRotation(int enable);
 extern void g4dRotateViewport(eM4dAxis axis1, eM4dAxis axis2, double angle);
-extern void g4dRotateViewportAngle(int angle);
+extern int g4dRotateViewportAngle(int interval, void *angle);
 
 extern void g4dDraw4DCube(tM4dVector center,
                           tM4dMatrix orientation,
