@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <limits.h>
 
 #include "4dt_main.h"
 #include "4dt_m3d.h"
@@ -112,16 +113,22 @@ void g4dSwitchAutoRotation(int enable)
 }
 
 /** Rotates the view port with angle deg in more steps */
-int g4dRotateViewportAngle(int interval, void *angle)
+int g4dRotateViewportAngle(int interval, void *param)
 {
   int anglestep = 30;
+  static int angle = INT_MIN;
 
-  if ((*(int *)angle) > 0)
+  if (angle == INT_MIN)
   {
-    (*(int *)angle) -= anglestep;
-    if ((*(int *)angle) < 0)
+    angle = 180;
+  }
+
+  if (angle > 0)
+  {
+    angle -= anglestep;
+    if (angle < 0)
     {
-      anglestep -= - (*(int *)angle);
+      anglestep -= - angle;
     }
 
     g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
@@ -133,6 +140,7 @@ int g4dRotateViewportAngle(int interval, void *angle)
   }
   else
   {
+    angle = INT_MIN;
     return(0);
   }
 }
