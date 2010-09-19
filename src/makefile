@@ -4,16 +4,17 @@ lint=splint
 
 bin = 4dtris
 
-sources = 4dt_ai.c \
-          4dt_eng.c \
+sources = 4dt_ai.c   \
+          4dt_eng.c  \
           4dt_main.c \
           4dt_menu.c \
-          4dt_scn.c \
-          4dt_m3d.c \
-          4dt_m4d.c \
-          4dt_g3d.c \
-          4dt_g4d.c \
-          4dt_hst.c \
+          4dt_scn.c  \
+          4dt_m3d.c  \
+          4dt_m4d.c  \
+          4dt_g3d.c  \
+          4dt_gtxt.c \
+          4dt_g4d.c  \
+          4dt_hst.c  \
           4dt_ui.c
 
 objects = $(sources:.c=.o) 
@@ -21,7 +22,6 @@ objects = $(sources:.c=.o)
 cflags = -Wall -Wextra
 
 libs = -lGLU -lGL -lSDL -lSDL_ttf
-incl = -I/usr/include/SDL
 
 all : $(bin)
 
@@ -35,4 +35,4 @@ $(bin) : $(objects)
 	$(cc) $(cflags) -o $(bin) $(objects) $(libs)
 
 %.o : %.c
-	$(cc) $(cflags) $(incl) -c -o $@ $< 
+	$(cc) $(cflags) -c -o $@ $< 

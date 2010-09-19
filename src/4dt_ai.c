@@ -89,6 +89,10 @@ static int aiTimer(int interval, void *param)
       return(0);
     }
   }
+  else
+  {
+    return(0);
+  }
 }
 
 /** Trigger the AI to make a turn. */

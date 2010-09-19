@@ -36,6 +36,8 @@
 
 /** Time step for animation [msec] */
 static const int engAnimationTimeStep = 15;
+/** Time step for step downs when object dropped */
+static const double engDropSolidTimeStep = 0.25;
 
 /** Empty solid */
 static const tEngSolid engEmptySolid =
@@ -136,7 +138,7 @@ int engDropSolid(int interval, void *param)
 {
   if (engLowerSolid())
   {
-    return(interval);
+    return(engDropSolidTimeStep);
   }
   else
   {

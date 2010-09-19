@@ -12,8 +12,8 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 
 #include "4dt_m3d.h"
 #include "4dt_g3d.h"
@@ -183,46 +183,6 @@ void g3dEndDraw(void)
 {
   // Swap the buffers.
   SDL_GL_SwapBuffers();
-}
-
-/** Draw bitmap text to the specified coordinates and font. */
-void g3dRenderText(double x, double y,
-                   float color[4],
-                   char **strings,
-                   int lineNum,
-                   double lineSpace)
-{
-  int i;
-
-  for (i = 0; i < lineNum; i++)
-  {
-    g3dRenderString(x, y - i * lineSpace, color, strings[i]);
-  }
-}
-
-/** Draw bitmap string to the specified coordinates and font. */
-void g3dRenderString(double x, double y,
-                    float color[4],
-                    char *string)
-{
-  /*
-  SDL_Surface* screen,
-  char* string,
-  int size,
-  int x, int y,
-  int fR, int fG, int fB,
-  int bR, int bG, int bB)
-  */
-  int size = 16;
-  TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf", size);
-  SDL_Color foregroundColor = { 255, 255, 255 };
-  SDL_Color backgroundColor = { 0, 0, 0 };
-  SDL_Surface* textSurface = TTF_RenderText_Shaded(font, string,
-                             foregroundColor, backgroundColor);
-  SDL_Rect textLocation = { (int)(x*640), (int)(y*480), 0, 0 };
-  SDL_BlitSurface(textSurface, NULL, (SDL_Surface *)getSDLScreen(), &textLocation);
-  SDL_FreeSurface(textSurface);
-  TTF_CloseFont(font);
 }
 
 /** Draws 3D line */
