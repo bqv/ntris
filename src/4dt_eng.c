@@ -37,7 +37,7 @@
 /** Time step for animation [msec] */
 static const int engAnimationTimeStep = 15;
 /** Time step for step downs when object dropped */
-static const double engDropSolidTimeStep = 0.25;
+static const double engDropSolidTimeStep = 10;
 
 /** Empty solid */
 static const tEngSolid engEmptySolid =
