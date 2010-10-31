@@ -66,6 +66,8 @@
 
 static int debugmode = 0;
 
+static const int framerate = 50;
+
 SDL_Surface *screen;
 
 /*
@@ -160,8 +162,15 @@ int main(int argc, char *argv[])
 
   g3dResize(screen->w, screen->h);
   done = 0;
-  while ( ! done ) {
+
+  while ( ! done )
+  {
     SDL_Event event;
+    Uint32 startFrame;
+    Uint32 endFrame;
+    Uint32 delay;
+
+    startFrame = SDL_GetTicks();
 
     while ( SDL_PollEvent(&event) )
     {
@@ -215,6 +224,19 @@ int main(int argc, char *argv[])
     }
 
     scnDisplay();
+
+    endFrame = SDL_GetTicks();
+
+    delay = 1000/framerate - (endFrame - startFrame);
+    if (delay < 0)
+    {
+      delay = 0;
+    }
+    else if (delay > 1000/framerate)
+    {
+      delay = 1000/framerate;
+    }
+    SDL_Delay(delay);
   }
   TTF_Quit();
   SDL_Quit();
