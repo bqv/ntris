@@ -37,7 +37,7 @@
 const static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.35};
 const static float scn4DWireColor[4] = {0.8, 0.8, 0.9, 1.00};
 /** Color of the 4D grid. */
-const static float scn4DGridColor[4] = {0.7, 0.7, 0.8, 0.015};
+const static float scn4DGridColor[4] = {1.0, 1.0, 1.0, 0.03};
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -303,16 +303,14 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 
             mask[x][y][z] = 1;
           }
-          else
-          {
-            if (pScnSet->enableGridDraw)
-            {
-              g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                            m4dUnitMatrix(),
-                            scn4DGridColor, 4, 2, NULL);
-            }
-          }
         }
+      }
+
+      if (pScnSet->enableGridDraw)
+      {
+        g4dDraw4DCube(m4dVector(x - 2.0, y - 2.0, z - 2.0, l - 2.0),
+                      m4dMultiplySM(2.0,m4dUnitMatrix()),
+                      scn4DGridColor, 4, 2, NULL);
       }
     }
 

@@ -337,6 +337,10 @@ void g3dDrawPoly(tM3dVector points[4],
         }
         else
         {
+          if (mode == 2)
+          {
+            glDisable(GL_LIGHTING);
+          }
           glBegin(GL_LINE);
 
           glVertex3d(points[k].c[0],
@@ -354,6 +358,7 @@ void g3dDrawPoly(tM3dVector points[4],
 
   if (transparent)
   {
+    glEnable(GL_LIGHTING);
     glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
   }
