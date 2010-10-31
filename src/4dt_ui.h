@@ -31,7 +31,7 @@ enum
   UI_KEY_END       = 0x0800,
   UI_KEY_F1        = 0x1100,
   UI_KEY_F2        = 0x1200,
-  UI_KEY_F10       = 0x1A00,
+  UI_KEY_F10       = 0x1A00
 } tuiKeyCodes;
 
 
@@ -39,6 +39,6 @@ enum
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern void uiKeyPress(int key);
+extern void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet);
 
 #endif /* 4DT_UI_H_ */

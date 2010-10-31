@@ -1,10 +1,10 @@
 /**
- * \file  4dt_main.h
- * \brief Header for main modul.
+ * \file  4dt_gtxt.h
+ * \brief Header of text drawing modul.
  */
- 
-#ifndef _4DT_MAIN_H_
-#define _4DT_MAIN_H_
+
+#ifndef _4DT_GTXT_H_
+#define _4DT_GTXT_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -18,10 +18,14 @@
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern void setTimerCallback(int time,
-                             int (*callback)(int interval, void *param),
-                             void *param);
-extern void refresh(void);
-extern void* getSDLScreen(void);
+extern  void g3dRenderString(double x, double y,
+                             float color[4],
+                             char *string);
 
-#endif /* _4DT_MAIN_H_ */
+extern void g3dRenderText(double x, double y,
+                          float color[4],
+                          char **strings,
+                          int lineNum,
+                          double lineSpace);
+
+#endif /* _4DT_GTXT_H_ */

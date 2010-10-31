@@ -14,10 +14,11 @@
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_ai.h"
+#include "4dt_scn.h"
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
-#include "4dt_scn.h"
 #include "4dt_menu.h"
+#include "4dt_main.h"
 
 #include "4dt_ui.h"
 
@@ -50,13 +51,13 @@ static const double uiViewportRotAngle = 15.0 * M_PI / 180.0;
 
 
 /** Eventhandler of special key pressing. */
-void uiKeyPress(int key)
+void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
 {
-  // if game menu is activated
+  /*  if game menu is activated */
   if(menuIsActived())
   {
-    // Forward user action to menu module
-    // Check which key pressed.
+    /*  Forward user action to menu module */
+    /*  Check which key pressed. */
     switch (key)
     {
       case UI_KEY_UP:
@@ -80,118 +81,120 @@ void uiKeyPress(int key)
   }
   else
   {
-    // Check which key pressed.
+    /*  Check which key pressed. */
     switch (key)
     {
-      // If escape
+      /*  If escape */
       case UI_KEY_ESC:
-        // go to the menu
+        /*  go to the menu */
         menuNavigate(eMenuForward);
         break;
 
-      // If up arrow then
+      /*  If up arrow then */
       case UI_KEY_UP:
-        // rotate viewport around x axis
-        // to positive direction.
+        /*  rotate viewport around x axis */
+        /*  to positive direction. */
         g4dRotateViewport(eM4dAxisY, eM4dAxisZ, -uiViewportRotAngle);
       break;
 
-      // If up arrow then
+      /*  If up arrow then */
       case UI_KEY_LEFT:
-        // rotate viewport around z axis
-        // to negative direction.
+        /*  rotate viewport around z axis */
+        /*  to negative direction. */
         g4dRotateViewport(eM4dAxisX, eM4dAxisY, -uiViewportRotAngle);
       break;
 
-      // If up arrow then
+      /*  If up arrow then */
       case UI_KEY_DOWN:
-        // rotate viewport around x axis
-        // to positive direction.
+        /*  rotate viewport around x axis */
+        /*  to positive direction. */
         g4dRotateViewport(eM4dAxisY, eM4dAxisZ, uiViewportRotAngle);
       break;
 
-      // If up arrow then
+      /*  If up arrow then */
       case UI_KEY_RIGHT:
-        // rotate viewport around z axis
-        // to negative direction.
+        /*  rotate viewport around z axis */
+        /*  to negative direction. */
         g4dRotateViewport(eM4dAxisX, eM4dAxisY, uiViewportRotAngle);
       break;
 
-      // If 'z' then
+      /*  If 'z' then */
       case 'z':
-        // turn the solid
-        // around axis 2.
-        engTurn(0, 1);
+        /*  turn the solid */
+        /*  around axis 2. */
+        engTurn(0, 1, pEngGame);
       break;
 
-      // If 'x' then
+      /*  If 'x' then */
       case 'x':
-        // turn the solid
-        // around axis 0.
-        engTurn(1, 2);
+        /*  turn the solid */
+        /*  around axis 0. */
+        engTurn(1, 2, pEngGame);
       break;
 
-      // If 'c' then
+      /*  If 'c' then */
       case 'c':
-        // turn the solid
-        // around axis 1.
-        engTurn(2, 0);
+        /*  turn the solid */
+        /*  around axis 1. */
+        engTurn(2, 0, pEngGame);
       break;
 
-      // If 'v' then
+      /*  If 'v' then */
       case 'v':
-        // turn the solid
-        // around axis 4.
-        engTurn(0, 3);
+        /*  turn the solid */
+        /*  around axis 4. */
+        engTurn(0, 3, pEngGame);
       break;
 
-      // If space then
+      /*  If space then */
       case ' ':
-        // step down the solid.
-        engLowerSolid();
+        /*  step down the solid. */
+        engLowerSolid(pEngGame);
       break;
 
       case '1':
-          scnAxle = 0;
+        pScnSet->axle = 0;
       break;
 
       case '2':
-          scnAxle = 1;
+        pScnSet->axle = 1;
       break;
 
       case '3':
-          scnAxle = 2;
+        pScnSet->axle = 2;
       break;
 
       case UI_KEY_PGUP:
       case '+':
       {
-        // turn around selected axle clockwise
-        engTurn((scnAxle == 0) ? 1 : 0, (scnAxle == 2) ? 1 : 2);
+        /*  turn around selected axle clockwise */
+        engTurn((pScnSet->axle == 0) ? 1 : 0,
+                (pScnSet->axle == 2) ? 1 : 2, pEngGame);
       }
       break;
 
       case UI_KEY_PGDOWN:
       case '-':
       {
-        // turn around selected axle counterclockwise
-        engTurn((scnAxle == 2) ? 1 : 2, (scnAxle == 0) ? 1 : 0);
+        /*  turn around selected axle counterclockwise */
+        engTurn((pScnSet->axle == 2) ? 1 : 2,
+                (pScnSet->axle == 0) ? 1 : 0, pEngGame);
       }
       break;
 
       case UI_KEY_HOME:
-        // turn around selected axle clockwise
-        engTurn(scnAxle, 3);
+        /*  turn around selected axle clockwise */
+        engTurn(pScnSet->axle, 3, pEngGame);
       break;
 
       case UI_KEY_END:
-        // turn around selected axle counterclockwise
-        engTurn(3, scnAxle);
+        /*  turn around selected axle counterclockwise */
+        engTurn(3, pScnSet->axle, pEngGame);
       break;
 
       case 'a':
-        // Switch the autoplayer on.
-        aiSetActive(aiIsActive() ? 0 : 1);
+        /*  Switch the autoplayer on. */
+        aiSetActive(aiIsActive() ? 0 : 1, pEngGame);
       break;
 
       case UI_KEY_F1:
@@ -203,11 +206,11 @@ void uiKeyPress(int key)
       break;
 
       case UI_KEY_BACKSPACE:
-        g4dRotateViewportAngle(180);
+        setTimerCallback(1, g4dRotateViewportAngle, NULL);
       break;
 
       case UI_KEY_ENTER:
-        engDropSolid(0);
+        engDropSolid(pEngGame);
       break;
     }
   }
