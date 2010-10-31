@@ -210,7 +210,7 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       break;
 
       case UI_KEY_ENTER:
-        setTimerCallback(1, engDropSolid, pEngGame);
+        engDropSolid(pEngGame);
       break;
     }
   }
