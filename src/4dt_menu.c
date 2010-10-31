@@ -12,11 +12,12 @@
 
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
-#include "4dt_g3d.h"
-#include "4dt_g4d.h"
-#include "4dt_ai.h"
 #include "4dt_eng.h"
 #include "4dt_scn.h"
+#include "4dt_g3d.h"
+#include "4dt_gtxt.h"
+#include "4dt_g4d.h"
+#include "4dt_ai.h"
 #include "4dt_hst.h"
 
 #include "4dt_menu.h"
@@ -149,9 +150,18 @@ static eMenuItem menuActItem = eMenuRoot; /**< Actual active menu item.         
 static int menuSelItems[eMenuItemNum];    /**< Last selected submenu in each menuitem */
 static char **menuText = NULL;        /**< Actual menu text for display       */
 
+static tEngGame *pMenuEngGame;
+static tScnSet *pMenuScnSet;
+
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+void menuInit(tEngGame *pEngGame, tScnSet *pScnSet)
+{
+  pMenuEngGame = pEngGame;
+  pMenuScnSet  = pScnSet;
+}
 
 /** Get function for query menu active state. */
 int menuIsActived(void)
@@ -195,14 +205,14 @@ void menuGotoItem(eMenuItem menuItem)
 /** Menu state machine. */
 void menuNavigate(eMenuEvent event)
 {
-  int subMenuNum;    // number of submenus in actual menu item
+  int subMenuNum;    /*  number of submenus in actual menu item */
 
   subMenuNum = menuSubNum(menuActItem);
 
   switch(event)
   {
     case eMenuUp:
-      // Go up in the submenu list
+      /*  Go up in the submenu list */
       if (subMenuNum != 0)
       {
         menuSelItems[menuActItem] = (menuSelItems[menuActItem] + subMenuNum - 1)
@@ -210,7 +220,7 @@ void menuNavigate(eMenuEvent event)
       }
       break;
     case eMenuDown:
-      // Go down in the submenu list
+      /*  Go down in the submenu list */
       if (subMenuNum != 0)
       {
         menuSelItems[menuActItem] = (menuSelItems[menuActItem] + 1)
@@ -219,7 +229,7 @@ void menuNavigate(eMenuEvent event)
       break;
     case eMenuForward:
     {
-      // Step in to a menu item
+      /*  Step in to a menu item */
       eMenuItem subItem = menuItems[menuActItem].submenus[menuSelItems[menuActItem]];
 
       if (   (subItem != eMenuNull)
@@ -230,7 +240,7 @@ void menuNavigate(eMenuEvent event)
       break;
     }
     case eMenuBack:
-      // Step out from a menu item
+      /*  Step out from a menu item */
       if (1 == menuItems[menuItems[menuActItem].parent].enabled)
       {
         menuGotoItem(menuItems[menuActItem].parent);
@@ -238,7 +248,7 @@ void menuNavigate(eMenuEvent event)
       }
       break;
     default:
-      exit(1); // Control should not reach this point
+      exit(1); /*  Control should not reach this point */
   }
 }
 
@@ -248,20 +258,20 @@ void menuDraw(void)
   int i = 0;
   eMenuItem subItem;
 
-  float linespace = 0.1; // portion of vert. display size between lines
+  float linespace = 0.1; /*  portion of vert. display size between lines */
 
-  // colors for different menu item states
+  /*  colors for different menu item states */
   float colorDisable[4] = {0.3, 0.3, 0.3, 1.0};
   float colorNormal[4]  = {0.8, 0.8, 0.9, 1.0};
-  float colorSelect[4]  = {1.0, 0.6, 0.6, 1.0};
+  float colorSelect[4]  = {0.3, 0.3, 1.0, 1.0};
 
-  // for each submenu in active menu item
+  /*  for each submenu in active menu item */
   for (i = 0; i < menuSubNum(menuActItem); i++)
   {
     subItem = menuItems[menuActItem].submenus[i];
 
-    // Render the menu caption.
-    g3dRenderString(0.1, (1-linespace) - i * linespace,
+    /*  Render the menu caption. */
+    g3dRenderString(0.1, 1 - (i+1.5) * linespace,
                     (i == menuSelItems[menuActItem])
                     ? colorSelect
                     : (0 == menuItems[subItem].enabled)
@@ -270,11 +280,11 @@ void menuDraw(void)
                     menuItems[subItem].caption);
   }
 
-  // If multiline text selected to display
+  /*  If multiline text selected to display */
   if (menuText != NULL)
   {
-    // display the text
-    g3dRenderText(0.1, 1-linespace, colorNormal,
+    /*  display the text */
+    g3dRenderText(0.1, 1 - 1.5 * linespace, colorNormal,
                   menuText, TEXTLINENUM, linespace);
   }
 
@@ -296,16 +306,16 @@ static void menuGameOver(void)
 static void menuGameOverOff(void)
 {
   menuText = NULL;
-  engResetGame();
-  aiSetActive(1);
+  engResetGame(pMenuEngGame);
+  aiSetActive(1, pMenuEngGame);
 }
 
 static void menuNew(void)
 {
-  // reset game engine
-  aiSetActive(0);
-  engResetGame();
-  engGE.activeUser = 1;
+  /*  reset game engine */
+  aiSetActive(0, pMenuEngGame);
+  engResetGame(pMenuEngGame);
+  pMenuEngGame->activeUser = 1;
 
   menuItems[eMenuAutoPlayer].caption = "Auto Player - OFF";
 
@@ -321,17 +331,17 @@ static void menuNew(void)
 
 static void menuSound(void)
 {
-  // Not implemented yet
+  /*  Not implemented yet */
 }
 
 static void menuMusic(void)
 {
-  // Not implemented yet
+  /*  Not implemented yet */
 }
 
 static void menuAuto(void)
 {
-  aiSetActive(aiIsActive() ? 0 : 1);
+  aiSetActive(aiIsActive() ? 0 : 1, pMenuEngGame);
 
   menuItems[eMenuAutoPlayer].caption = (aiIsActive())
                                    ? "Auto Player - ON"
@@ -348,16 +358,16 @@ static void menuLevel(void)
     "Diff. Level - Hard"
   };
 
-  engGE.game_opts.diff = (engGE.game_opts.diff+1) % DIFFLEVELS;
+  pMenuEngGame->game_opts.diff = (pMenuEngGame->game_opts.diff+1) % DIFFLEVELS;
 
-  menuItems[eMenuDiffLevel].caption = captions[engGE.game_opts.diff];
+  menuItems[eMenuDiffLevel].caption = captions[pMenuEngGame->game_opts.diff];
 
   menuNavigate(eMenuBack);
 }
 
 static void menuControls(void)
 {
-  // Not implemented yet
+  /*  Not implemented yet */
 }
 
 static void menuHelp(void)
@@ -388,9 +398,9 @@ static void menuQuit(void)
 
 static void menuAnimation(void)
 {
-  engGE.animation.enable = !engGE.animation.enable;
+  pMenuEngGame->animation.enable = !pMenuEngGame->animation.enable;
 
-  menuItems[eMenuAnimation].caption = (engGE.animation.enable)
+  menuItems[eMenuAnimation].caption = (pMenuEngGame->animation.enable)
                                    ? "Animation - ON"
                                    : "Animation - OFF";
   menuNavigate(eMenuBack);
@@ -415,8 +425,8 @@ static void menuDrawmode(void)
 
   state = (state + 1) % 3;
 
-  scnSetEnableHypercubeDraw(states[state].hypercubedraw);
-  scnSetEnableSeparateBlockDraw(states[state].separateBlockDraw);
+  scnSetEnableHypercubeDraw(states[state].hypercubedraw, pMenuScnSet);
+  scnSetEnableSeparateBlockDraw(states[state].separateBlockDraw, pMenuScnSet);
 
   menuItems[eMenuDrawmode].caption = states[state].caption;
   menuNavigate(eMenuBack);
@@ -424,9 +434,9 @@ static void menuDrawmode(void)
 
 static void menuGrid(void)
 {
-  scnSetEnableGridDraw(!scnGetEnableGridDraw());
+  scnSetEnableGridDraw(!scnGetEnableGridDraw(pMenuScnSet), pMenuScnSet);
 
-  menuItems[eMenuGrid].caption = scnGetEnableGridDraw()
+  menuItems[eMenuGrid].caption = scnGetEnableGridDraw(pMenuScnSet)
                                  ? "Grid - ON"
                                  : "Grid - OFF";
   menuNavigate(eMenuBack);
@@ -441,9 +451,10 @@ static void menuStereo(void)
     "View mode - Anaglyph"
   };
 
-  scnSetViewMode( (scnGetViewMode()+1) % eScnViewModeNum );
+  scnSetViewMode( (scnGetViewMode(pMenuScnSet)+1) % eScnViewModeNum,
+                  pMenuScnSet);
 
-  menuItems[eMenuStereo].caption = captions[scnGetViewMode()];
+  menuItems[eMenuStereo].caption = captions[scnGetViewMode(pMenuScnSet)];
 
   menuNavigate(eMenuBack);
 }

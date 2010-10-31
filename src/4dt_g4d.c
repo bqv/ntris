@@ -9,10 +9,13 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <limits.h>
 
 #include "4dt_main.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
+#include "4dt_eng.h"
+#include "4dt_scn.h"
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
 
@@ -80,8 +83,8 @@ static tM3dVector g4dProject(tM4dVector vector);
 
 static tM3dVector g4d2PointProject(tM4dVector vector);
 
-static void g4dStepViewModeChange(int num);
-static void g4dAutoRotateViewport(int num);
+static int g4dAutoRotateViewport(int interval, void *param);
+static int g4dStepViewModeChange(int interval, void *param);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -95,7 +98,7 @@ void g4dInit(double w_maximum)
 
   g4dReset();
 
-  g4dAutoRotateViewport(0);
+  setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
 }
 
 /** Reset 4D draving unit */
@@ -107,33 +110,45 @@ void g4dReset(void)
 void g4dSwitchAutoRotation(int enable)
 {
   g4dAutoRotationEnabled = enable;
-  g4dAutoRotateViewport(0);
+
+  setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
 }
 
 /** Rotates the view port with angle deg in more steps */
-void g4dRotateViewportAngle(int angle)
+int g4dRotateViewportAngle(int interval, void *param)
 {
   int anglestep = 30;
+  static int angle = INT_MIN;
+
+  if (angle == INT_MIN)
+  {
+    angle = 180;
+  }
 
   if (angle > 0)
   {
     angle -= anglestep;
     if (angle < 0)
     {
-      anglestep -= -angle;
+      anglestep -= - angle;
     }
 
     g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
                                              anglestep * M_PI / 180),
                                 g4dViewport);
 
-    setTimerCallback(g4dRotationTimeStep, &g4dRotateViewportAngle, angle);
     refresh();
+    return(g4dRotationTimeStep);
+  }
+  else
+  {
+    angle = INT_MIN;
+    return(0);
   }
 }
 
 /** View rotation procedure. Should be triggered. */
-static void g4dAutoRotateViewport(int num)
+static int g4dAutoRotateViewport(int interval, void *param)
 {
   if (g4dAutoRotationEnabled)
   {
@@ -145,33 +160,53 @@ static void g4dAutoRotateViewport(int num)
                                              0.20 * M_PI / 180),
                                 g4dViewport);
 
-    setTimerCallback(g4dRotationTimeStep, &g4dAutoRotateViewport, 0);
     refresh();
+
+    return(interval);
+  }
+  else
+  {
+    return(0);
   }
 }
 
 /** View rotation procedure. Should be triggered. */
-static void g4dStepViewModeChange(int num)
+static int g4dStepViewModeChange(int interval, void *param)
 {
+  int newinterval = 0;
+
   switch(g4dViewType)
   {
     case eG4d1PointProjection:
     {
       g4dViewInterpol -= g4dViewInterpolStep;
-      if (g4dViewInterpol < 0.0) { g4dViewInterpol = 0.0; }
-      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0); }
+      if (g4dViewInterpol < 0.0)
+      {
+        g4dViewInterpol = 0.0;
+      }
+      else
+      {
+        newinterval = interval;
+      }
       break;
     }
     case eG4d2PointProjection:
     {
       g4dViewInterpol += g4dViewInterpolStep;
-      if (g4dViewInterpol > 1.0) { g4dViewInterpol = 1.0; }
-      else { setTimerCallback(g4dViewmodeTimeStep, &g4dStepViewModeChange, 0); }
+      if (g4dViewInterpol > 1.0)
+      {
+        g4dViewInterpol = 1.0;
+      }
+      else
+      {
+        newinterval = interval;
+      }
       break;
     }
   }
 
   refresh();
+  return(newinterval);
 }
 
 /** Set function for view type */
@@ -260,7 +295,7 @@ static tM3dVector g4dProject(tM4dVector vector)
 {
   tM3dVector result;
 
-  // Rotate coordinate system to the viewport coord system
+  /*  Rotate coordinate system to the viewport coord system */
   vector = m4dMultiplyMV(g4dViewport, vector);
 
   result = g4d2PointProject(vector);
@@ -272,22 +307,22 @@ static tM3dVector g4dProject(tM4dVector vector)
            (game space 4th axis). */
 static double g4dPerspFact(double w)
 {
-  // Local variables:
-  double baseLevel, // lowest level if the viewpoint is at zero level;
-         sizeFact,  // factor of highest and lowest level projected size;
-         result;    // return value.
+  /*  Local variables: */
+  double baseLevel, /*  lowest level if the viewpoint is at zero level; */
+         sizeFact,  /*  factor of highest and lowest level projected size; */
+         result;    /*  return value. */
 
-  // Calculate size factor.
+  /*  Calculate size factor. */
   sizeFact = g4dBaseSize / g4dMaxSize;
 
-  // Calculate viewpoint distance from lowest level.
+  /*  Calculate viewpoint distance from lowest level. */
   baseLevel = g4dMaxW * sizeFact / (1 - sizeFact);
 
-  // Calculate perspective projection.
+  /*  Calculate perspective projection. */
   result = g4dBaseSize * (baseLevel + g4dMaxW) /
            (baseLevel + g4dMaxW - w);
 
-  // Return with the result value.
+  /*  Return with the result value. */
   return result;
 }
 
@@ -331,7 +366,7 @@ void g4dDraw4DCube(tM4dVector center,
                    int mode,
                    int sideVisible[eM4dDimNum][2])
 {
-  // Array contains the points of a 4D hypercube.
+  /*  Array contains the points of a 4D hypercube. */
   tM4dVector points[16] =
   /*  x,   y,   z,   l */
   { {{-0.5,-0.5,-0.5,-0.5}},
@@ -351,26 +386,26 @@ void g4dDraw4DCube(tM4dVector center,
     {{-0.5, 0.5, 0.5, 0.5}},
     {{ 0.5, 0.5, 0.5, 0.5}} };
 
-  // Array contains the faces (specified with num. of the points)
-  // of a 4D hypercube.
+  /*  Array contains the faces (specified with num. of the points) */
+  /*  of a 4D hypercube. */
   const int faces[24][4] =
   {
-// inner cube
+/*  inner cube */
 {   8,  12,  14,  10}, {   9,  11,  15,  13}, {   8,   9,  13,  12},
 {  10,  14,  15,  11}, {   8,  10,  11,   9}, {  12,  13 ,  15,  14},
-// outer cube
+/*  outer cube */
 {   0,   4,   6,   2}, {   1,   3,   7,   5}, {   0,   1,   5,   4},
 {   2,   6,   7,   3}, {   0,   2,   3,   1}, {   4,   5,   7,   6},
-// intermediate faces
+/*  intermediate faces */
 {   0,   8, 0xC,   4}, {   0,   8, 0xA,   2}, { 0xA,   2,   6, 0xE}, { 0xE,   6,   4, 0xC},
 {   1,   9, 0xB,   3}, { 0xB,   3,   7, 0xF}, {   7, 0xF, 0xD,   5}, { 0xD,   5,   1,   9},
 { 0xC, 0xD,   5,   4}, {   8,   9,   1,   0}, { 0xA, 0xB,   3,   2}, { 0xE, 0xF,   7,   6}
   };
 
-  int visible[16];  // visibility flag for points
-  int n, i, k; // Loop counter.
+  int visible[16];  /*  visibility flag for points */
+  int n, i, k; /*  Loop counter. */
 
-  // Move each point of the hypercube to its final position
+  /*  Move each point of the hypercube to its final position */
   for (n = 0; n < 16; n++)
   {
     visible[n] = 1;
@@ -384,8 +419,8 @@ void g4dDraw4DCube(tM4dVector center,
       }
     }
 
-    // Dirty hack to get rid of Z-fighting between top cube and act. object
-    points[n] = m4dMultiplySV(1.001, points[n]);
+    /*  Dirty hack to get rid of Z-fighting between top cube and act. object */
+    points[n] = m4dMultiplySV(1.01, points[n]);
 
     points[n] = m4dMultiplyMV(orientation, points[n]);
 
@@ -394,7 +429,7 @@ void g4dDraw4DCube(tM4dVector center,
     points[n] = m4dAddVectors(points[n], center);
   }
 
-  // For each facet and
+  /*  For each facet and */
   for (i = 0; i < 24; i++)
   {
     int sideVisible[4];
