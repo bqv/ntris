@@ -21,6 +21,12 @@
 /** Axices belongs to the turns around 1..4 axis */
 static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 
+/** Time step for AI turning object */
+static const int aiTimeStepTurn = 500;
+
+/** Time step for AI step down object */
+static const int aiTimeStepDown = 100;
+
 /*------------------------------------------------------------------------------
    VARIABLES
 ------------------------------------------------------------------------------*/
@@ -29,7 +35,7 @@ static const char aiTurnAxices[4][2] = {{0, 1},{1, 2},{2, 0},{0, 3}};
 static int aiAutoGamerON = 0;
 
 /** Time step for autoplayer in msec */
-static int aiTimeStep = 150;
+static int aiTimeStep = 500;
 
 /** Array of the number of turns by axises needed to the best situation. */
 static int aiNeededTurns[4];
@@ -68,7 +74,7 @@ void aiSetActive(int active)
 
   if (timerMustStarted)
   {
-    setTimerCallback(aiTimeStep, aiTimer, NULL);
+    setTimerCallback(0, aiTimer, NULL);
   }
 }
 
@@ -122,7 +128,7 @@ static void aiDoStep(void)
           && (!stepMade)
           && (!engGE.lock))
       {
-        aiTimeStep = 200;
+        aiTimeStep = aiTimeStepTurn;
 
         // turn around the axis,
         engTurn(aiTurnAxices[i][0],
@@ -136,7 +142,7 @@ static void aiDoStep(void)
     // If no turn made, so no more turn needed, then
     if ((!stepMade) && (!engGE.lock))
     {
-      aiTimeStep = 100;
+      aiTimeStep = aiTimeStepDown;
 
       // lower the solid. }
       engLowerSolid();

@@ -254,7 +254,7 @@ void menuDraw(void)
   // colors for different menu item states
   float colorDisable[4] = {0.3, 0.3, 0.3, 1.0};
   float colorNormal[4]  = {0.8, 0.8, 0.9, 1.0};
-  float colorSelect[4]  = {1.0, 0.6, 0.6, 1.0};
+  float colorSelect[4]  = {0.3, 0.3, 1.0, 1.0};
 
   // for each submenu in active menu item
   for (i = 0; i < menuSubNum(menuActItem); i++)
