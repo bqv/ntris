@@ -19,7 +19,7 @@ sources = 4dt_ai.c   \
 
 objects = $(sources:.c=.o)
 
-cflags = -Wall -Wextra
+cflags = -Wall -Wextra --pedantic -g
 
 libs = -lGLU -lGL -lSDL -lSDL_ttf
 

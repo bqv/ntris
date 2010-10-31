@@ -48,11 +48,11 @@
 
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
-#include "4dt_ai.h"
 #include "4dt_eng.h"
-#include "4dt_g3d.h"
+#include "4dt_ai.h"
 #include "4dt_g4d.h"
 #include "4dt_scn.h"
+#include "4dt_g3d.h"
 #include "4dt_ui.h"
 #include "4dt_menu.h"
 #include "4dt_hst.h"
@@ -102,7 +102,6 @@ void setTimerCallback(int time,
 /** Redraw */
 void refresh(void)
 {
-//  scnDisplay();
 }
 
 /** Process command line arguments */
@@ -128,12 +127,15 @@ int main(int argc, char *argv[])
   Uint8 *keys;
   int uiKey;
 
+  tEngGame engGame, engGameDraw;
+  tScnSet scnSet = scnGetDefaultSet(), scnSetDraw;
+
   processARGV(argc, argv);
 
-  // Initialize/load High Score table
+  /*  Initialize/load High Score table */
   hstInit();
 
-  // Set random colors for game levels
+  /*  Set random colors for game levels */
   scnInit();
 
   SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
@@ -148,17 +150,20 @@ int main(int argc, char *argv[])
   SDL_WM_SetCaption("4DTris", "4dtris");
   TTF_Init();
 
-  // initialise 3D drawing modul
+  /*  initialise 3D drawing modul */
   g3dInit();
 
-  // initialise 4D drawing modul
+  /*  initialise 4D drawing modul */
   g4dInit(SPACELENGTH);
 
-  // Initialize the game engine.
-  engInitGame();
+  /*  Initialize the game engine. */
+  engInitGame(&engGame);
 
-  // start autoplayer
-  aiSetActive(1);
+  /* Initialize menu */
+  menuInit(&engGame, &scnSet);
+
+  /*  start autoplayer */
+  aiSetActive(1, &engGame);
 
   g3dResize(screen->w, screen->h);
   done = 0;
@@ -218,12 +223,14 @@ int main(int argc, char *argv[])
           if(keys[SDLK_1])         { uiKey = '1';             }
           if(keys[SDLK_2])         { uiKey = '2';             }
           if(keys[SDLK_3])         { uiKey = '3';             }
-          if(uiKey != 0) { uiKeyPress(uiKey); }
+          if(uiKey != 0) { uiKeyPress(uiKey, &engGame, &scnSet); }
         }
       }
     }
 
-    scnDisplay();
+    engGameDraw = engGame;
+    scnSetDraw  = scnSet;
+    scnDisplay(&engGameDraw, &scnSetDraw);
 
     endFrame = SDL_GetTicks();
 
@@ -241,6 +248,6 @@ int main(int argc, char *argv[])
   TTF_Quit();
   SDL_Quit();
 
-  // Return with successed exit constant.
+  /*  Return with successed exit constant. */
   return EXIT_SUCCESS;
 }

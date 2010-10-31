@@ -23,26 +23,39 @@ typedef enum
 }
 tScnViewMode;
 
+typedef struct
+{
+  /** Flag indicates if hypercube should be drawn or only the "top side" cube */
+  int enableHypercubeDraw;
+  /** Flag indicates if block should be drawn separated */
+  int enableSeparateBlockDraw;
+  /** Flag indicates if grid has to be drawn */
+  int enableGridDraw;
+  /** selected axle for rotation */
+  int axle;
+  /** temporary switch for stereo view */
+  tScnViewMode viewMode;
+}
+tScnSet;
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-// TODO: remove
-extern int scnAxle;
-
 extern void scnInit(void);
-extern void scnDisplay(void);
+extern tScnSet scnGetDefaultSet(void);
+extern void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet);
 
-extern void scnSetViewMode(tScnViewMode mode);
-extern tScnViewMode scnGetViewMode(void);
+extern void scnSetViewMode(tScnViewMode mode, tScnSet *pScnSet);
+extern tScnViewMode scnGetViewMode(tScnSet *pScnSet);
 
-extern void scnSetEnableHypercubeDraw(int enable);
-extern int  scnGetEnableHypercubeDraw(void);
+extern void scnSetEnableHypercubeDraw(int enable, tScnSet *pScnSet);
+extern int  scnGetEnableHypercubeDraw(tScnSet *pScnSet);
 
-extern void scnSetEnableSeparateBlockDraw(int enable);
-extern int  scnGetEnableSeparateBlockDraw(void);
+extern void scnSetEnableSeparateBlockDraw(int enable, tScnSet *pScnSet);
+extern int  scnGetEnableSeparateBlockDraw(tScnSet *pScnSet);
 
-extern void scnSetEnableGridDraw(int enable);
-extern int  scnGetEnableGridDraw(void);
+extern void scnSetEnableGridDraw(int enable, tScnSet *pScnSet);
+extern int  scnGetEnableGridDraw(tScnSet *pScnSet);
 
 #endif /* _4DT_SCN_H_ */
