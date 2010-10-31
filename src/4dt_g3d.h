@@ -33,7 +33,7 @@ extern void g3dDrawLine(tM3dVector point0,
                         float linewidth);
 extern void g3dDrawRectangle(float x0, float y0, float x1, float y1,
                       float color1[4], float color2[4]);
-extern void g3dBeginDraw(int x, int y, int z, int picnum);
+extern void g3dBeginDraw(int x, int y, int z, int picnum, tScnViewMode viewMode);
 extern void g3dEndDrawPic(void);
 extern void g3dEndDraw(void);
 extern void g3dResize(int width, int height);

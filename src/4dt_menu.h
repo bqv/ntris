@@ -64,6 +64,8 @@ eMenuEvent;
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+
+extern void menuInit(tEngGame *pEngGame, tScnSet *pScnSet);
 extern int  menuIsActived(void);
 extern void menuDraw(void);
 extern void menuNavigate(eMenuEvent event);

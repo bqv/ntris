@@ -17,7 +17,7 @@
 typedef enum
 {
   eG4d1PointProjection = 0,
-  eG4d2PointProjection = 1,
+  eG4d2PointProjection = 1
 }
 tG4dViewType;
 

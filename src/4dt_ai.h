@@ -12,7 +12,7 @@
 ------------------------------------------------------------------------------*/
 
 extern int aiIsActive(void);
-extern void aiSetActive(int active);
+extern void aiSetActive(int active, tEngGame *pEngGame);
 
 
 #endif

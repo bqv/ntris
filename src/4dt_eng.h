@@ -106,20 +106,18 @@ typedef struct
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
-extern tEngGame engGE;
-
-extern void engResetGame(void);
-extern void engInitGame(void);
-extern int engLowerSolid(void);
-extern int engDropSolid(int interval, void *param);
-extern int engTurn(char ax1, char ax2);
-extern void engPrintSpace(void);
+extern void engResetGame(tEngGame *pEngGame);
+extern void engInitGame(tEngGame *pEngGame);
+extern int engLowerSolid(tEngGame *pEngGame);
+extern int engDropSolid(int interval, tEngGame *pEngGame);
+extern int engTurn(char ax1, char ax2, tEngGame *pEngGame);
+extern void engPrintSpace(tEngGame *pEngGame);
 
 /** get the cell of the level at x, y, z from
     the game space empty or full */
-static inline int engGetSpaceCell(int w, int x, int y, int z)
+static inline int engGetSpaceCell(int w, int x, int y, int z, tEngGame *pEngGame)
 {
-  return(engGE.space[w][x][y][z]);
+  return(pEngGame->space[w][x][y][z]);
 }
 
 #endif
