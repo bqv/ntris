@@ -202,6 +202,22 @@ tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR)
   return result;
 }
 
+/** Multiplies scalar with matrix */
+tM4dMatrix m4dMultiplySM(double scalar, tM4dMatrix matrix)
+{
+  eM4dAxis row, col;
+  tM4dMatrix result = matrix;
+
+  for (row = eM4dAxisX; row < eM4dDimNum; row++)
+  for (col = eM4dAxisX; col < eM4dDimNum; col++)
+  {
+    result.c[row][col] *= scalar;
+  }
+
+  return result;
+}
+
+
 void m4dPrintVector(tM4dVector vector)
 {
   eM4dAxis axis;
