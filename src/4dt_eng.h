@@ -109,7 +109,7 @@ typedef struct
 extern void engResetGame(tEngGame *pEngGame);
 extern void engInitGame(tEngGame *pEngGame);
 extern int engLowerSolid(tEngGame *pEngGame);
-extern int engDropSolid(int interval, tEngGame *pEngGame);
+extern void engDropSolid(tEngGame *pEngGame);
 extern int engTurn(char ax1, char ax2, tEngGame *pEngGame);
 extern void engPrintSpace(tEngGame *pEngGame);
 

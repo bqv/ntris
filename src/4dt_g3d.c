@@ -33,7 +33,7 @@
 ------------------------------------------------------------------------------*/
 
 /** Constant light parameters */
-static const GLfloat g3dLightAmbient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+static const GLfloat g3dLightAmbient[]  = { 0.2f, 0.2f, 0.2f, 1.0f };
 static const GLfloat g3dLightDiffuse[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
 static const GLfloat g3dLightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 static const GLfloat g3dLightPosition[] = { 2.0f, -5.0f, 2.5f, 1.0f };

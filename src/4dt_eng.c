@@ -81,11 +81,11 @@ static const int engProbs[DIFFLEVELS][OBJECTTYPES] =
 static tEngSolid engObject2Solid(tEngObject object);
 static int engEqLevel(tEngLevel level1, tEngLevel level2);
 static void engCopyLevel(tEngLevel target, tEngLevel source);
-
 static void engNewSolid(tEngGame *pEngGame);
 static int engOverlapping(tEngGame *pEngGame);
 static void engKillFullLevels(tEngGame *pEngGame);
 static int engAnimation(int interval, tEngGame *pEngGame);
+static int engDropSolidTimer(int interval, tEngGame *pEngGame);
 static int engTimer(int interval, tEngGame *pEngGame);
 static int engGetTimestep(tEngGame *pEngGame);
 static void engUpdateScore(int clearedLevels, tEngGame *pEngGame);
@@ -127,8 +127,14 @@ static int engGetTimestep(tEngGame *pEngGame)
   return(10000/(4+pEngGame->score/2000));
 }
 
-/** Timer function for Game engine. */
-int engDropSolid(int interval, tEngGame *pEngGame)
+/** Drop object */
+void engDropSolid(tEngGame *pEngGame)
+{
+  setTimerCallback(1, engDropSolidTimer, pEngGame);
+}
+
+/** Timer for drop object */
+static int engDropSolidTimer(int interval, tEngGame *pEngGame)
 {
   if (engLowerSolid(pEngGame))
   {
