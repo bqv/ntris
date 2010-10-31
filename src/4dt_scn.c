@@ -408,8 +408,8 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
       for (n = 0; n < maxpic; n++)
       {
         g3dEndDrawPic();
+        g3dEndDraw();
       }
     }
-    g3dEndDraw();
   }
 }

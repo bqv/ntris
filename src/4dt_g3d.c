@@ -68,6 +68,7 @@ static void g3dDrawSphere(tM3dVector o, double radius);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
+/* TODO: do not use viewmode, or export type from here. */
 /** \brief Starts the actual frame drawing */
 void g3dBeginDraw(int x, int y, int z, int picnum, tScnViewMode viewMode)
 {

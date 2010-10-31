@@ -14,6 +14,8 @@
 #include "4dt_main.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
+#include "4dt_eng.h"
+#include "4dt_scn.h"
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
 
