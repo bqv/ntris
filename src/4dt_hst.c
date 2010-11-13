@@ -14,6 +14,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "gettext.h"
+
 #include "4dt_hst.h"
 
 /*------------------------------------------------------------------------------
@@ -152,7 +154,7 @@ void hstInit(void)
   }
   else
   {
-    fprintf(stderr, __FILE__ ":info: No %s found, it will be created.\n", hstScoreFile);
+    fprintf(stderr, gettext(":info: No %s found, it will be created.\n"), hstScoreFile);
     // Create score table file
     hstFWriteScoreTab(hstScores, hstScoreFile);
   }
@@ -185,7 +187,7 @@ static void hstFReadScoreTab(tHstScore scores[SCORENUM], char *filename)
   }
   else
   {
-    fprintf(stderr, __FILE__ ":warning: Can not read file %s\n", filename);
+    fprintf(stderr, gettext(":warning: Can not read file %s\n"), filename);
   }
 }
 
@@ -212,8 +214,8 @@ static void hstFWriteScoreTab(tHstScore scores[SCORENUM], char *filename)
   }
   else
   {
-    fprintf(stderr, __FILE__
-      ":Warning: Can not write file %s, data won't be stored.\n", filename);
+    fprintf(stderr, gettext(
+      ":Warning: Can not write file %s, data won't be stored.\n"), filename);
   }
 }
 
@@ -239,7 +241,7 @@ static tHstScore hstCreateScore(int score)
   strftime(res.month, MONTHLEN, "%B", lctime);
 
   // add actual user
-  strncpy(res.user, (user != NULL) ? user : "Me", USRNAMELEN-1);
+  strncpy(res.user, (user != NULL) ? user : gettext("Me"), USRNAMELEN-1);
   res.user[USRNAMELEN-1] = '\0';
 
   return(res);

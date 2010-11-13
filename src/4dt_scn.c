@@ -112,7 +112,7 @@ static void scnWriteScore(void)
   float color[4] = {0.3, 0.3, 0.5, 1.0};
 
   // Create the score character array.
-  sprintf(text, "Score: %i", engGE.score);
+  sprintf(text, gettext("Score: %i"), engGE.score);
 
   // Render the text.
   g3dRenderString(0.1, 0.1, color, text);
