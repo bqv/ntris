@@ -11,6 +11,7 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#include <libintl.h>
 
 #include "4dt_main.h"
 
@@ -49,7 +50,7 @@ void SDL_GL_RenderText(char *text,
   int texture;
 
   /* Use SDL_TTF to render our text */
-  initial = TTF_RenderText_Blended(font, text, color);
+  initial = TTF_RenderUTF8_Blended(font, gettext(text), color);
 
   /* Convert the rendered text to a known format */
   w = nextpoweroftwo(initial->w);
