@@ -18,6 +18,9 @@ README
 
  ---
 
+ Preinstall for bzr version:
+ $ ./autogen.sh
+
  Install:
  $ ./configure
  $ make
