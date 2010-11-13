@@ -42,6 +42,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <libintl.h>
+#include <locale.h>
+
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
@@ -131,6 +134,10 @@ int main(int argc, char *argv[])
   tScnSet scnSet = scnGetDefaultSet(), scnSetDraw;
 
   processARGV(argc, argv);
+
+  /* Initialize localization */
+  setlocale(LC_ALL, "");
+  textdomain("4dtris");
 
   /*  Initialize/load High Score table */
   hstInit();
