@@ -252,6 +252,30 @@ void menuNavigate(eMenuEvent event)
   }
 }
 
+static void menuColor(int selected,
+                      int disabled,
+                      float color[4])
+{
+  static eMenuItem lastActItem = eMenuNull;
+  int i;
+  float colors[2][4] = { {0.8, 0.8, 0.9, 1.0} /* normal */,
+                         {0.3, 0.3, 1.0, 1.0} /* selected */};
+
+  static float alpha = 0.0f;
+
+  alpha = (lastActItem != menuActItem)
+          ? 0.0f
+          : (alpha < 1.0f) ? alpha + 0.20f : 1.0f;
+
+  lastActItem = menuActItem;
+
+  for(i = 0; i < 4; i++) { color[i] = (colors[selected][i]); }
+
+  if (disabled) { color[3] = 0.5; }
+
+  color[3] *= alpha;
+}
+
 /** Menu drawing procedure */
 void menuDraw(void)
 {
@@ -261,30 +285,31 @@ void menuDraw(void)
   float linespace = 0.1; /*  portion of vert. display size between lines */
 
   /*  colors for different menu item states */
-  float colorDisable[4] = {0.3, 0.3, 0.3, 1.0};
-  float colorNormal[4]  = {0.8, 0.8, 0.9, 1.0};
-  float colorSelect[4]  = {0.3, 0.3, 1.0, 1.0};
+  float color[4];
 
   /*  for each submenu in active menu item */
   for (i = 0; i < menuSubNum(menuActItem); i++)
   {
     subItem = menuItems[menuActItem].submenus[i];
 
+    menuColor((i == menuSelItems[menuActItem]),
+              (0 == menuItems[subItem].enabled),
+              color);
+
     /*  Render the menu caption. */
     g3dRenderString(0.1, 1 - (i+1.5) * linespace,
-                    (i == menuSelItems[menuActItem])
-                    ? colorSelect
-                    : (0 == menuItems[subItem].enabled)
-                      ? colorDisable
-                      : colorNormal,
+                    color,
                     menuItems[subItem].caption);
   }
 
   /*  If multiline text selected to display */
   if (menuText != NULL)
   {
+
+    menuColor(0, 0, color);
+
     /*  display the text */
-    g3dRenderText(0.1, 1 - 1.5 * linespace, colorNormal,
+    g3dRenderText(0.1, 1 - 1.5 * linespace, color,
                   menuText, TEXTLINENUM, linespace);
   }
 
