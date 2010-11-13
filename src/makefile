@@ -4,7 +4,8 @@ lint=splint
 
 bin = 4dtris
 
-sources = 4dt_ai.c   \
+sources = 4dt_cptr.c \
+          4dt_ai.c   \
           4dt_eng.c  \
           4dt_main.c \
           4dt_menu.c \
