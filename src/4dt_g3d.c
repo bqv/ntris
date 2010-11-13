@@ -11,6 +11,8 @@
 #include <GL/glut.h>
 #include <stdio.h>
 
+#include "gettext.h"
+
 #include "4dt_m3d.h"
 #include "4dt_g3d.h"
 
@@ -182,7 +184,7 @@ void g3dRenderString(double x, double y,
   for (c=string; *c != '\0'; c++)
   {
     // draw the character.
-    glutBitmapCharacter(font, *c);
+    glutBitmapCharacter(font, gettext(*c));
   }
 
   g3dSwitchTo3D();
