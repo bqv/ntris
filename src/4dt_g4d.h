@@ -38,7 +38,7 @@ extern void g4dDraw4DCube(tM4dVector center,
                           tM4dMatrix orientation,
                           float color[4],
                           int dimension,
-                          int mode,
+                          tG3dFillMode mode,
                           int sideVisible[eM4dDimNum][2]);
 
 extern void g4dDrawLine(tM4dVector point0,
