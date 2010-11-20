@@ -186,6 +186,21 @@ tM4dVector m4dMultiplyMV(tM4dMatrix matrix, tM4dVector vector)
   return result;
 }
 
+/** Multiplies the given vector with the given matrix. */
+tM4dMatrix m4dMultiplyVM(tM4dVector vector, tM4dMatrix matrix)
+{
+  eM4dAxis row, col;
+  tM4dMatrix result = m4dNullMatrix();
+
+  for (row = eM4dAxisX; row < eM4dDimNum; row++)
+  for (col = eM4dAxisX; col < eM4dDimNum; col++)
+  {
+    result.c[row][col] += matrix.c[row][col] * vector.c[row] ;
+  }
+
+  return result;
+}
+
 /** Multiplies two matrices */
 tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR)
 {

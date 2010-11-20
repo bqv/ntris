@@ -64,10 +64,21 @@ static void scnDrawBottomLevel(int mask[XSIZE][YSIZE][ZSIZE],
 static void scnDrawObject(tEngGame *pEngGame,
                           tScnSet *pScnSet,
                           int wire);
+static tM4dVector scnPosToCoord(int x, int y, int z, int w);
+static tM4dVector scnCenter(void);
+static void scnDrawGrid(int enableGridDraw);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Returns with the coordinates of the center of the gamespace */
+static tM4dVector scnCenter(void)
+{
+  const tM4dVector center = {{XSIZE/2.0, YSIZE/2.0, ZSIZE/2.0, WSIZE/2.0}};
+
+  return(center);
+}
 
 /** Set function for stereoscope view enable flag */
 void scnSetViewMode(tScnViewMode mode, tScnSet *pScnSet)
@@ -107,6 +118,16 @@ tScnSet scnGetDefaultSet(void)
   tScnSet def = { 1, 0, 0, 0, eScnViewMono };
 
   return(def);
+}
+
+/** Converts cube position in game space to real 4D draw space coordinates */
+static tM4dVector scnPosToCoord(int x, int y, int z, int w)
+{
+  tM4dVector coords = m4dVector(x + 0.5, y + 0.5, z + 0.5, w + 0.5);
+
+  coords = m4dSubVectors(coords, scnCenter());
+
+  return (coords);
 }
 
 /** \brief Set random colors for game levels */
@@ -278,13 +299,13 @@ static void scnDrawGamespace(tEngGame *pEngGame,
         if (engGetSpaceCell(l, x, y, z, pEngGame))
         {
           /*  draw the cube. */
-          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+          g4dDraw4DCube(scnPosToCoord(x, y, z, l),
                         m4dUnitMatrix(),
                         scnLevelColors[l],
                         pScnSet->enableHypercubeDraw ? 4 : 3,
                         eG3dFillAndWire, NULL);
 
-          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+          g4dDraw4DCube(scnPosToCoord(x, y, z, l),
                         m4dUnitMatrix(),
                         scnLevelColors[l],
                         pScnSet->enableHypercubeDraw ? 4 : 3,
@@ -294,11 +315,22 @@ static void scnDrawGamespace(tEngGame *pEngGame,
         }
       }
     }
+  }
+}
 
-    if (pScnSet->enableGridDraw)
+/** Draws grid of the gamespace */
+static void scnDrawGrid(int enableGridDraw)
+{
+  int l;        /*  loop counter; */
+
+  for (l = SPACELENGTH - 1; l >= 0; l--)
+  {
+    if (enableGridDraw)
     {
-      g4dDraw4DCube(m4dVector(x - 2.0, y - 2.0, z - 2.0, l - 2.0),
-                    m4dMultiplySM(2.0,m4dUnitMatrix()),
+      /** \todo grid depends on game space, sould be updated */
+      g4dDraw4DCube(m4dVector(0.0, 0.0, 0.0, l),
+                    m4dMultiplyVM(m4dMultiplySV(2.0, scnCenter()),
+                                  m4dUnitMatrix()),
                     scn4DGridColor, 4,
                     eG3dWire, NULL);
     }
@@ -319,7 +351,7 @@ static void scnDrawBottomLevel(int mask[XSIZE][YSIZE][ZSIZE],
     /*  space which has no cube above (so it is visible) */
     if (mask[x][y][z] == 0)
     {
-      g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
+      g4dDraw4DCube(scnPosToCoord(x, y, z, 0),
                     m4dUnitMatrix(),
                     scn4DCubeColor, 3,
                     wire ? eG3dWireTube : eG3dFillAndWire, NULL);
@@ -342,7 +374,8 @@ static void scnDrawObject(tEngGame *pEngGame,
 
     scnVisibleSides(n, &visibleSides, &pEngGame->object.block);
 
-    pos = m4dAddVectors(pEngGame->object.pos,
+    pos = m4dAddVectors(m4dSubVectors(pEngGame->object.pos,
+                                      scnCenter()),
                         m4dMultiplyMV(pEngGame->object.axices,
                                       pEngGame->object.block.c[n]));
 
@@ -400,6 +433,8 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
     }
 
     scnDrawGamespace(pEngGame, pScnSet, mask);
+
+    scnDrawGrid(pScnSet->enableGridDraw);
 
     scnDrawBottomLevel(mask, 1);
 

@@ -403,8 +403,7 @@ static void engNewSolid(tEngGame *pEngGame)
 
   /*  position the new solid to the */
   /*  top 2 level of the space */
-  pEngGame->object.pos = m4dNullVector();
-  pEngGame->object.pos.c[eM4dAxisW] = SPACELENGTH - WSIZE;
+  pEngGame->object.pos = m4dVector(1.0, 1.0, 1.0, SPACELENGTH - WSIZE);
 
   /*  increase the number of the solid */
   pEngGame->solidnum++;

@@ -54,6 +54,7 @@ extern tM4dVector m4dSubVectors(tM4dVector vector1, tM4dVector vector2);
 extern tM4dVector m4dMultiplySV(double scalar, tM4dVector vector);
 extern tM4dMatrix m4dMultiplySM(double scalar, tM4dMatrix matrix);
 extern tM4dVector m4dMultiplyMV(tM4dMatrix matrix, tM4dVector vector);
+extern tM4dMatrix m4dMultiplyVM(tM4dVector vector, tM4dMatrix matrix);
 extern tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR);
 
 extern void m4dPrintVector(tM4dVector vector);
