@@ -182,6 +182,14 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       }
       break;
 
+      case UI_KEY_DEL:
+        engMove(pScnSet->axle, 1, pEngGame);
+      break;
+
+      case UI_KEY_INS:
+        engMove(pScnSet->axle, -1, pEngGame);
+      break;
+
       case UI_KEY_HOME:
         /*  turn around selected axle clockwise */
         engTurn(pScnSet->axle, 3, pEngGame);

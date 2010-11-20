@@ -264,35 +264,6 @@ void m4dPrintMatrix(tM4dMatrix matrix)
 
 #ifdef TEST
 
-void m4dPrintVector(tM4dVector vector)
-{
-  eM4dAxis axis;
-
-  printf("{");
-  for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
-  {
-    printf("%f\t", vector.c[axis]);
-  }
-  printf("}\n");
-}
-
-void m4dPrintMatrix(tM4dMatrix matrix)
-{
-  eM4dAxis axis1, axis2;
-
-  printf("{\n");
-  for (axis1 = eM4dAxisX; axis1 < eM4dDimNum; axis1++)
-  {
-    printf("{");
-    for (axis2 = eM4dAxisX; axis2 < eM4dDimNum; axis2++)
-    {
-      printf("%f\t", matrix.c[axis1][axis2]);
-    }
-    printf("}\n");
-  }
-  printf("}\n");
-}
-
 int main(void)
 {
   tM4dVector vector1, vector2;

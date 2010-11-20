@@ -41,7 +41,7 @@ typedef char tEngLevel[XSIZE][YSIZE][ZSIZE];
 /** 2x2x2x2 supercube / container of a Solid */
 typedef struct
 {
-  tEngLevel c[WSIZE];
+  tEngLevel c[SPACELENGTH];
 } tEngSolid;
 
 /** Container of block array */
@@ -88,13 +88,13 @@ typedef struct
   /** engine locked while animation running */
   int lock;
 
-  /** animation related variables*/
+  /** animation related variables */
   struct
   {
-    int enable;   /** animation switch */
-    int num;  /** number of transformation have to be performed */
-    tM4dMatrix transform; /** transformation to be performed. */
-    double posDecrease;   /** position decreasion to be performed */
+    int enable;             /**< animation switch */
+    int num;                /**< number of transformation have to be performed */
+    tM4dMatrix transform;   /**< transformation to be performed. */
+    tM4dVector translation; /**< translation vector */
   } animation;
 
   /** struct of game options */
@@ -111,6 +111,7 @@ extern void engInitGame(tEngGame *pEngGame);
 extern int engLowerSolid(tEngGame *pEngGame);
 extern void engDropSolid(tEngGame *pEngGame);
 extern int engTurn(char ax1, char ax2, tEngGame *pEngGame);
+extern int engMove(char axle, int direction, tEngGame *pEngGame);
 extern void engPrintSpace(tEngGame *pEngGame);
 extern int engGetSpaceCell(int w, int x, int y, int z, tEngGame *pEngGame);
 

@@ -80,7 +80,7 @@ static const int engProbs[DIFFLEVELS][OBJECTTYPES] =
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static tEngSolid engObject2Solid(tEngObject object);
+static tEngSolid engObject2Solid(tEngObject object, int *invalid);
 static int engEqLevel(tEngLevel level1, tEngLevel level2);
 static void engCopyLevel(tEngLevel target, tEngLevel source);
 static void engNewSolid(tEngGame *pEngGame);
@@ -165,8 +165,6 @@ static int engTimer(int interval, tEngGame *pEngGame)
       engLowerSolid(pEngGame);
     }
 
-    refresh();
-
     return(engGetTimestep(pEngGame));
   }
   else
@@ -197,12 +195,11 @@ static int engAnimation(int interval, tEngGame *pEngGame)
     pEngGame->object.axices = m4dMultiplyMM(pEngGame->animation.transform,
                                         pEngGame->object.axices);
 
-    pEngGame->object.pos.c[eM4dAxisW] -= pEngGame->animation.posDecrease;
+    pEngGame->object.pos = m4dAddVectors(pEngGame->object.pos,
+                                         pEngGame->animation.translation);
 
     pEngGame->animation.num--;
   }
-
-  refresh();
 
   if (pEngGame->animation.num <= 0)
   {
@@ -216,57 +213,41 @@ static int engAnimation(int interval, tEngGame *pEngGame)
 }
 
 /** Render/convert an object to gamespace array */
-static tEngSolid engObject2Solid(tEngObject object)
+static tEngSolid engObject2Solid(tEngObject object, int *invalid)
 {
-  int i;
+  int i, x, y, z, w;
   tEngSolid solid;
   tM4dVector vec;
+
+  if (invalid != NULL) { *invalid = 0; }
 
   solid = engEmptySolid;
 
   for (i = 0; i < object.block.num; i++)
   {
     vec = m4dMultiplyMV(object.axices, object.block.c[i]);
+    vec = m4dAddVectors(object.pos, vec);
 
-    solid.c[(vec.c[eM4dAxisW] > 0) ? 1 : 0]
-           [(vec.c[eM4dAxisX] > 0) ? 1 : 0]
-           [(vec.c[eM4dAxisY] > 0) ? 1 : 0]
-           [(vec.c[eM4dAxisZ] > 0) ? 1 : 0] = 1;
+    w = floorl(vec.c[eM4dAxisW]);
+    x = floorl(vec.c[eM4dAxisX]);
+    y = floorl(vec.c[eM4dAxisY]);
+    z = floorl(vec.c[eM4dAxisZ]);
+
+    if (    (x >= 0) && (x < XSIZE)
+         && (y >= 0) && (y < YSIZE)
+         && (z >= 0) && (z < ZSIZE)
+         && (w >= 0) && (w < SPACELENGTH)
+       )
+    {
+      solid.c[w][x][y][z] = 1;
+    }
+    else
+    {
+      if (invalid != NULL) { *invalid = 1; }
+    }
   }
 
   return solid;
-}
-
-/** Prints out the game space to std out. */
-void engPrintSpace(tEngGame *pEngGame)
-{
-  int w, x, y, z;
-
-  tEngSolid solid = engObject2Solid(pEngGame->object);
-
-  for(y = YSIZE-1; y >= 0; y--)
-  {
-    for(z = ZSIZE-1; z >= 0 ; z--)
-    {
-      printf((z == 1) ? " " : "");
-      for(w = 0; w < SPACELENGTH; w++)
-      {
-        for(x = 0; x < XSIZE; x++)
-        {
-          printf(pEngGame->space[w][x][y][z] ||
-                 (      (w - pEngGame->object.pos.c[eM4dAxisW] >= 0)
-                     && (w - pEngGame->object.pos.c[eM4dAxisW] < WSIZE)
-                     && solid.c[w - lround(pEngGame->object.pos.c[eM4dAxisW])]
-                               [x][y][z])
-                 ? "X" : ".");
-          printf("  ");
-        }
-        printf(" ");
-      }
-      printf("\n");
-    }
-  }
-  printf("\n");
 }
 
 /** Compare two levels */
@@ -335,7 +316,8 @@ void engResetGame(tEngGame *pEngGame)
 
   pEngGame->animation.num = 0;
   pEngGame->lock = 0;
-  pEngGame->animation.posDecrease = 0;
+
+  pEngGame->animation.translation = m4dNullVector();
   pEngGame->animation.transform   = m4dUnitMatrix();
 
   setTimerCallback(engGetTimestep(pEngGame), engTimer, pEngGame);
@@ -403,7 +385,10 @@ static void engNewSolid(tEngGame *pEngGame)
 
   /*  position the new solid to the */
   /*  top 2 level of the space */
-  pEngGame->object.pos = m4dVector(1.0, 1.0, 1.0, SPACELENGTH - WSIZE);
+  pEngGame->object.pos = m4dVector(1.0 + rand() % (XSIZE-1),
+                                   1.0 + rand() % (YSIZE-1),
+                                   1.0 + rand() % (ZSIZE-1),
+                                   SPACELENGTH - 1.0);
 
   /*  increase the number of the solid */
   pEngGame->solidnum++;
@@ -413,20 +398,20 @@ static void engNewSolid(tEngGame *pEngGame)
  *  \return overlapping detected flag */
 static int engOverlapping(tEngGame *pEngGame)
 {
-  int w, x, y, z, pos;
+  int w, x, y, z;
   int overlap = 0;
 
-  tEngSolid solid = engObject2Solid(pEngGame->object);
+  tEngSolid solid = engObject2Solid(pEngGame->object, &overlap);
 
-  for(w = 0; w < WSIZE; w++)
+  for(w = 0; w < SPACELENGTH; w++)
   for(x = 0; x < XSIZE; x++)
   for(y = 0; y < YSIZE; y++)
   for(z = 0; z < ZSIZE; z++)
   {
-    pos = pEngGame->object.pos.c[eM4dAxisW];
-
-    overlap |= (((pos + w) >= 0) ? pEngGame->space[pos + w][x][y][z] : 1)
-               && solid.c[w][x][y][z];
+    if (solid.c[w][x][y][z])
+    {
+      overlap |=  pEngGame->space[w][x][y][z];
+    };
   }
 
   return(overlap);
@@ -474,10 +459,12 @@ int engLowerSolid(tEngGame *pEngGame)
   if (!pEngGame->lock)
   {
     pEngGame->object.pos.c[eM4dAxisW]--;
-    if (engOverlapping(pEngGame))
+
+    onFloor = engOverlapping(pEngGame);
+
+    if (onFloor)
     {
       pEngGame->object.pos.c[eM4dAxisW]++;
-      onFloor = 1;
     }
     else
     {
@@ -486,8 +473,9 @@ int engLowerSolid(tEngGame *pEngGame)
         pEngGame->object.pos.c[eM4dAxisW]++;
 
         pEngGame->lock = 1;
-        pEngGame->animation.num  = 2.0;
-        pEngGame->animation.posDecrease  = 1.0 / 2.0;
+        pEngGame->animation.num = 2;
+        pEngGame->animation.translation = m4dVector(0.0,0.0,0.0,
+                                                -1.0 / pEngGame->animation.num);
         pEngGame->animation.transform   = m4dUnitMatrix();
 
         setTimerCallback(engAnimationTimeStep, engAnimation, pEngGame);
@@ -497,15 +485,15 @@ int engLowerSolid(tEngGame *pEngGame)
     /*  if reached the floor, */
     if (onFloor)
     {
-      tEngSolid solid = engObject2Solid(pEngGame->object);
+      tEngSolid solid = engObject2Solid(pEngGame->object, NULL);
 
       /*  put the solid to the space */
-      for(w = 0; w < WSIZE; w++)
+      for(w = 0; w < SPACELENGTH; w++)
       for(x = 0; x < XSIZE; x++)
       for(y = 0; y < YSIZE; y++)
       for(z = 0; z < ZSIZE; z++)
       {
-        pEngGame->space[lround(pEngGame->object.pos.c[eM4dAxisW])+w][x][y][z] |= solid.c[w][x][y][z];
+        pEngGame->space[w][x][y][z] |= solid.c[w][x][y][z];
       }
 
       /*  delete the full levels */
@@ -521,6 +509,10 @@ int engLowerSolid(tEngGame *pEngGame)
 
       return (pEngGame->gameOver);
     }
+  }
+  else
+  {
+    /** \todo should be lowered also in case of locked*/
   }
 
   return(!onFloor);
@@ -558,8 +550,9 @@ int engTurn(char ax1, char ax2, tEngGame *pEngGame)
       {
         pEngGame->lock = 1;
         pEngGame->animation.num  = 5;
-        pEngGame->animation.posDecrease  = 0.0;
-        pEngGame->animation.transform  = m4dRotMatrix(ax1, ax2, M_PI / 2.0 / 5.0);
+        pEngGame->animation.translation = m4dNullVector();
+        pEngGame->animation.transform   = m4dRotMatrix(ax1, ax2, M_PI / 2.0
+                                                     / pEngGame->animation.num);
 
         setTimerCallback(engAnimationTimeStep, engAnimation, pEngGame);
       }
@@ -567,4 +560,71 @@ int engTurn(char ax1, char ax2, tEngGame *pEngGame)
   }
 
   return(result);
+}
+
+/** moves the solid on 'axle' to the 'direction=[-1,+1]' */
+int engMove(char axle, int direction, tEngGame *pEngGame)
+{
+  tEngObject objStored  = pEngGame->object;
+  tM4dVector moveVector = m4dMultiplySV(direction, m4dUnitVector(axle));
+  int valid;
+
+  pEngGame->object.pos = m4dAddVectors(pEngGame->object.pos, moveVector);
+
+  valid = !engOverlapping(pEngGame);
+
+  if (valid)
+  {
+    if (pEngGame->animation.enable)
+    {
+      pEngGame->object = objStored;
+
+      if (!pEngGame->lock)
+      {
+        pEngGame->lock = 1;
+        pEngGame->animation.num  = 3;
+        pEngGame->animation.translation = m4dMultiplySV(1.0 / pEngGame->animation.num,
+                                                        moveVector);
+        pEngGame->animation.transform   = m4dUnitMatrix();
+
+        setTimerCallback(engAnimationTimeStep, engAnimation, pEngGame);
+      }
+    }
+  }
+  else
+  {
+    pEngGame->object = objStored;
+  }
+
+  return(valid);
+}
+
+
+/** Prints out the game space to std out. */
+void engPrintSpace(tEngGame *pEngGame)
+{
+  int w, x, y, z;
+
+  tEngSolid solid = engObject2Solid(pEngGame->object, NULL);
+
+  for(y = YSIZE-1; y >= 0; y--)
+  {
+    for(z = ZSIZE-1; z >= 0 ; z--)
+    {
+      printf((z == 1) ? " " : "");
+      for(w = 0; w < SPACELENGTH; w++)
+      {
+        for(x = 0; x < XSIZE; x++)
+        {
+          printf(pEngGame->space[w][x][y][z] ? "X" :
+                 solid.c[w][x][y][z]         ? "#" :
+                                               ".");
+          printf("  ");
+        }
+        printf(" ");
+      }
+      printf("\n");
+    }
+  }
+  printf("\n");
 }

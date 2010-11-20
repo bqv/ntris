@@ -137,7 +137,6 @@ int g4dRotateViewportAngle(int interval, void *param)
                                              anglestep * M_PI / 180),
                                 g4dViewport);
 
-    refresh();
     return(g4dRotationTimeStep);
   }
   else
@@ -159,8 +158,6 @@ static int g4dAutoRotateViewport(int interval, void *param)
     g4dViewport = m4dMultiplyMM(m4dRotMatrix(eM4dAxisX, eM4dAxisY,
                                              0.20 * M_PI / 180),
                                 g4dViewport);
-
-    refresh();
 
     return(interval);
   }
@@ -205,7 +202,6 @@ static int g4dStepViewModeChange(int interval, void *param)
     }
   }
 
-  refresh();
   return(newinterval);
 }
 

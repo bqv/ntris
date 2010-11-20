@@ -74,7 +74,6 @@ static int aiTimer(int interval, tEngGame *pEngGame)
     if (pEngGame->gameOver == 0)
     {
       aiDoStep(pEngGame);
-      refresh();
       return(aiTimeStepTurn);
     }
     else

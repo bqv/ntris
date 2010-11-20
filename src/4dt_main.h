@@ -21,7 +21,7 @@
 extern void setTimerCallback(int time,
                              int (*callback)(int interval, void *param),
                              void *param);
-extern void refresh(void);
+
 extern void* getSDLScreen(void);
 
 #endif /* _4DT_MAIN_H_ */

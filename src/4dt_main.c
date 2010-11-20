@@ -101,12 +101,6 @@ void setTimerCallback(int time,
   SDL_AddTimer(time, callback, param);
 }
 
-
-/** Redraw */
-void refresh(void)
-{
-}
-
 /** Process command line arguments */
 static void processARGV(int argc, char *argv[])
 {
@@ -221,6 +215,8 @@ int main(int argc, char *argv[])
           if(keys[SDLK_BACKSPACE]) { uiKey = UI_KEY_BACKSPACE;}
           if(keys[SDLK_TAB])       { uiKey = UI_KEY_TAB;      }
           if(keys[SDLK_RETURN])    { uiKey = UI_KEY_ENTER;    }
+          if(keys[SDLK_DELETE])    { uiKey = UI_KEY_DEL;      }
+          if(keys[SDLK_INSERT])    { uiKey = UI_KEY_INS;      }
           if(keys[SDLK_SPACE])     { uiKey = ' ';             }
           if(keys[SDLK_a])         { uiKey = 'a';             }
           if(keys[SDLK_z])         { uiKey = 'z';             }

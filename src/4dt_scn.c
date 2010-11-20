@@ -53,7 +53,7 @@ static float scnLevelColors[SPACELENGTH][4];
 static void scnDrawBG(void);
 static void scnWriteScore(int score);
 static void scnInitLevelColors(void);
-static void scnDrawRotAxis(double objectPosW, int axle);
+static void scnDrawRotAxis(tM4dVector objectPos, int axle);
 static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2],
                             tEngBlocks *pEngBlock);
 static void scnDrawGamespace(tEngGame *pEngGame,
@@ -193,7 +193,7 @@ static void scnDrawBG(void)
 }
 
 /** draws the rotation axis selected */
-static void scnDrawRotAxis(double objectPosW, int axle)
+static void scnDrawRotAxis(tM4dVector objectPos, int axle)
 {
   int i;
   const double planeSize = 3.5;
@@ -205,13 +205,15 @@ static void scnDrawRotAxis(double objectPosW, int axle)
   {
     for (i = -1; i <= 1; i += 2)
     {
-      tM4dVector point0 = m4dNullVector();
+      tM4dVector point0 = objectPos;
       tM4dVector point1 = m4dUnitVector(axle);
-
       point1 = m4dMultiplySV(i * planeSize, point1);
 
+      point0 = m4dSubVectors(point0, scnCenter());
+      point1 = m4dAddVectors(point0, point1);
+
       point0.c[eM4dAxisW] =
-      point1.c[eM4dAxisW] = objectPosW;
+      point1.c[eM4dAxisW] = objectPos.c[eM4dAxisW];
 
       g4dDrawLine(point0, point1, color0, color1, 2.5);
     }
@@ -327,7 +329,6 @@ static void scnDrawGrid(int enableGridDraw)
   {
     if (enableGridDraw)
     {
-      /** \todo grid depends on game space, sould be updated */
       g4dDraw4DCube(m4dVector(0.0, 0.0, 0.0, l),
                     m4dMultiplyVM(m4dMultiplySV(2.0, scnCenter()),
                                   m4dUnitMatrix()),
@@ -444,7 +445,7 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 
     scnDrawObject(pEngGame, pScnSet, 0);
 
-    scnDrawRotAxis(pEngGame->object.pos.c[eM4dAxisW], pScnSet->axle);
+    scnDrawRotAxis(pEngGame->object.pos, pScnSet->axle);
 
     if ((pic == maxpic-1)
         || (pScnSet->viewMode == eScnViewAnaglyph))
