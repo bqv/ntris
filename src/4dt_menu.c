@@ -108,7 +108,7 @@ static tMenuItem menuItems[eMenuItemNum] =
 };
 
 /** Text of help page */
-tMenuString menuHelpText[TEXTLINENUM] =
+static tMenuString menuHelpText[TEXTLINENUM] =
 {
   "Game Controls:",
   " - arrow keys, backspace - rotate/turn the view port",
@@ -121,7 +121,7 @@ tMenuString menuHelpText[TEXTLINENUM] =
 };
 
 /** Text of help page */
-tMenuString menuAboutText[TEXTLINENUM] =
+static tMenuString menuAboutText[TEXTLINENUM] =
 {
   "4DTRIS",
   "Tetris like game in four dimension",
@@ -134,7 +134,7 @@ tMenuString menuAboutText[TEXTLINENUM] =
 };
 
 /** Text of help page */
-tMenuString menuGameOverText[TEXTLINENUM] =
+static tMenuString menuGameOverText[TEXTLINENUM] =
 {
   "", "", "","", "", "",
   "Game over.",

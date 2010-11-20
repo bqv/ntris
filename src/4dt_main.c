@@ -50,9 +50,9 @@
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_ai.h"
-#include "4dt_g4d.h"
 #include "4dt_scn.h"
 #include "4dt_g3d.h"
+#include "4dt_g4d.h"
 #include "4dt_ui.h"
 #include "4dt_menu.h"
 #include "4dt_hst.h"
@@ -68,7 +68,7 @@ static int debugmode = 0;
 
 static const int framerate = 50;
 
-SDL_Surface *screen;
+static SDL_Surface *screen;
 
 /*
 --------------------------------------------------------------------------------

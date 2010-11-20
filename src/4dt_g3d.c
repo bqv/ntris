@@ -56,7 +56,6 @@ static const GLfloat g3dBgColor[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-extern void g3dResize(int width, int height);
 static void g3dSwitchTo2D(void);
 static void g3dSwitchTo3D(void);
 static void g3dDrawCylinder(tM3dVector v1,
@@ -219,6 +218,7 @@ void g3dDrawLine(tM3dVector point0,
   glEnable(GL_LIGHTING);
 }
 
+/** Draws a cylinder */
 static void g3dDrawCylinder(tM3dVector v1,
                             tM3dVector v2,
                             float radius)
@@ -250,6 +250,7 @@ static void g3dDrawCylinder(tM3dVector v1,
   gluDeleteQuadric(quadric);
 }
 
+/** Draws a sphere */
 static void g3dDrawSphere(tM3dVector o, double radius)
 {
   int resolution = 4;
@@ -267,9 +268,11 @@ static void g3dDrawSphere(tM3dVector o, double radius)
 /** \brief Draw quad with given coordinates, color, style. */
 void g3dDrawPoly(tM3dVector points[4],
                  float color[4],
-                 int mode /**< 0: fill, 1: fill & wire, 2: wire, 3 tube wire */,
+                 tG3dFillMode mode,
                  int sideVisible[4])
 {
+  const double lineWidth = 0.04;
+
   /*  loop counters */
   int k;
   int transparent;
@@ -297,7 +300,7 @@ void g3dDrawPoly(tM3dVector points[4],
     glEnable(GL_BLEND);
   }
 
-  if (mode < 2)
+  if (mode < eG3dWire)
   {
     /*  Start draw a quad. */
     glBegin(GL_QUADS);
@@ -317,27 +320,27 @@ void g3dDrawPoly(tM3dVector points[4],
   }
 
   /*  if enabled wire draw */
-  if (mode > 0)
+  if (mode > eG3dFill)
   {
     /*  For each point of the facet */
     for (k = 0; k < 4; k++)
     {
       if ((sideVisible == NULL) || (sideVisible[k] == 1))
       {
-        if(mode == 3)
+        if(mode == eG3dWireTube)
         {
           glDepthMask(GL_TRUE);
           glDisable(GL_BLEND);
 
-          g3dDrawSphere(points[k], 0.02);
+          g3dDrawSphere(points[k], lineWidth/2.0);
 
           g3dDrawCylinder(points[k],
                           points[(k+1) % 4],
-                          0.02);
+                          lineWidth/2.0);
         }
         else
         {
-          if (mode == 2)
+          if (mode == eG3dWire)
           {
             glDisable(GL_LIGHTING);
           }
@@ -390,7 +393,7 @@ void g3dInit(void)
   glClearColor(g3dBgColor[0], g3dBgColor[1], g3dBgColor[2], g3dBgColor[3]);
 
   /*  Enable cull face. */
- /*  glEnable(GL_CULL_FACE); */
+  /*  glEnable(GL_CULL_FACE); */
   /*  Set Cull face. */
   glCullFace(GL_BACK);
 

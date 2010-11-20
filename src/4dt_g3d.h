@@ -17,6 +17,16 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+typedef enum
+{
+  eG3dFill = 0,
+  eG3dFillAndWire = 1,
+  eG3dWire = 2,
+  eG3dWireTube = 3
+}
+tG3dFillMode;
+
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
@@ -24,7 +34,7 @@
 extern void g3dInit(void);
 extern void g3dDrawPoly(tM3dVector points[4],
                         float color[4],
-                        int enableWire,
+                        tG3dFillMode mode,
                         int sideVisible[4]);
 extern void g3dDrawLine(tM3dVector point0,
                         tM3dVector point1,
