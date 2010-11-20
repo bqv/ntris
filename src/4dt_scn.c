@@ -56,6 +56,14 @@ static void scnInitLevelColors(void);
 static void scnDrawRotAxis(double objectPosW, int axle);
 static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2],
                             tEngBlocks *pEngBlock);
+static void scnDrawGamespace(tEngGame *pEngGame,
+                             tScnSet *pScnSet,
+                             int mask[XSIZE][YSIZE][ZSIZE]);
+static void scnDrawBottomLevel(int mask[XSIZE][YSIZE][ZSIZE],
+                               int wire);
+static void scnDrawObject(tEngGame *pEngGame,
+                          tScnSet *pScnSet,
+                          int wire);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
@@ -106,16 +114,33 @@ static void scnInitLevelColors(void)
 {
   /*  Loop counters. */
   int i, j;
+  double mean;
 
   /*  For each level of the game space, */
   for (i = 0; i < SPACELENGTH; i++)
   {
+    mean = 0;
+
     /*  for each color component */
     for (j = 0; j < 3; j++)
     {
       /*  create a random value. */
       scnLevelColors[i][j] = (double)rand() / RAND_MAX;
+
+      mean += scnLevelColors[i][j] / 3;
     }
+
+    /*  normalize */
+/*    for (j = 0; j < 3; j++)
+    {
+      scnLevelColors[i][j] = 1.5 * scnLevelColors[i][j] * mean;
+
+      if (scnLevelColors[i][j] > 1.0)
+      {
+        scnLevelColors[i][j] = 1.0;
+      }
+    }
+*/
     /*  Set the color's alpha component. */
     scnLevelColors[i][3] = 1.0;
   }
@@ -229,6 +254,108 @@ static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2],
   }
 }
 
+/**  Draw the gamespace. */
+static void scnDrawGamespace(tEngGame *pEngGame,
+                             tScnSet *pScnSet,
+                             int mask[XSIZE][YSIZE][ZSIZE])
+{
+  int l, x, y, z;        /*  loop counter; */
+
+  /*  For each level from top */
+  for (l = SPACELENGTH - 1; l >= 0; l--)
+  {
+    /*  For each cell of the level */
+    for (x = 0; x < XSIZE; x++)
+    for (y = 0; y < YSIZE; y++)
+    for (z = 0; z < ZSIZE; z++)
+    {
+      /*  space which has no cube above (so it is visible) */
+      /*  gets rid of Z-fighting */
+      if (   (mask[x][y][z] == 0)
+          || (g4dGetViewType() == eG4d2PointProjection) )
+      {
+        /*  if the cell is not empty then */
+        if (engGetSpaceCell(l, x, y, z, pEngGame))
+        {
+          /*  draw the cube. */
+          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+                        m4dUnitMatrix(),
+                        scnLevelColors[l],
+                        pScnSet->enableHypercubeDraw ? 4 : 3,
+                        eG3dFillAndWire, NULL);
+
+          g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
+                        m4dUnitMatrix(),
+                        scnLevelColors[l],
+                        pScnSet->enableHypercubeDraw ? 4 : 3,
+                        eG3dWireTube, NULL);
+
+          mask[x][y][z] = 1;
+        }
+      }
+    }
+
+    if (pScnSet->enableGridDraw)
+    {
+      g4dDraw4DCube(m4dVector(x - 2.0, y - 2.0, z - 2.0, l - 2.0),
+                    m4dMultiplySM(2.0,m4dUnitMatrix()),
+                    scn4DGridColor, 4,
+                    eG3dWire, NULL);
+    }
+  }
+}
+
+/** Draw the bottom level. */
+static void scnDrawBottomLevel(int mask[XSIZE][YSIZE][ZSIZE],
+                               int wire)
+{
+  int x, y, z;        /*  loop counter; */
+
+  /*  For each cell of the level do: */
+  for (x = 0; x < XSIZE; x++)
+  for (y = 0; y < YSIZE; y++)
+  for (z = 0; z < ZSIZE; z++)
+  {
+    /*  space which has no cube above (so it is visible) */
+    if (mask[x][y][z] == 0)
+    {
+      g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
+                    m4dUnitMatrix(),
+                    scn4DCubeColor, 3,
+                    wire ? eG3dWireTube : eG3dFillAndWire, NULL);
+    }
+  }
+}
+
+
+/** Draw the actual solid. */
+static void scnDrawObject(tEngGame *pEngGame,
+                          tScnSet *pScnSet,
+                          int wire)
+{
+  int n;        /*  loop counter; */
+  /*  For each cell */
+  for (n = 0; n < pEngGame->object.block.num; n++)
+  {
+    tM4dVector pos;
+    int visibleSides[eM4dDimNum][2];
+
+    scnVisibleSides(n, &visibleSides, &pEngGame->object.block);
+
+    pos = m4dAddVectors(pEngGame->object.pos,
+                        m4dMultiplyMV(pEngGame->object.axices,
+                                      pEngGame->object.block.c[n]));
+
+    /*  draw the hypercube. */
+    g4dDraw4DCube(pos,
+                  pEngGame->object.axices,
+                  wire ? scn4DWireColor : scn4DCubeColor,
+                  pScnSet->enableHypercubeDraw ? 4 : 3,
+                  wire ? eG3dWireTube : eG3dFillAndWire,
+                  pScnSet->enableSeparateBlockDraw ? NULL : visibleSides);
+  }
+}
+
 /** Main drawing function. */
 void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 {
@@ -237,7 +364,7 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 
   /*  mask indicates which block space */
   /*  hidden by upper blocks */
-  int mask[2][2][2];
+  int mask[XSIZE][YSIZE][ZSIZE];
 
   double camx, camz;
   int pic, maxpic;
@@ -246,9 +373,9 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 
   for (pic = 0; pic < maxpic; pic++)
   {
-    for (x = 0; x <= 1; x++)
-    for (y = 0; y <= 1; y++)
-    for (z = 0; z <= 1; z++)
+    for (x = 0; x < XSIZE; x++)
+    for (y = 0; y < YSIZE; y++)
+    for (z = 0; z < ZSIZE; z++)
     {
       mask[x][y][z] = 0;
     }
@@ -272,119 +399,15 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
       scnDrawBG();
     }
 
-    /*  Draw the gamespace. */
+    scnDrawGamespace(pEngGame, pScnSet, mask);
 
-    /*  For each level from top */
-    for (l = SPACELENGTH - 1; l >= 0; l--)
-    {
-      /*  For each cell of the level */
-      for (x = 0; x <= 1; x++)
-      for (y = 0; y <= 1; y++)
-      for (z = 0; z <= 1; z++)
-      {
-        /*  space which has no cube above (so it is visible) */
-        /*  gets rid of Z-fighting */
-        if (   (mask[x][y][z] == 0)
-            || (g4dGetViewType() == eG4d2PointProjection) )
-        {
-          /*  if the cell is not empty then */
-          if (engGetSpaceCell(l, x, y, z, pEngGame))
-          {
-            /*  draw the cube. */
-            g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                          m4dUnitMatrix(),
-                          scnLevelColors[l],
-                          pScnSet->enableHypercubeDraw ? 4 : 3, 1, NULL);
+    scnDrawBottomLevel(mask, 1);
 
-            g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, l - 0.5),
-                          m4dUnitMatrix(),
-                          scnLevelColors[l],
-                          pScnSet->enableHypercubeDraw ? 4 : 3, 3, NULL);
+    scnDrawObject(pEngGame, pScnSet, 1);
 
-            mask[x][y][z] = 1;
-          }
-        }
-      }
+    scnDrawBottomLevel(mask, 0);
 
-      if (pScnSet->enableGridDraw)
-      {
-        g4dDraw4DCube(m4dVector(x - 2.0, y - 2.0, z - 2.0, l - 2.0),
-                      m4dMultiplySM(2.0,m4dUnitMatrix()),
-                      scn4DGridColor, 4, 2, NULL);
-      }
-    }
-
-    /*  Draw the bottom level wire. */
-
-    /*  For each cell of the level do: */
-    for (x = 0; x <= 1; x++)
-    for (y = 0; y <= 1; y++)
-    for (z = 0; z <= 1; z++)
-    {
-      /*  space which has no cube above (so it is visible) */
-      if (mask[x][y][z] == 0)
-      {
-        g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
-                      m4dUnitMatrix(),
-                      scn4DCubeColor, 3, 3, NULL);
-      }
-    }
-
-    /*  Draw the actual solid wire. */
-
-    /*  For each cell */
-    for (n = 0; n < pEngGame->object.block.num; n++)
-    {
-      tM4dVector pos;
-      int visibleSides[eM4dDimNum][2];
-
-      scnVisibleSides(n, &visibleSides, &pEngGame->object.block);
-
-      pos = m4dAddVectors(pEngGame->object.pos,
-                          m4dMultiplyMV(pEngGame->object.axices,
-                                        pEngGame->object.block.c[n]));
-
-      /*  draw the hypercube. */
-      g4dDraw4DCube(pos, pEngGame->object.axices, scn4DWireColor,
-                    pScnSet->enableHypercubeDraw ? 4 : 3, 3,
-                    pScnSet->enableSeparateBlockDraw ? NULL : visibleSides);
-    }
-
-    /*  Draw the bottom level. */
-
-    /*  For each cell of the level do: */
-    for (x = 0; x <= 1; x++)
-    for (y = 0; y <= 1; y++)
-    for (z = 0; z <= 1; z++)
-    {
-      /*  space which has no cube above (so it is visible) */
-      if (mask[x][y][z] == 0)
-      {
-        g4dDraw4DCube(m4dVector(x - 0.5, y - 0.5, z - 0.5, -0.5),
-                      m4dUnitMatrix(),
-                      scn4DCubeColor, 3, 1, NULL);
-      }
-    }
-
-    /*  Draw the actual solid. */
-
-    /*  For each cell */
-    for (n = 0; n < pEngGame->object.block.num; n++)
-    {
-      tM4dVector pos;
-      int visibleSides[eM4dDimNum][2];
-
-      scnVisibleSides(n, &visibleSides, &pEngGame->object.block);
-
-      pos = m4dAddVectors(pEngGame->object.pos,
-                          m4dMultiplyMV(pEngGame->object.axices,
-                                        pEngGame->object.block.c[n]));
-
-      /*  draw the hypercube. */
-      g4dDraw4DCube(pos, pEngGame->object.axices, scn4DCubeColor,
-                    pScnSet->enableHypercubeDraw ? 4 : 3, 1,
-                    pScnSet->enableSeparateBlockDraw ? NULL : visibleSides);
-    }
+    scnDrawObject(pEngGame, pScnSet, 0);
 
     scnDrawRotAxis(pEngGame->object.pos.c[eM4dAxisW], pScnSet->axle);
 

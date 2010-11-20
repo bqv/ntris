@@ -138,23 +138,23 @@ void hstInit(void)
   FILE* fp = NULL;
   char *home = getenv("HOME");
 
-  // concat score table file name
+  /* concat score table file name */
   strcpy(hstScoreFile, (home != NULL) ? home : ".");
   strcat(hstScoreFile, "/.4dtris-scores");
 
   fp = fopen(hstScoreFile,"r");
 
-  // if file exists
+  /* if file exists */
   if (fp != NULL)
   {
     fclose(fp);
-    // read score table file
+    /* read score table file */
     hstFReadScoreTab(hstScores, hstScoreFile);
   }
   else
   {
     fprintf(stderr, gettext(":info: No %s found, it will be created.\n"), hstScoreFile);
-    // Create score table file
+    /* Create score table file */
     hstFWriteScoreTab(hstScores, hstScoreFile);
   }
 }
@@ -167,10 +167,10 @@ static void hstFReadScoreTab(tHstScore scores[SCORENUM], char *filename)
 
   fp = fopen(filename,"r");
 
-  // if file exists
+  /* if file exists */
   if (fp != NULL)
   {
-    // while line founds with score and not found enough read score
+    /* while line founds with score and not found enough read score */
     while((fscanf(fp, "%d,%" string(USRNAMELEN)
                      "[^,],%d,%" string(MONTHLEN)
                      "[^,],%d,%d,%d\n",
@@ -198,10 +198,10 @@ static void hstFWriteScoreTab(tHstScore scores[SCORENUM], char *filename)
 
   fp = fopen(filename,"w");
 
-  // if file exists
+  /* if file exists */
   if (fp != NULL)
   {
-    // write out each score struct
+    /* write out each score struct */
     for (n = 0; n < SCORENUM; n++)
     {
      fprintf(fp, "%d,%s,%d,%s,%d,%d,%d\n",
@@ -227,11 +227,11 @@ static tHstScore hstCreateScore(int score)
   struct tm *lctime;
   char * user = getenv("USER");
 
-  // get actual local time
+  /* get actual local time */
   curtime = time(NULL);
   lctime = localtime(&curtime);
 
-  // add timestamp to score struct
+  /* add timestamp to score struct */
   res.score = score;
   res.year = 1900 + (*lctime).tm_year;
   res.day = (*lctime).tm_mday;
@@ -239,7 +239,7 @@ static tHstScore hstCreateScore(int score)
   res.minu = (*lctime).tm_min;
   strftime(res.month, MONTHLEN, "%B", lctime);
 
-  // add actual user
+  /* add actual user */
   strncpy(res.user, (user != NULL) ? user : gettext("Me"), USRNAMELEN-1);
   res.user[USRNAMELEN-1] = '\0';
 
