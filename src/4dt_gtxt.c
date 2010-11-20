@@ -41,7 +41,8 @@ int nextpoweroftwo(int x)
 void SDL_GL_RenderText(char *text,
                       TTF_Font *font,
                       SDL_Color color,
-                      SDL_Rect *location)
+                      SDL_Rect *location,
+                      float alpha)
 {
   SDL_Surface *initial;
   SDL_Surface *intermediary;
@@ -65,7 +66,7 @@ void SDL_GL_RenderText(char *text,
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_BGRA,
-                  GL_UNSIGNED_BYTE, intermediary->pixels );
+               GL_UNSIGNED_BYTE, intermediary->pixels );
 
   /* GL_NEAREST looks horrible, if scaled... */
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -74,7 +75,7 @@ void SDL_GL_RenderText(char *text,
   /* prepare to render our texture */
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texture);
-  glColor3f(1.0f, 1.0f, 1.0f);
+  glColor4f(alpha, alpha, alpha, alpha);
 
   /* Draw a quad at location */
   glBegin(GL_QUADS);
@@ -82,13 +83,13 @@ void SDL_GL_RenderText(char *text,
        That is why the TexCoords specify different corners
        than the Vertex coors seem to. */
     glTexCoord2f(0.0f, 1.0f);
-            glVertex2f(location->x    , location->y);
+    glVertex2f(location->x    , location->y);
     glTexCoord2f(1.0f, 1.0f);
-            glVertex2f(location->x + w, location->y);
+    glVertex2f(location->x + w, location->y);
     glTexCoord2f(1.0f, 0.0f);
-            glVertex2f(location->x + w, location->y + h);
+    glVertex2f(location->x + w, location->y + h);
     glTexCoord2f(0.0f, 0.0f);
-            glVertex2f(location->x    , location->y + h);
+    glVertex2f(location->x    , location->y + h);
   glEnd();
 
   /* Bad things happen if we delete the texture before it finishes */
@@ -154,7 +155,7 @@ void g3dRenderString(double x, double y,
    * rectangle **/
   position.x = ((SDL_Surface *)getSDLScreen())->w * x;
   position.y = ((SDL_Surface *)getSDLScreen())->h * y;
-  SDL_GL_RenderText(string, font, colorf, &position);
+  SDL_GL_RenderText(string, font, colorf, &position, color[3]);
 
   /* Come out of HUD mode */
   glEnable(GL_DEPTH_TEST);
