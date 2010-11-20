@@ -76,7 +76,7 @@ static double g4dPerspFact(double w);
 
 static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
-                        int enableWire,
+                        tG3dFillMode mode,
                         int sideVisible[4]);
 
 static tM3dVector g4dProject(tM4dVector vector);
@@ -343,7 +343,7 @@ void g4dDrawLine(tM4dVector point0,
 /** \brief Draws 4D polygon */
 static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
-                        int mode,
+                        tG3dFillMode mode,
                         int sideVisible[4])
 {
   tM3dVector points3D[4];
@@ -363,7 +363,7 @@ void g4dDraw4DCube(tM4dVector center,
                    tM4dMatrix orientation,
                    float color[4],
                    int dimension,
-                   int mode,
+                   tG3dFillMode mode,
                    int sideVisible[eM4dDimNum][2])
 {
   /*  Array contains the points of a 4D hypercube. */

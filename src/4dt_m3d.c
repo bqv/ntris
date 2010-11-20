@@ -140,10 +140,10 @@ double m3dAbs(tM3dVector vector)
   double abs = 0;
   eM3dAxis axis;
 
-  // For each coordinate
+  /* For each coordinate */
   for (axis = eM3dAxisX; axis < eM3dDimNum; axis++)
   {
-    // normalise the coordinate.
+    /* normalise the coordinate. */
     abs += vector.c[axis] * vector.c[axis];
   }
 
@@ -158,7 +158,7 @@ tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2)
 {
   tM3dVector cross;
 
-  // Calculate crossproduct by coordinates.
+  /* Calculate crossproduct by coordinates. */
   cross.c[0] = vector1.c[1] * vector2.c[2] - vector2.c[1] * vector1.c[2];
   cross.c[1] = vector1.c[2] * vector2.c[0] - vector2.c[2] * vector1.c[0];
   cross.c[2] = vector1.c[0] * vector2.c[1] - vector2.c[0] * vector1.c[1];
@@ -169,10 +169,10 @@ tM3dVector m3dCrossProduct(tM3dVector vector1, tM3dVector vector2)
 /** Normalise a vector. */
 tM3dVector m3dNormalise(tM3dVector vector)
 {
-  // Calculate length of the vector.
+  /* Calculate length of the vector. */
   double length = m3dAbs(vector);
 
-  // normalise the coordinates.
+  /* normalise the coordinates. */
   vector = m3dMultiplySV(1/length, vector);
 
   return(vector);

@@ -112,12 +112,6 @@ extern int engLowerSolid(tEngGame *pEngGame);
 extern void engDropSolid(tEngGame *pEngGame);
 extern int engTurn(char ax1, char ax2, tEngGame *pEngGame);
 extern void engPrintSpace(tEngGame *pEngGame);
-
-/** get the cell of the level at x, y, z from
-    the game space empty or full */
-static inline int engGetSpaceCell(int w, int x, int y, int z, tEngGame *pEngGame)
-{
-  return(pEngGame->space[w][x][y][z]);
-}
+extern int engGetSpaceCell(int w, int x, int y, int z, tEngGame *pEngGame);
 
 #endif

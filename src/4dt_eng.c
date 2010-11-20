@@ -15,11 +15,13 @@
 #include <math.h>
 
 #include "4dt_main.h"
+#include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_hst.h"
-#include "4dt_g4d.h"
 #include "4dt_eng.h"
 #include "4dt_scn.h"
+#include "4dt_g3d.h"
+#include "4dt_g4d.h"
 #include "4dt_menu.h"
 #include "4dt_ai.h"
 
@@ -93,6 +95,13 @@ static void engUpdateScore(int clearedLevels, tEngGame *pEngGame);
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** get the cell of the level at x, y, z from
+    the game space empty or full */
+int engGetSpaceCell(int w, int x, int y, int z, tEngGame *pEngGame)
+{
+  return(pEngGame->space[w][x][y][z]);
+}
 
 /** Calculates scores for cleared levels */
 static void engUpdateScore(int clearedLevels, tEngGame *pEngGame)
