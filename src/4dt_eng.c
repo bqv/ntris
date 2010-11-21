@@ -255,7 +255,7 @@ static int engEqLevel(tEngLevel level,
   int x, y, z;
   int equal = 1;
 
-  for(x = 0; x < pEngGame->size[1]; x++)
+  for(x = 0; x < pEngGame->size[0]; x++)
   for(y = 0; y < pEngGame->size[1]; y++)
   for(z = 0; z < pEngGame->size[2]; z++)
   {
@@ -272,7 +272,7 @@ static void engCopyLevel(tEngLevel target,
 {
   int x, y, z;
 
-  for(x = 0; x < pEngGame->size[1]; x++)
+  for(x = 0; x < pEngGame->size[0]; x++)
   for(y = 0; y < pEngGame->size[1]; y++)
   for(z = 0; z < pEngGame->size[2]; z++)
   {
@@ -286,7 +286,7 @@ static void engClearLevel(tEngLevel level,
 {
   int x, y, z;
 
-  for(x = 0; x < pEngGame->size[1]; x++)
+  for(x = 0; x < pEngGame->size[0]; x++)
   for(y = 0; y < pEngGame->size[1]; y++)
   for(z = 0; z < pEngGame->size[2]; z++)
   {
