@@ -11,9 +11,9 @@ autoscan
 ./configure
 cd po; make update-po; cd ..
 make distclean
-unlink install-sh && cp /usr/share/automake-1.11/install-sh .
-unlink missing && cp /usr/share/automake-1.11/missing .
-unlink depcomp && cp /usr/share/automake-1.11/depcomp .
+for i in config.guess config.sub install-sh missing depcomp; do
+  unlink $i && cp /usr/share/automake-1.11/$i ./
+done
 cd ..
 tar -cf 4dtris-$VER-src.tar 4dtris-$VER
 gzip -c 4dtris-$VER-src.tar >4dtris-$VER-src.tar.gz
