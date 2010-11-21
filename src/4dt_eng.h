@@ -86,8 +86,8 @@ typedef struct
   int lock;
   /** levels of gamespace */
   int spaceLength;
-  /** game space level sizes */
-  int xsize, ysize, zsize;
+  /** game space level sizes (x, y, z) */
+  int size[3];
   /** animation related variables */
   struct
   {

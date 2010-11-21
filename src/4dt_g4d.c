@@ -97,8 +97,6 @@ void g4dInit(double w_maximum)
   g4dMaxW = w_maximum;
 
   g4dReset();
-
-  setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
 }
 
 /** Reset 4D draving unit */
@@ -109,9 +107,15 @@ void g4dReset(void)
 
 void g4dSwitchAutoRotation(int enable)
 {
-  g4dAutoRotationEnabled = enable;
+  if (g4dAutoRotationEnabled != enable)
+  {
+    g4dAutoRotationEnabled = enable;
 
-  setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
+    if (g4dAutoRotationEnabled == 1)
+    {
+      setTimerCallback(g4dRotationTimeStep, g4dAutoRotateViewport, NULL);
+    }
+  }
 }
 
 /** Rotates the view port with angle deg in more steps */

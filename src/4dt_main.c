@@ -159,6 +159,7 @@ int main(int argc, char *argv[])
 
   /*  initialise 4D drawing modul */
   g4dInit(engGame.spaceLength);
+  g4dSwitchAutoRotation(1);
 
   /* Initialize menu */
   menuInit(&engGame, &scnSet);

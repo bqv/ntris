@@ -60,6 +60,7 @@ static void menuSound(void);
 static void menuMusic(void);
 static void menuAuto(void);
 static void menuLevel(void);
+static void menuSize(void);
 static void menuControls(void);
 static void menuHelp(void);
 static void menuScores(void);
@@ -90,13 +91,14 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
   {1, "Draw connected hypercubes",menuDrawmode,NULL,eMenuVideoOptions,{eMenuNull} },
   {1, "Grid - OFF",     menuGrid,      NULL,   eMenuVideoOptions, {eMenuNull} },
-  {1, "View mode - Mono", menuStereo, NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "View mode - Mono", menuStereo,  NULL,   eMenuVideoOptions, {eMenuNull} },
   {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
   {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
   {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
-  {1, "Game Options",   NULL,          NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuControls, eMenuNull} },
+  {1, "Game Options",   NULL,          NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuGameSpace, eMenuControls, eMenuNull} },
   {1, "Auto Player - ON", menuAuto,    NULL,   eMenuGameOptions,  {eMenuNull}  },
   {1, "Diff. Level - Hard", menuLevel, NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Space size 2x2x2", menuSize,    NULL,   eMenuGameOptions,  {eMenuNull}  },
   {0, "Controls",       menuControls,  NULL,   eMenuGameOptions,  {eMenuNull}  },
   {1, "Help",           NULL,          NULL,   eMenuRoot,         {eMenuHelppage, eMenuHighScores, eMenuAbout, eMenuNull} },
   {1, "Help Page",      menuHelp,      NULL,   eMenuHelp,         {eMenuNull}  },
@@ -383,9 +385,44 @@ static void menuLevel(void)
     "Diff. Level - Hard"
   };
 
+  /* \todo move to eng.c + enum for diff levels */
+  int spaceLengths[DIFFLEVELS] = {20, 16, 12};
+
   pMenuEngGame->game_opts.diff = (pMenuEngGame->game_opts.diff+1) % DIFFLEVELS;
 
   menuItems[eMenuDiffLevel].caption = captions[pMenuEngGame->game_opts.diff];
+
+  pMenuEngGame->spaceLength = spaceLengths[pMenuEngGame->game_opts.diff];
+
+  engResetGame(pMenuEngGame);
+
+  g4dInit(pMenuEngGame->spaceLength);
+
+  menuNavigate(eMenuBack);
+}
+
+static void menuSize(void)
+{
+  static int size = 0;
+
+  const int sizes[4][3] = { {2,2,2}, {2,2,3}, {2,3,3}, {3,3,3} };
+
+  const char template[] = "Space size %dx%dx%d";
+
+  static char caption[sizeof(template)];
+
+  size = (size + 1) % 4;
+
+  sprintf(caption, template, sizes[size][0], sizes[size][1], sizes[size][2]);
+
+  menuItems[eMenuGameSpace].caption = caption;
+
+  pMenuEngGame->size[0] = sizes[size][0];
+  pMenuEngGame->size[1] = sizes[size][1];
+  pMenuEngGame->size[2] = sizes[size][2];
+
+  engResetGame(pMenuEngGame);
+  g4dReset();
 
   menuNavigate(eMenuBack);
 }

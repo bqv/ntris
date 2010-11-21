@@ -77,9 +77,9 @@ static void scnDrawGrid(int enableGridDraw, tEngGame *pEngGame);
 /** Returns with the coordinates of the center of the gamespace */
 static tM4dVector scnCenter(tEngGame *pEngGame)
 {
-  tM4dVector center = {{pEngGame->xsize/2.0,
-                        pEngGame->ysize/2.0,
-                        pEngGame->zsize/2.0,
+  tM4dVector center = {{pEngGame->size[0]/2.0,
+                        pEngGame->size[1]/2.0,
+                        pEngGame->size[2]/2.0,
                         0.0}};
 
   return(center);
@@ -294,9 +294,9 @@ static void scnDrawGamespace(tEngGame *pEngGame,
   for (l = pEngGame->spaceLength - 1; l >= 0; l--)
   {
     /*  For each cell of the level */
-    for (x = 0; x < pEngGame->xsize; x++)
-    for (y = 0; y < pEngGame->ysize; y++)
-    for (z = 0; z < pEngGame->zsize; z++)
+    for (x = 0; x < pEngGame->size[0]; x++)
+    for (y = 0; y < pEngGame->size[1]; y++)
+    for (z = 0; z < pEngGame->size[2]; z++)
     {
       /*  space which has no cube above (so it is visible) */
       /*  gets rid of Z-fighting */
@@ -352,9 +352,9 @@ static void scnDrawBottomLevel(int mask[SPACESIZE][SPACESIZE][SPACESIZE],
   int x, y, z;        /*  loop counter; */
 
   /*  For each cell of the level do: */
-  for (x = 0; x < pEngGame->xsize; x++)
-  for (y = 0; y < pEngGame->ysize; y++)
-  for (z = 0; z < pEngGame->zsize; z++)
+  for (x = 0; x < pEngGame->size[0]; x++)
+  for (y = 0; y < pEngGame->size[1]; y++)
+  for (z = 0; z < pEngGame->size[2]; z++)
   {
     /*  space which has no cube above (so it is visible) */
     if (mask[x][y][z] == 0)
@@ -414,9 +414,9 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 
   for (pic = 0; pic < maxpic; pic++)
   {
-    for (x = 0; x < pEngGame->xsize; x++)
-    for (y = 0; y < pEngGame->ysize; y++)
-    for (z = 0; z < pEngGame->zsize; z++)
+    for (x = 0; x < pEngGame->size[0]; x++)
+    for (y = 0; y < pEngGame->size[1]; y++)
+    for (z = 0; z < pEngGame->size[2]; z++)
     {
       mask[x][y][z] = 0;
     }
