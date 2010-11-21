@@ -37,10 +37,12 @@ static int aiAutoGamerON = 0;
 ------------------------------------------------------------------------------*/
 
 static int aiFindBestSolution(int neededTurns[4],
+                              int neededMoves[4],
                               tEngGame *pEngGame);
 static double aiProcessSitu(tEngGame *pEngGame);
-static int aiSearchBestSitu(double CoG[4 * 4 * 4 * 4],
-                            int turns[4 * 4 * 4 * 4]);
+static int aiSearchBestSitu(double CoG[],
+                            int turns[],
+                            int situNum);
 static void aiDoStep(tEngGame *pEngGame);
 static int aiTimer(int interval, tEngGame *pEngGame);
 
@@ -96,6 +98,7 @@ static void aiDoStep(tEngGame *pEngGame)
   int i;   /*  loop counters; */
   /* Array of the number of turns by axises needed to the best situation. */
   static int neededTurns[4];
+  static int neededMoves[4];
 
   static int solidnum = -1;
 
@@ -103,7 +106,8 @@ static void aiDoStep(tEngGame *pEngGame)
   if (solidnum != pEngGame->solidnum)
   {
     /*  find the best situation (num of turns) to drop it. */
-    aiFindBestSolution(neededTurns, pEngGame);
+    aiFindBestSolution(neededTurns, neededMoves, pEngGame);
+
     solidnum = pEngGame->solidnum;
   }
   else
@@ -127,6 +131,18 @@ static void aiDoStep(tEngGame *pEngGame)
         stepMade = 1;
       }
     }
+    for (i = 0; i < 3; i++)
+    {
+       if (   (neededMoves[i] != 0)
+           && (!stepMade)
+           && (!pEngGame->lock))
+       {
+         int direction = neededMoves[i] > 0 ? 1 : -1;
+         engMove(i, direction, pEngGame);
+         neededMoves[i] += -direction;
+         stepMade = 1;
+       }
+    }
     /*  If no turn made, so no more turn needed, then */
     if ((!stepMade) && (!pEngGame->lock))
     {
@@ -140,29 +156,33 @@ static void aiDoStep(tEngGame *pEngGame)
  *  (the most effective one with fewest turn).
  *  \return id of optimal turn variation */
 static int aiFindBestSolution(int neededTurns[4],
+                              int neededMoves[4],
                               tEngGame *pEngGame)
 {
   /*  Local variables: */
   int i, j, n;             /*  loop counter; */
-  int x[4];                /*  loop counters; */
+  int x[7];                /*  loop counters; */
   int bestSitu;            /*  number of the best situation */
   tEngGame engGE;          /*  game engine copy; */
-  double pos;
+  int index, pos;
   /** Array contains the CenterOf Gravity of each situation. */
-  double CoG[4 * 4 * 4 * 4];
+  double CoG[(XSIZE-1) * (YSIZE-1) * (ZSIZE-1) * 4 * 4 * 4 * 4];
   /** Array contains the number of turns for each situation. */
-  int turns[4 * 4 * 4 * 4];
+  int turns[(XSIZE-1) * (YSIZE-1) * (ZSIZE-1) * 4 * 4 * 4 * 4];
 
   /*  For each turn number variation: */
-  for (x[3] = 0; x[3] < 4; x[3]++)
-    for (x[1] = 0; x[1] < 4; x[1]++)
-      for (x[2] = 0; x[2] < 4; x[2]++)
-        for (x[0] = 0; x[0] < 4; x[0]++)
+  for (x[6] = 0; x[6] < (XSIZE-1); x[6]++)
+    for (x[5] = 0; x[5] < (YSIZE-1); x[5]++)
+      for (x[4] = 0; x[4] < (ZSIZE-1); x[4]++)
+        for (x[3] = 0; x[3] < 4; x[3]++)
+          for (x[1] = 0; x[1] < 4; x[1]++)
+            for (x[2] = 0; x[2] < 4; x[2]++)
+              for (x[0] = 0; x[0] < 4; x[0]++)
   {
     /*  Back up the actual situation. */
     engGE = *pEngGame;
-
     engGE.animation.enable = 0;
+    engGE.lock = 0;
 
     for (j = 0; j < 4; j++)
     {
@@ -175,37 +195,49 @@ static int aiFindBestSolution(int neededTurns[4],
       }
     }
 
-    do
+
+    for (j = 0; j < 3; j++)
     {
-      /*  store the actual pos */
-      pos = engGE.object.pos.c[eM4dAxisW];
+      pos = lround(engGE.object.pos.c[j] - 1);
 
-      /*  lower the solid. */
-      engLowerSolid(&engGE);
-
-    /*  While not reached the floor */
+      engMove(j, x[6-j] - pos, &engGE);
     }
-    while (engGE.object.pos.c[eM4dAxisW] < pos);
+
+    while (engLowerSolid(&engGE)) {};
 
     /*  Number of the situation. */
-    n = x[0]*64 + x[1]*16 + x[2]*4 + x[3];
+    n =   x[6]*256*(YSIZE-1)*(ZSIZE-1)
+        + x[5]*256*(ZSIZE-1)
+        + x[4]*256 +
+        + x[0]*64 + x[1]*16 + x[2]*4 + x[3];
 
     /*  Calculate Cog of the situation. */
     CoG[n] = aiProcessSitu(&engGE);
 
     /*  Calculate number of turns made. */
-    turns[n] = x[0] + x[1] + x[2] + x[3];
+    /* \todo x4,x5,x6 wrong */
+    turns[n] = x[0] + x[1] + x[2] + x[3] + x[4] + x[5] + x[6];
   }
 
   /*  Return with the best of situations. */
-  bestSitu = aiSearchBestSitu(CoG, turns);
+  bestSitu = aiSearchBestSitu(CoG, turns,
+                              (XSIZE-1) * (YSIZE-1) * (ZSIZE-1) * 4 * 4 * 4 * 4);
 
   /*  Fill the array of the required steps. */
+  engGE = *pEngGame;
   neededTurns[3] = bestSitu % 4;
   neededTurns[2] = bestSitu / 4 % 4;
   neededTurns[1] = bestSitu / 16 % 4;
   neededTurns[0] = bestSitu / 64 % 4;
-
+  index = bestSitu / 256 % (ZSIZE-1);
+  pos = lround(engGE.object.pos.c[2]) - 1;
+  neededMoves[2] = index - pos;
+  index = bestSitu / (256*(ZSIZE-1)) % (YSIZE-1);
+  pos = lround(engGE.object.pos.c[1]) - 1;
+  neededMoves[1] = index - pos;
+  index = bestSitu / (256*(YSIZE-1)*(ZSIZE-1)) % (XSIZE-1);
+  pos = lround(engGE.object.pos.c[0]) - 1;
+  neededMoves[0] = index - pos;
   return bestSitu;
 
 }  /*  End of function */
@@ -224,9 +256,9 @@ static double aiProcessSitu(tEngGame *pEngGame)
 
   /*  For each cell of gamespace, */
   for (l = 0; l < SPACELENGTH; l++)
-    for (x = 0; x < 2; x++)
-      for (y = 0; y < 2; y++)
-        for (z = 0; z < 2; z++)
+    for (x = 0; x < XSIZE; x++)
+      for (y = 0; y < YSIZE; y++)
+        for (z = 0; z < ZSIZE; z++)
   {
     /*  if the cell is full, */
     if (engGetSpaceCell(l,x,y,z, pEngGame))
@@ -239,38 +271,31 @@ static double aiProcessSitu(tEngGame *pEngGame)
   }
 
   /*  'Normalise' CoG. */
-  if (sum == 0)
-  {
-    return 0.0;
-  }
-  else
-  {
-    return ( (double)cog / sum);
-  }
-
+  return ( (sum == 0) ? 0.0 : (double)cog / sum);
 }  /*  End of function. */
 
 /** Search the best situation.
  *  \return ID of optimal situation */
-static int aiSearchBestSitu(double CoG[4 * 4 * 4 * 4],
-                            int turns[4 * 4 * 4 * 4])
+static int aiSearchBestSitu(double CoG[],
+                            int turns[],
+                            int situNum)
 {
   /*  Local variables: */
   int i,       /*  loop counter; */
       cntCog,  /*  counter for; */
       cntTurn; /*  counter for turns; */
-  int bestSitusCog[4 * 4 * 4 * 4];  /*  best situation container array; */
-  int bestSitusTurn[4 * 4 * 4 * 4]; /*  best situation container array; */
+  int bestSitusCog[situNum];  /*  best situation container array; */
+  int bestSitusTurn[situNum]; /*  best situation container array; */
 
   /*  lowest value of Cog; */
   double lowerCog = SPACELENGTH;
   /*  lowest value of turn numbers. */
-  double fewerTurn = 4 * 4 * 4 * 4;
+  double fewerTurn = situNum;
 
   /*  Find the minimal CoG result. */
 
   /*  For each situation */
-  for (i = 0; i < 4 * 4 * 4 * 4; i++)
+  for (i = 0; i < situNum; i++)
   {
     /*  If actual CoG lower then lowest, */
     if (CoG[i] < lowerCog)
@@ -284,7 +309,7 @@ static int aiSearchBestSitu(double CoG[4 * 4 * 4 * 4],
   cntCog = 0;
 
   /*  For each situation */
-  for (i = 0; i < 4 * 4 * 4 * 4; i++)
+  for (i = 0; i < situNum; i++)
   {
     /*  If the situations cog is the best */
     if (CoG[i] == lowerCog)
@@ -331,6 +356,6 @@ static int aiSearchBestSitu(double CoG[4 * 4 * 4 * 4],
   }
 
   /*  Select one from the best situations and return */
-  return bestSitusTurn[rand()*cntTurn/RAND_MAX];
+  return bestSitusTurn[rand() % cntTurn];
 
 }  /*  End of function. */

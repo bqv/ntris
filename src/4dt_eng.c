@@ -45,12 +45,6 @@ static const double engDropSolidTimeStep = 10;
 static const tEngSolid engEmptySolid =
 {   {{{{0,0}, {0,0}}, {{0,0}, {0,0}}}, {{{0,0}, {0,0}}, {{0,0}, {0,0}}}}   };
 
-/** Empty level */
-static const tEngLevel engEmptyLevel = {{{0,0}, {0,0}}, {{0,0}, {0,0}}};
-
-/** Full level */
-static tEngLevel engFullLevel = {{{1,1}, {1,1}}, {{1,1}, {1,1}}};
-
 /** defined solids */
 static const tEngBlocks engObjects[OBJECTTYPES] =
 {
@@ -81,7 +75,7 @@ static const int engProbs[DIFFLEVELS][OBJECTTYPES] =
 ------------------------------------------------------------------------------*/
 
 static tEngSolid engObject2Solid(tEngObject object, int *invalid);
-static int engEqLevel(tEngLevel level1, tEngLevel level2);
+static int engEqLevel(tEngLevel level1, int value);
 static void engCopyLevel(tEngLevel target, tEngLevel source);
 static void engNewSolid(tEngGame *pEngGame);
 static int engOverlapping(tEngGame *pEngGame);
@@ -112,7 +106,7 @@ static void engUpdateScore(int clearedLevels, tEngGame *pEngGame)
 
   for(level = 0; level < SPACELENGTH; level++)
   {
-    clearSpace &= engEqLevel(pEngGame->space[level], engEmptyLevel);
+    clearSpace &= engEqLevel(pEngGame->space[level], 0);
   }
 
   if (clearSpace) { score *= 2; }
@@ -250,8 +244,8 @@ static tEngSolid engObject2Solid(tEngObject object, int *invalid)
   return solid;
 }
 
-/** Compare two levels */
-static int engEqLevel(tEngLevel level1, tEngLevel level2)
+/** Check if a levels contains the same value at each cells */
+static int engEqLevel(tEngLevel level, int value)
 {
   int x, y, z;
   int equal = 1;
@@ -260,7 +254,7 @@ static int engEqLevel(tEngLevel level1, tEngLevel level2)
   for(y = 0; y < YSIZE; y++)
   for(z = 0; z < ZSIZE; z++)
   {
-    if (level1[x][y][z] != level2[x][y][z]) { equal = 0; }
+    if (level[x][y][z] != value) { equal = 0; }
   }
 
   return(equal);
@@ -429,7 +423,7 @@ static void engKillFullLevels(tEngGame *pEngGame)
   for(t = 0; t < SPACELENGTH; t++)
   {
     /*  if full level found */
-    if (engEqLevel(pEngGame->space[t], engFullLevel))
+    if (engEqLevel(pEngGame->space[t], 1))
     {
       /*  step down every higher level */
       for (tn = t+1; tn < SPACELENGTH; tn++)

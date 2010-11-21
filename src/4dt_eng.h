@@ -24,8 +24,8 @@
 #define DIFFLEVELS (3)
 
 /** Size of gamespace */
-#define XSIZE 2
-#define YSIZE 2
+#define XSIZE 3
+#define YSIZE 3
 #define ZSIZE 2
 #define WSIZE 2
 
