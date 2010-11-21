@@ -18,17 +18,14 @@
 ------------------------------------------------------------------------------*/
 
 /** length of the game space (num of levels) */
-#define SPACELENGTH (12)
+#define SPACELENGTH 20
+/** Size of gamespace */
+#define SPACESIZE 4
 
 /** number of difficulty levels */
-#define DIFFLEVELS (3)
+#define DIFFLEVELS 3
 
-/** Size of gamespace */
-#define XSIZE 3
-#define YSIZE 3
-#define ZSIZE 2
-#define WSIZE 2
-
+/** Number of blocks in an object */
 #define MAXBLOCKNUM 4
 
 /*------------------------------------------------------------------------------
@@ -36,7 +33,7 @@
 ------------------------------------------------------------------------------*/
 
 /** one 3D level of the game space x, y, z */
-typedef char tEngLevel[XSIZE][YSIZE][ZSIZE];
+typedef char tEngLevel[SPACESIZE][SPACESIZE][SPACESIZE];
 
 /** 2x2x2x2 supercube / container of a Solid */
 typedef struct
@@ -87,7 +84,10 @@ typedef struct
   int solidnum;
   /** engine locked while animation running */
   int lock;
-
+  /** levels of gamespace */
+  int spaceLength;
+  /** game space level sizes */
+  int xsize, ysize, zsize;
   /** animation related variables */
   struct
   {

@@ -133,6 +133,9 @@ int main(int argc, char *argv[])
   setlocale(LC_ALL, "");
   textdomain("4dtris");
 
+  /*  Initialize the game engine. */
+  engInitGame(&engGame);
+
   /*  Initialize/load High Score table */
   hstInit();
 
@@ -155,10 +158,7 @@ int main(int argc, char *argv[])
   g3dInit();
 
   /*  initialise 4D drawing modul */
-  g4dInit(SPACELENGTH);
-
-  /*  Initialize the game engine. */
-  engInitGame(&engGame);
+  g4dInit(engGame.spaceLength);
 
   /* Initialize menu */
   menuInit(&engGame, &scnSet);

@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "4dt_main.h"
 #include "4dt_m4d.h"
@@ -166,14 +167,14 @@ static int aiFindBestSolution(int neededTurns[4],
   tEngGame engGE;          /*  game engine copy; */
   int index, pos;
   /** Array contains the CenterOf Gravity of each situation. */
-  double CoG[(XSIZE-1) * (YSIZE-1) * (ZSIZE-1) * 4 * 4 * 4 * 4];
+  double CoG[(SPACESIZE-1) * (SPACESIZE-1) * (SPACESIZE-1) * 4 * 4 * 4 * 4];
   /** Array contains the number of turns for each situation. */
-  int turns[(XSIZE-1) * (YSIZE-1) * (ZSIZE-1) * 4 * 4 * 4 * 4];
+  int turns[(SPACESIZE-1) * (SPACESIZE-1) * (SPACESIZE-1) * 4 * 4 * 4 * 4];
 
   /*  For each turn number variation: */
-  for (x[6] = 0; x[6] < (XSIZE-1); x[6]++)
-    for (x[5] = 0; x[5] < (YSIZE-1); x[5]++)
-      for (x[4] = 0; x[4] < (ZSIZE-1); x[4]++)
+  for (x[6] = 0; x[6] < (pEngGame->xsize-1); x[6]++)
+    for (x[5] = 0; x[5] < (pEngGame->ysize-1); x[5]++)
+      for (x[4] = 0; x[4] < (pEngGame->zsize-1); x[4]++)
         for (x[3] = 0; x[3] < 4; x[3]++)
           for (x[1] = 0; x[1] < 4; x[1]++)
             for (x[2] = 0; x[2] < 4; x[2]++)
@@ -206,8 +207,8 @@ static int aiFindBestSolution(int neededTurns[4],
     while (engLowerSolid(&engGE)) {};
 
     /*  Number of the situation. */
-    n =   x[6]*256*(YSIZE-1)*(ZSIZE-1)
-        + x[5]*256*(ZSIZE-1)
+    n =   x[6]*256*(pEngGame->zsize-1)*(pEngGame->ysize-1)
+        + x[5]*256*(pEngGame->ysize-1)
         + x[4]*256 +
         + x[0]*64 + x[1]*16 + x[2]*4 + x[3];
 
@@ -221,7 +222,10 @@ static int aiFindBestSolution(int neededTurns[4],
 
   /*  Return with the best of situations. */
   bestSitu = aiSearchBestSitu(CoG, turns,
-                              (XSIZE-1) * (YSIZE-1) * (ZSIZE-1) * 4 * 4 * 4 * 4);
+                              (pEngGame->xsize-1) *
+                              (pEngGame->ysize-1) *
+                              (pEngGame->zsize-1) *
+                              4 * 4 * 4 * 4);
 
   /*  Fill the array of the required steps. */
   engGE = *pEngGame;
@@ -229,13 +233,13 @@ static int aiFindBestSolution(int neededTurns[4],
   neededTurns[2] = bestSitu / 4 % 4;
   neededTurns[1] = bestSitu / 16 % 4;
   neededTurns[0] = bestSitu / 64 % 4;
-  index = bestSitu / 256 % (ZSIZE-1);
+  index = bestSitu / 256 % (pEngGame->zsize-1);
   pos = lround(engGE.object.pos.c[2]) - 1;
   neededMoves[2] = index - pos;
-  index = bestSitu / (256*(ZSIZE-1)) % (YSIZE-1);
+  index = bestSitu / (256*(pEngGame->zsize-1)) % (pEngGame->ysize-1);
   pos = lround(engGE.object.pos.c[1]) - 1;
   neededMoves[1] = index - pos;
-  index = bestSitu / (256*(YSIZE-1)*(ZSIZE-1)) % (XSIZE-1);
+  index = bestSitu / (256*(pEngGame->zsize-1)*(pEngGame->ysize-1)) % (pEngGame->xsize-1);
   pos = lround(engGE.object.pos.c[0]) - 1;
   neededMoves[0] = index - pos;
   return bestSitu;
@@ -255,10 +259,10 @@ static double aiProcessSitu(tEngGame *pEngGame)
   sum = 0;
 
   /*  For each cell of gamespace, */
-  for (l = 0; l < SPACELENGTH; l++)
-    for (x = 0; x < XSIZE; x++)
-      for (y = 0; y < YSIZE; y++)
-        for (z = 0; z < ZSIZE; z++)
+  for (l = 0; l < pEngGame->spaceLength; l++)
+    for (x = 0; x < pEngGame->xsize; x++)
+      for (y = 0; y < pEngGame->ysize; y++)
+        for (z = 0; z < pEngGame->zsize; z++)
   {
     /*  if the cell is full, */
     if (engGetSpaceCell(l,x,y,z, pEngGame))
@@ -288,7 +292,7 @@ static int aiSearchBestSitu(double CoG[],
   int bestSitusTurn[situNum]; /*  best situation container array; */
 
   /*  lowest value of Cog; */
-  double lowerCog = SPACELENGTH;
+  double lowerCog = INT_MAX;
   /*  lowest value of turn numbers. */
   double fewerTurn = situNum;
 

@@ -74,9 +74,10 @@ static const int engProbs[DIFFLEVELS][OBJECTTYPES] =
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
-static tEngSolid engObject2Solid(tEngObject object, int *invalid);
-static int engEqLevel(tEngLevel level1, int value);
-static void engCopyLevel(tEngLevel target, tEngLevel source);
+static tEngSolid engObject2Solid(tEngObject object, int *invalid, tEngGame *pEngGame);
+static int engEqLevel(tEngLevel level1, int value, tEngGame *pEngGame);
+static void engCopyLevel(tEngLevel target, tEngLevel source, tEngGame *pEngGame);
+static void engClearLevel(tEngLevel level, tEngGame *pEngGame);
 static void engNewSolid(tEngGame *pEngGame);
 static int engOverlapping(tEngGame *pEngGame);
 static void engKillFullLevels(tEngGame *pEngGame);
@@ -104,9 +105,9 @@ static void engUpdateScore(int clearedLevels, tEngGame *pEngGame)
   int clearSpace = 1;
   int level;
 
-  for(level = 0; level < SPACELENGTH; level++)
+  for(level = 0; level < pEngGame->spaceLength; level++)
   {
-    clearSpace &= engEqLevel(pEngGame->space[level], 0);
+    clearSpace &= engEqLevel(pEngGame->space[level], 0, pEngGame);
   }
 
   if (clearSpace) { score *= 2; }
@@ -207,7 +208,9 @@ static int engAnimation(int interval, tEngGame *pEngGame)
 }
 
 /** Render/convert an object to gamespace array */
-static tEngSolid engObject2Solid(tEngObject object, int *invalid)
+static tEngSolid engObject2Solid(tEngObject object,
+                                 int *invalid,
+                                 tEngGame *pEngGame)
 {
   int i, x, y, z, w;
   tEngSolid solid;
@@ -227,10 +230,10 @@ static tEngSolid engObject2Solid(tEngObject object, int *invalid)
     y = floorl(vec.c[eM4dAxisY]);
     z = floorl(vec.c[eM4dAxisZ]);
 
-    if (    (x >= 0) && (x < XSIZE)
-         && (y >= 0) && (y < YSIZE)
-         && (z >= 0) && (z < ZSIZE)
-         && (w >= 0) && (w < SPACELENGTH)
+    if (    (x >= 0) && (x < pEngGame->xsize)
+         && (y >= 0) && (y < pEngGame->ysize)
+         && (z >= 0) && (z < pEngGame->zsize)
+         && (w >= 0) && (w < pEngGame->spaceLength)
        )
     {
       solid.c[w][x][y][z] = 1;
@@ -245,14 +248,16 @@ static tEngSolid engObject2Solid(tEngObject object, int *invalid)
 }
 
 /** Check if a levels contains the same value at each cells */
-static int engEqLevel(tEngLevel level, int value)
+static int engEqLevel(tEngLevel level,
+                      int value,
+                      tEngGame *pEngGame)
 {
   int x, y, z;
   int equal = 1;
 
-  for(x = 0; x < XSIZE; x++)
-  for(y = 0; y < YSIZE; y++)
-  for(z = 0; z < ZSIZE; z++)
+  for(x = 0; x < pEngGame->xsize; x++)
+  for(y = 0; y < pEngGame->ysize; y++)
+  for(z = 0; z < pEngGame->zsize; z++)
   {
     if (level[x][y][z] != value) { equal = 0; }
   }
@@ -261,26 +266,29 @@ static int engEqLevel(tEngLevel level, int value)
 }
 
 /** Copy level to another. */
-static void engCopyLevel(tEngLevel target, tEngLevel source)
+static void engCopyLevel(tEngLevel target,
+                         tEngLevel source,
+                         tEngGame *pEngGame)
 {
   int x, y, z;
 
-  for(x = 0; x < XSIZE; x++)
-  for(y = 0; y < YSIZE; y++)
-  for(z = 0; z < ZSIZE; z++)
+  for(x = 0; x < pEngGame->xsize; x++)
+  for(y = 0; y < pEngGame->ysize; y++)
+  for(z = 0; z < pEngGame->zsize; z++)
   {
     target[x][y][z] = source[x][y][z];
   }
 }
 
 /** Clears a levels */
-static void engClearLevel(tEngLevel level)
+static void engClearLevel(tEngLevel level,
+                          tEngGame *pEngGame)
 {
   int x, y, z;
 
-  for(x = 0; x < XSIZE; x++)
-  for(y = 0; y < YSIZE; y++)
-  for(z = 0; z < ZSIZE; z++)
+  for(x = 0; x < pEngGame->xsize; x++)
+  for(y = 0; y < pEngGame->ysize; y++)
+  for(z = 0; z < pEngGame->zsize; z++)
   {
     level[x][y][z] = 0;
   }
@@ -292,9 +300,9 @@ void engResetGame(tEngGame *pEngGame)
   int w;
 
   /*  for the every part of the space */
-  for (w = 0; w < SPACELENGTH; w++)
+  for (w = 0; w < pEngGame->spaceLength; w++)
   {
-    engClearLevel(pEngGame->space[w]);
+    engClearLevel(pEngGame->space[w], pEngGame);
   }
 
   /*  initialise the number of solids dropped */
@@ -325,9 +333,13 @@ void engInitGame(tEngGame *pEngGame)
   srand(time(NULL));
 
   /*  set options */
-  pEngGame->game_opts.diff = 2;
+  pEngGame->game_opts.diff   = 2;
   pEngGame->animation.enable = 1;
-  pEngGame->activeUser = 0;
+  pEngGame->activeUser       = 0;
+  pEngGame->spaceLength      = 12;
+  pEngGame->xsize            = 2;
+  pEngGame->ysize            = 2;
+  pEngGame->zsize            = 2;
 
   /*  reset parameters */
   engResetGame(pEngGame);
@@ -379,10 +391,10 @@ static void engNewSolid(tEngGame *pEngGame)
 
   /*  position the new solid to the */
   /*  top 2 level of the space */
-  pEngGame->object.pos = m4dVector(1.0 + rand() % (XSIZE-1),
-                                   1.0 + rand() % (YSIZE-1),
-                                   1.0 + rand() % (ZSIZE-1),
-                                   SPACELENGTH - 1.0);
+  pEngGame->object.pos = m4dVector(1.0 + rand() % (pEngGame->xsize-1),
+                                   1.0 + rand() % (pEngGame->ysize-1),
+                                   1.0 + rand() % (pEngGame->zsize-1),
+                                   pEngGame->spaceLength - 1.0);
 
   /*  increase the number of the solid */
   pEngGame->solidnum++;
@@ -395,12 +407,12 @@ static int engOverlapping(tEngGame *pEngGame)
   int w, x, y, z;
   int overlap = 0;
 
-  tEngSolid solid = engObject2Solid(pEngGame->object, &overlap);
+  tEngSolid solid = engObject2Solid(pEngGame->object, &overlap, pEngGame);
 
-  for(w = 0; w < SPACELENGTH; w++)
-  for(x = 0; x < XSIZE; x++)
-  for(y = 0; y < YSIZE; y++)
-  for(z = 0; z < ZSIZE; z++)
+  for(w = 0; w < pEngGame->spaceLength; w++)
+    for(x = 0; x < pEngGame->xsize; x++)
+      for(y = 0; y < pEngGame->ysize; y++)
+        for(z = 0; z < pEngGame->zsize; z++)
   {
     if (solid.c[w][x][y][z])
     {
@@ -420,19 +432,19 @@ static void engKillFullLevels(tEngGame *pEngGame)
   int clearedLevels = 0;
 
   /*  for every level */
-  for(t = 0; t < SPACELENGTH; t++)
+  for(t = 0; t < pEngGame->spaceLength; t++)
   {
     /*  if full level found */
-    if (engEqLevel(pEngGame->space[t], 1))
+    if (engEqLevel(pEngGame->space[t], 1, pEngGame))
     {
       /*  step down every higher level */
-      for (tn = t+1; tn < SPACELENGTH; tn++)
+      for (tn = t+1; tn < pEngGame->spaceLength; tn++)
       {
         /*  get the next level */
-        engCopyLevel(pEngGame->space[tn-1], pEngGame->space[tn]);
+        engCopyLevel(pEngGame->space[tn-1], pEngGame->space[tn], pEngGame);
       } /*  end of every level */
      /*  0 on the top level */
-     engClearLevel(pEngGame->space[SPACELENGTH-1]);
+     engClearLevel(pEngGame->space[pEngGame->spaceLength-1], pEngGame);
      clearedLevels++;
 
      /*  step back with the loop counter to get the same level checked again */
@@ -479,13 +491,13 @@ int engLowerSolid(tEngGame *pEngGame)
     /*  if reached the floor, */
     if (onFloor)
     {
-      tEngSolid solid = engObject2Solid(pEngGame->object, NULL);
+      tEngSolid solid = engObject2Solid(pEngGame->object, NULL, pEngGame);
 
       /*  put the solid to the space */
-      for(w = 0; w < SPACELENGTH; w++)
-      for(x = 0; x < XSIZE; x++)
-      for(y = 0; y < YSIZE; y++)
-      for(z = 0; z < ZSIZE; z++)
+      for(w = 0; w < pEngGame->spaceLength; w++)
+        for(x = 0; x < pEngGame->xsize; x++)
+          for(y = 0; y < pEngGame->ysize; y++)
+            for(z = 0; z < pEngGame->zsize; z++)
       {
         pEngGame->space[w][x][y][z] |= solid.c[w][x][y][z];
       }
@@ -599,16 +611,16 @@ void engPrintSpace(tEngGame *pEngGame)
 {
   int w, x, y, z;
 
-  tEngSolid solid = engObject2Solid(pEngGame->object, NULL);
+  tEngSolid solid = engObject2Solid(pEngGame->object, NULL, pEngGame);
 
-  for(y = YSIZE-1; y >= 0; y--)
+  for(y = pEngGame->ysize-1; y >= 0; y--)
   {
-    for(z = ZSIZE-1; z >= 0 ; z--)
+    for(z = pEngGame->zsize-1; z >= 0 ; z--)
     {
       printf((z == 1) ? " " : "");
-      for(w = 0; w < SPACELENGTH; w++)
+      for(w = 0; w < pEngGame->spaceLength; w++)
       {
-        for(x = 0; x < XSIZE; x++)
+        for(x = 0; x < pEngGame->xsize; x++)
         {
           printf(pEngGame->space[w][x][y][z] ? "X" :
                  solid.c[w][x][y][z]         ? "#" :
