@@ -61,7 +61,7 @@ static double g4dMaxW;
 static tM4dMatrix g4dViewport;
 
 /** Enable flag for auto viewprot rotation */
-static int g4dAutoRotationEnabled = 1;
+static int g4dAutoRotationEnabled = 0;
 
 /** Actual View type (projection mode from 4D to 3D) */
 static tG4dViewType g4dViewType = eG4d1PointProjection;
