@@ -259,7 +259,7 @@ static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2],
   {
     /* indicates, which orientation 'i' block is neighbor with 'n'
        -1 = not found, -2 = no neighbor */
-    eM4dAxis orientation = -1;
+    int orientation = -1;
     eM4dAxis axis;
 
     tM4dVector sub =
