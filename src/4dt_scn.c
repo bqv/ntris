@@ -141,33 +141,16 @@ static void scnInitLevelColors(void)
 {
   /*  Loop counters. */
   int i, j;
-  double mean;
 
   /*  For each level of the game space, */
   for (i = 0; i < SPACELENGTH; i++)
   {
-    mean = 0;
-
     /*  for each color component */
     for (j = 0; j < 3; j++)
     {
-      /*  create a random value. */
-      scnLevelColors[i][j] = (double)rand() / RAND_MAX;
-
-      mean += scnLevelColors[i][j] / 3;
+      scnLevelColors[i][j] = 0.48 + 0.24 * cos((i-0.2)+2*(2-j)*M_PI/3.0);
     }
 
-    /*  normalize */
-/*    for (j = 0; j < 3; j++)
-    {
-      scnLevelColors[i][j] = 1.5 * scnLevelColors[i][j] * mean;
-
-      if (scnLevelColors[i][j] > 1.0)
-      {
-        scnLevelColors[i][j] = 1.0;
-      }
-    }
-*/
     /*  Set the color's alpha component. */
     scnLevelColors[i][3] = 1.0;
   }
@@ -233,11 +216,6 @@ static void scnDrawRotAxis(int axle, tEngGame *pEngGame)
 /** Initialize the scene */
 void scnInit(void)
 {
-  /*  Initialize random number generator with the */
-  /*  Answer to the Ultimate Question of Life, the Universe, and Everything */
-  /*  to get always the same colors for levels. */
-  srand(42);
-
   scnInitLevelColors();
 }
 

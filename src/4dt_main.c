@@ -143,6 +143,7 @@ int main(int argc, char *argv[])
   scnInit();
 
   SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
+  SDL_EnableKeyRepeat(100,SDL_DEFAULT_REPEAT_INTERVAL);
 
   screen = SDL_SetVideoMode(640, 480, 16, SDL_OPENGL|SDL_RESIZABLE);
   if (!screen)
