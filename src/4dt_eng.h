@@ -98,7 +98,9 @@ typedef struct
   } animation;
 
   /** id of drop down timer */
-  int fnID_dropdown;
+  int *fnID_dropdown;
+  /** id of lowering timer */
+  int *fnID_lower;
 
   /** struct of game options */
   tEngGameOptions game_opts;

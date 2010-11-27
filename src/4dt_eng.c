@@ -338,9 +338,11 @@ void engResetGame(tEngGame *pEngGame)
   pEngGame->animation.posDecrease = 0;
   pEngGame->animation.transform   = m4dUnitMatrix();
 
-  setTimerCallback(engGetTimestep(pEngGame), engTimer, pEngGame);
-
+  clearTimerCallback(pEngGame->fnID_lower);
   clearTimerCallback(pEngGame->fnID_dropdown);
+
+  pEngGame->fnID_lower =
+    setTimerCallback(engGetTimestep(pEngGame), engTimer, pEngGame);
 }
 
 
@@ -355,6 +357,7 @@ void engInitGame(tEngGame *pEngGame)
   pEngGame->animation.enable = 1;
   pEngGame->activeUser = 0;
   pEngGame->fnID_dropdown    = NULL;
+  pEngGame->fnID_lower       = NULL;
 
   /*  reset parameters */
   engResetGame(pEngGame);
