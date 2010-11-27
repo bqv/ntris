@@ -139,7 +139,7 @@ static int engGetTimestep(tEngGame *pEngGame)
 /** Drop object */
 void engDropSolid(tEngGame *pEngGame)
 {
-  setTimerCallback(1, engDropSolidTimer, pEngGame);
+  pEngGame->fnID_dropdown = setTimerCallback(1, engDropSolidTimer, pEngGame);
 }
 
 /** Timer for drop object */
@@ -151,6 +151,7 @@ static int engDropSolidTimer(int interval, tEngGame *pEngGame)
   }
   else
   {
+    pEngGame->fnID_dropdown = NULL;
     return(0);
   }
 }
@@ -330,7 +331,6 @@ void engResetGame(tEngGame *pEngGame)
    
   /*  init score value */
   pEngGame->score = 0;
-
   pEngGame->gameOver = 0;
 
   pEngGame->animation.num = 0;
@@ -339,6 +339,8 @@ void engResetGame(tEngGame *pEngGame)
   pEngGame->animation.transform   = m4dUnitMatrix();
 
   setTimerCallback(engGetTimestep(pEngGame), engTimer, pEngGame);
+
+  clearTimerCallback(pEngGame->fnID_dropdown);
 }
 
 
@@ -352,6 +354,7 @@ void engInitGame(tEngGame *pEngGame)
   pEngGame->game_opts.diff = 2;
   pEngGame->animation.enable = 1;
   pEngGame->activeUser = 0;
+  pEngGame->fnID_dropdown    = NULL;
 
   /*  reset parameters */
   engResetGame(pEngGame);
