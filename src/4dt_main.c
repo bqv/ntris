@@ -94,11 +94,19 @@ void *getSDLScreen(void) { return((void *)screen); }
 */
 
 /** Sets a timer to call back the function passed after given time (msec) */
-void setTimerCallback(int time,
+int *setTimerCallback(int time,
                       int (*callback)(int interval, void *param),
                       void *param)
 {
-  SDL_AddTimer(time, callback, param);
+  return(SDL_AddTimer(time, callback, param));
+}
+
+/** Remove the previously set timer */
+void clearTimerCallback(int *id)
+{
+  SDL_RemoveTimer(id);
+
+  return;
 }
 
 

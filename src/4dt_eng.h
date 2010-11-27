@@ -97,6 +97,9 @@ typedef struct
     double posDecrease;   /** position decreasion to be performed */
   } animation;
 
+  /** id of drop down timer */
+  int fnID_dropdown;
+
   /** struct of game options */
   tEngGameOptions game_opts;
 
