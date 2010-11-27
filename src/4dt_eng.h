@@ -97,6 +97,9 @@ typedef struct
     tM4dVector translation; /**< translation vector */
   } animation;
 
+  /** id of drop down timer */
+  int fnID_dropdown;
+
   /** struct of game options */
   tEngGameOptions game_opts;
 
