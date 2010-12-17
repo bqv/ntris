@@ -66,9 +66,12 @@ typedef struct
 }
 tEngGameOptions;
 
+typedef struct sEngGame tEngGame;
+
+typedef void (*tEngGameEvent)(tEngGame *pEngGame);
 
 /** sturct of the game variables */
-typedef struct
+struct sEngGame
 {
   /** the game space  */
   tEngLevel space[SPACELENGTH];
@@ -84,6 +87,8 @@ typedef struct
   int solidnum;
   /** engine locked while animation running */
   int lock;
+  /** engine suspended while menu on (no lowering) */
+  int suspended;
   /** levels of gamespace */
   int spaceLength;
   /** game space level sizes (x, y, z) */
@@ -105,14 +110,16 @@ typedef struct
   /** struct of game options */
   tEngGameOptions game_opts;
 
-} tEngGame;
+  /** Event handler call back for game over */
+  tEngGameEvent onGameOver;
+};
 
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
 extern void engResetGame(tEngGame *pEngGame);
-extern void engInitGame(tEngGame *pEngGame);
+extern void engInitGame(tEngGame *pEngGame, tEngGameEvent onGameOver);
 extern int engLowerSolid(tEngGame *pEngGame);
 extern void engDropSolid(tEngGame *pEngGame);
 extern int engTurn(char ax1, char ax2, tEngGame *pEngGame);

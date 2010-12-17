@@ -16,8 +16,6 @@
 #include <SDL/SDL_ttf.h>
 
 #include "4dt_m3d.h"
-#include "4dt_eng.h"
-#include "4dt_scn.h"
 #include "4dt_g3d.h"
 
 /*------------------------------------------------------------------------------
@@ -69,20 +67,14 @@ static void g3dDrawSphere(tM3dVector o, double radius);
 
 /* TODO: do not use viewmode, or export type from here. */
 /** \brief Starts the actual frame drawing */
-void g3dBeginDraw(int x, int y, int z, int picnum, tScnViewMode viewMode)
+void g3dBeginDraw(int x, int y, int z, int picnum, int anaglyph)
 {
-  /*  Clear the display buffer. */
-  if (picnum == 0)
-  {
-    glClear(GL_COLOR_BUFFER_BIT);
-  }
-
-  if ((picnum == 0) || (viewMode == eScnViewAnaglyph))
+  if ((picnum == 0) || (anaglyph == 1))
   {
     glClear(GL_DEPTH_BUFFER_BIT);
   }
 
-  if (viewMode == eScnViewAnaglyph)
+  if (anaglyph == 1)
   {
     if (picnum == 0)
     {
@@ -103,7 +95,7 @@ void g3dBeginDraw(int x, int y, int z, int picnum, tScnViewMode viewMode)
   glRotated(-75.0, 1, 0, 0);
   glRotated(20.0, 0, 0, 1);
 
-  if (viewMode == eScnViewAnaglyph)
+  if (anaglyph == 1)
   {
     glRotated((picnum == 0) ? 0 : -4, 0, 0, 1);
   }

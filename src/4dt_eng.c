@@ -14,16 +14,10 @@
 #include <time.h>
 #include <math.h>
 
-#include "4dt_main.h"
+#include "4dt_timer.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
-#include "4dt_hst.h"
 #include "4dt_eng.h"
-#include "4dt_scn.h"
-#include "4dt_g3d.h"
-#include "4dt_g4d.h"
-#include "4dt_menu.h"
-#include "4dt_ai.h"
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -156,7 +150,7 @@ static int engTimer(int interval, tEngGame *pEngGame)
 {
   if (pEngGame->gameOver == 0)
   {
-    if (!menuIsActived())
+    if (pEngGame->suspended == 0)
     {
       engLowerSolid(pEngGame);
     }
@@ -175,11 +169,10 @@ static void engGameOver(tEngGame *pEngGame)
   pEngGame->gameOver = 1;
   pEngGame->activeUser = 0;
 
-  aiSetActive(0, pEngGame);
-
-  hstAddScore(pEngGame->score);
-
-  menuGotoItem(eMenuGameOver);
+  if (pEngGame->onGameOver != NULL)
+  {
+    pEngGame->onGameOver(pEngGame);
+  }
 }
 
 /** Performing the queued transformation, return flag indicates if more
@@ -318,6 +311,7 @@ void engResetGame(tEngGame *pEngGame)
 
   pEngGame->animation.num = 0;
   pEngGame->lock = 0;
+  pEngGame->suspended        = 0;
 
   pEngGame->animation.translation = m4dNullVector();
   pEngGame->animation.transform   = m4dUnitMatrix();
@@ -331,7 +325,7 @@ void engResetGame(tEngGame *pEngGame)
 
 
 /** initialize the game variables */
-void engInitGame(tEngGame *pEngGame)
+void engInitGame(tEngGame *pEngGame, tEngGameEvent onGameOver)
 {
   /*  initialize random generator */
   srand(time(NULL));
@@ -346,6 +340,10 @@ void engInitGame(tEngGame *pEngGame)
   pEngGame->size[2]          = 2;
   pEngGame->fnID_dropdown    = NULL;
   pEngGame->fnID_lower       = NULL;
+  pEngGame->suspended        = 0;
+  pEngGame->lock = 0;
+
+  pEngGame->onGameOver       = onGameOver;
 
   /*  reset parameters */
   engResetGame(pEngGame);

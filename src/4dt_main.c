@@ -59,7 +59,6 @@
 #include "4dt_ui.h"
 #include "4dt_menu.h"
 #include "4dt_hst.h"
-#include "4dt_main.h"
 
 /*
 --------------------------------------------------------------------------------
@@ -80,6 +79,7 @@ static SDL_Surface *screen;
 */
 
 static void processARGV(int argc, char *argv[]);
+static void onGameOver(tEngGame *pEngGame);
 
 /*
 --------------------------------------------------------------------------------
@@ -87,26 +87,17 @@ static void processARGV(int argc, char *argv[]);
 --------------------------------------------------------------------------------
 */
 
-void *getSDLScreen(void) { return((void *)screen); }
-
 /*------------------------------------------------------------------------------
     Event handlers
 */
 
-/** Sets a timer to call back the function passed after given time (msec) */
-int *setTimerCallback(int time,
-                      int (*callback)(int interval, void *param),
-                      void *param)
+static void onGameOver(tEngGame *pEngGame)
 {
-  return(SDL_AddTimer(time, callback, param));
-}
+  aiSetActive(0, pEngGame);
 
-/** Remove the previously set timer */
-void clearTimerCallback(int *id)
-{
-  SDL_RemoveTimer(id);
+  hstAddScore(pEngGame->score);
 
-  return;
+  menuGotoItem(eMenuGameOver);
 }
 
 /** Process command line arguments */
@@ -142,7 +133,7 @@ int main(int argc, char *argv[])
   textdomain("4dtris");
 
   /*  Initialize the game engine. */
-  engInitGame(&engGame);
+  engInitGame(&engGame, &onGameOver);
 
   /*  Initialize/load High Score table */
   hstInit();
@@ -177,6 +168,7 @@ int main(int argc, char *argv[])
   aiSetActive(1, &engGame);
 
   g3dResize(screen->w, screen->h);
+  gtxtResize(screen->w, screen->h);
   done = 0;
 
   while ( ! done )
@@ -199,6 +191,7 @@ int main(int argc, char *argv[])
           if ( screen )
           {
             g3dResize(screen->w, screen->h);
+            gtxtResize(screen->w, screen->h);
           }
           break;
         }

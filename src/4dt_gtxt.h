@@ -28,4 +28,6 @@ extern void g3dRenderText(double x, double y,
                           int lineNum,
                           double lineSpace);
 
+extern void gtxtResize(int width, int height);
+
 #endif /* _4DT_GTXT_H_ */

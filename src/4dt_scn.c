@@ -18,7 +18,7 @@
 #include "4dt_g3d.h"
 #include "4dt_gtxt.h"
 #include "4dt_g4d.h"
-#include "4dt_menu.h"
+#include "4dt_timer.h"
 
 
 /*------------------------------------------------------------------------------
@@ -410,7 +410,7 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
       camz = -6;
     }
 
-    g3dBeginDraw(camx, 0, camz, pic, pScnSet->viewMode);
+    g3dBeginDraw(camx, 0, camz, pic, pScnSet->viewMode == eScnViewAnaglyph);
 
     if ((pic == 0)
         || (pScnSet->viewMode == eScnViewAnaglyph))

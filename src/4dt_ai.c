@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#include "4dt_main.h"
+#include "4dt_timer.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_ai.h"

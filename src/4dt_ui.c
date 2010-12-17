@@ -18,7 +18,7 @@
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
 #include "4dt_menu.h"
-#include "4dt_main.h"
+#include "4dt_timer.h"
 
 #include "4dt_ui.h"
 

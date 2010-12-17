@@ -13,8 +13,6 @@
 #include <SDL/SDL_ttf.h>
 #include <libintl.h>
 
-#include "4dt_main.h"
-
 /*------------------------------------------------------------------------------
    TYPES
 ------------------------------------------------------------------------------*/
@@ -22,6 +20,10 @@
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
 ------------------------------------------------------------------------------*/
+
+
+static int gtxtWidth;
+static int gtxtHeight;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
@@ -37,6 +39,11 @@ int nextpoweroftwo(int x)
   return round(pow(2,ceil(logbase2)));
 }
 
+void gtxtResize(int width, int height)
+{
+  gtxtWidth = width;
+  gtxtHeight = height;
+}
 
 void SDL_GL_RenderText(char *text,
                       TTF_Font *font,
@@ -121,7 +128,7 @@ void g3dRenderString(double x, double y,
 
   font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-liberation/"
                       "LiberationSans-BoldItalic.ttf",
-                      ((SDL_Surface *)getSDLScreen())->h / 24);
+                      gtxtHeight / 24);
   if (font == NULL) {
      printf("Unable to load font: %s \n", TTF_GetError());
   }
@@ -153,8 +160,8 @@ void g3dRenderString(double x, double y,
    * space of most 2D api's. position, therefore,
    * gives the X,Y coordinates of the lower-left corner of the
    * rectangle **/
-  position.x = ((SDL_Surface *)getSDLScreen())->w * x;
-  position.y = ((SDL_Surface *)getSDLScreen())->h * y;
+  position.x = gtxtWidth * x;
+  position.y = gtxtHeight * y;
   SDL_GL_RenderText(string, font, colorf, &position, color[3]);
 
   /* Come out of HUD mode */

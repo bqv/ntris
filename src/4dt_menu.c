@@ -55,6 +55,8 @@ typedef struct
    PROTOTYPES
 ------------------------------------------------------------------------------*/
 
+static void menuOn(void);
+static void menuOff(void);
 static void menuNew(void);
 static void menuSound(void);
 static void menuMusic(void);
@@ -83,7 +85,7 @@ static tMenuItem menuItems[eMenuItemNum] =
 {
 /* en, caption,         activate,      deact., parent,            submenus */
   {0, "",               NULL,          NULL,   eMenuNull,         {eMenuNull}},
-  {0, "",               NULL,          NULL,   eMenuOFF,          {eMenuRoot, eMenuNull}},
+  {0, "",               menuOff,       menuOn, eMenuOFF,          {eMenuRoot, eMenuNull}},
   {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
   {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
   {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
@@ -321,6 +323,16 @@ void menuDraw(void)
 /*------------------------------------------------------------------------------
    MENUITEM CALLBACK FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+static void menuOn(void)
+{
+  pMenuEngGame->suspended = 1;
+}
+
+static void menuOff(void)
+{
+  pMenuEngGame->suspended = 0;
+}
 
 static void menuGameOver(void)
 {
