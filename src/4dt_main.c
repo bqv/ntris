@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
   int done;
   Uint8 *keys;
   int uiKey;
-  int w, h, ok;
+  int w, h, ok, temp;
 
   tEngGame engGame, engGameDraw;
   tScnSet scnSet = scnGetDefaultSet(), scnSetDraw;
@@ -162,12 +162,38 @@ int main(int argc, char *argv[])
 
   /*  Initialize the game engine. */
   engInitGame(&engGame, &onGameOver);
+  {
+    temp = confGetVar("spaceLength", &ok);
+    if (ok) { engGame.spaceLength = temp; }
+    temp = confGetVar("size_X", &ok);
+    if (ok) { engGame.size[0] = temp; }
+    temp = confGetVar("size_Y", &ok);
+    if (ok) { engGame.size[1] = temp; }
+    temp = confGetVar("size_Z", &ok);
+    if (ok) { engGame.size[2] = temp; }
+    temp = confGetVar("animation_enable", &ok);
+    if (ok) { engGame.animation.enable = temp; }
+    temp = confGetVar("game_opts_diff", &ok);
+    if (ok) { engGame.game_opts.diff = temp; }
+
+    engResetGame(&engGame);
+  }
 
   /*  Initialize/load High Score table */
   hstInit();
 
   /*  Set random colors for game levels */
   scnInit();
+  {
+    temp = confGetVar("enableHypercubeDraw", &ok);
+    if (ok) { scnSet.enableHypercubeDraw = temp; }
+    temp = confGetVar("enableSeparateBlockDraw", &ok);
+    if (ok) { scnSet.enableSeparateBlockDraw = temp; }
+    temp = confGetVar("enableGridDraw", &ok);
+    if (ok) { scnSet.enableGridDraw = temp; }
+    temp = confGetVar("viewMode", &ok);
+    if (ok) { scnSet.viewMode = temp; }
+  }
 
   SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
   SDL_EnableKeyRepeat(100,SDL_DEFAULT_REPEAT_INTERVAL);

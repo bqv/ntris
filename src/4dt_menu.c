@@ -18,7 +18,7 @@
 #include "4dt_g4d.h"
 #include "4dt_ai.h"
 #include "4dt_hst.h"
-
+#include "4dt_conf.h"
 #include "4dt_menu.h"
 
 /*------------------------------------------------------------------------------
@@ -414,6 +414,9 @@ static void menuLevel(void)
 
   pMenuEngGame->spaceLength = spaceLengths[pMenuEngGame->game_opts.diff];
 
+  confSetVar("game_opts_diff", pMenuEngGame->game_opts.diff);
+  confSetVar("spaceLength", pMenuEngGame->spaceLength);
+
   engResetGame(pMenuEngGame);
 
   g4dInit(pMenuEngGame->spaceLength);
@@ -440,6 +443,10 @@ static void menuSize(void)
   pMenuEngGame->size[0] = sizes[size][0];
   pMenuEngGame->size[1] = sizes[size][1];
   pMenuEngGame->size[2] = sizes[size][2];
+
+  confSetVar("size_X", pMenuEngGame->size[0]);
+  confSetVar("size_Y", pMenuEngGame->size[1]);
+  confSetVar("size_Z", pMenuEngGame->size[2]);
 
   engResetGame(pMenuEngGame);
   g4dReset();
@@ -477,6 +484,8 @@ static void menuAnimation(void)
 {
   pMenuEngGame->animation.enable = !pMenuEngGame->animation.enable;
 
+  confSetVar("animation_enable", pMenuEngGame->animation.enable);
+
   menuItems[eMenuAnimation].caption = (pMenuEngGame->animation.enable)
                                    ? "Animation - ON"
                                    : "Animation - OFF";
@@ -505,6 +514,9 @@ static void menuDrawmode(void)
   scnSetEnableHypercubeDraw(states[state].hypercubedraw, pMenuScnSet);
   scnSetEnableSeparateBlockDraw(states[state].separateBlockDraw, pMenuScnSet);
 
+  confSetVar("enableHypercubeDraw",     pMenuScnSet->enableHypercubeDraw);
+  confSetVar("enableSeparateBlockDraw", pMenuScnSet->enableSeparateBlockDraw);
+
   menuItems[eMenuDrawmode].caption = states[state].caption;
   menuNavigate(eMenuBack);
 }
@@ -516,6 +528,9 @@ static void menuGrid(void)
   menuItems[eMenuGrid].caption = scnGetEnableGridDraw(pMenuScnSet)
                                  ? "Grid - ON"
                                  : "Grid - OFF";
+
+  confSetVar("enableGridDraw", pMenuScnSet->enableGridDraw);
+
   menuNavigate(eMenuBack);
 }
 
@@ -532,6 +547,8 @@ static void menuStereo(void)
                   pMenuScnSet);
 
   menuItems[eMenuStereo].caption = captions[scnGetViewMode(pMenuScnSet)];
+
+  confSetVar("viewMode", pMenuScnSet->viewMode);
 
   menuNavigate(eMenuBack);
 }

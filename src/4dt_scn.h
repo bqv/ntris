@@ -33,7 +33,7 @@ typedef struct
   int enableGridDraw;
   /** selected axle for rotation */
   int axle;
-  /** temporary switch for stereo view */
+  /** switch for stereo view modes */
   tScnViewMode viewMode;
 }
 tScnSet;
