@@ -17,6 +17,7 @@ sources = 4dt_cptr.c \
           4dt_g4d.c  \
           4dt_hst.c  \
           4dt_ui.c   \
+          4dt_conf.c \
           4dt_timer.c
 
 objects = $(sources:.c=.o)

@@ -71,5 +71,7 @@ extern int  menuIsActived(void);
 extern void menuDraw(void);
 extern void menuNavigate(eMenuEvent event);
 extern void menuGotoItem(eMenuItem menuItem);
+extern void menuSetOnActivate(eMenuItem menuItem, void(*activate)(void));
+extern void menuSetOnDeactivate(eMenuItem menuItem, void(*deactivate)(void));
 
 #endif /* _4DT_MENU_H_ */

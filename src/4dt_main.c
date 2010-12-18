@@ -56,9 +56,11 @@
 #include "4dt_scn.h"
 #include "4dt_g3d.h"
 #include "4dt_g4d.h"
+#include "4dt_gtxt.h"
 #include "4dt_ui.h"
 #include "4dt_menu.h"
 #include "4dt_hst.h"
+#include "4dt_conf.h"
 
 /*
 --------------------------------------------------------------------------------
@@ -80,6 +82,8 @@ static SDL_Surface *screen;
 
 static void processARGV(int argc, char *argv[]);
 static void onGameOver(tEngGame *pEngGame);
+static void terminate(void);
+static void resize(int w, int h);
 
 /*
 --------------------------------------------------------------------------------
@@ -91,6 +95,16 @@ static void onGameOver(tEngGame *pEngGame);
     Event handlers
 */
 
+/** tasks on resize */
+static void resize(int w, int h)
+{
+  g3dResize(w, h);
+  gtxtResize(w, h);
+  confSetVar("WindowWidth", (double)w);
+  confSetVar("WindowHeight", (double)h);
+}
+
+/** Event handler of engine game over */
 static void onGameOver(tEngGame *pEngGame)
 {
   aiSetActive(0, pEngGame);
@@ -109,7 +123,17 @@ static void processARGV(int argc, char *argv[])
   {
     if (strcmp (argv[i], "--debug") == 0) { debugmode = 1; }
   }
+}
 
+/** Close tasks */
+static void terminate(void)
+{
+  TTF_Quit();
+  SDL_Quit();
+
+  confSave(confUserFilename("4dtris"));
+
+  exit(0);
 }
 
 /*------------------------------------------------------------------------------
@@ -122,11 +146,15 @@ int main(int argc, char *argv[])
   int done;
   Uint8 *keys;
   int uiKey;
+  int w, h, ok;
 
   tEngGame engGame, engGameDraw;
   tScnSet scnSet = scnGetDefaultSet(), scnSetDraw;
 
   processARGV(argc, argv);
+
+  confLoad(confUserFilename("4dtris"));
+  printf("Loaded\n");
 
   /* Initialize localization */
   setlocale(LC_ALL, "");
@@ -144,7 +172,10 @@ int main(int argc, char *argv[])
   SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
   SDL_EnableKeyRepeat(100,SDL_DEFAULT_REPEAT_INTERVAL);
 
-  screen = SDL_SetVideoMode(640, 480, 16, SDL_OPENGL|SDL_RESIZABLE);
+  w = confGetVar("WindowWidth", &ok); if (!ok) { w = 640; }
+  h = confGetVar("WindowHeight", &ok); if (!ok) { h = 480; }
+
+  screen = SDL_SetVideoMode(w, h, 16, SDL_OPENGL|SDL_RESIZABLE);
   if (!screen)
   {
     fprintf(stderr, "Couldn't set GL video mode: %s\n", SDL_GetError());
@@ -152,7 +183,13 @@ int main(int argc, char *argv[])
     exit(2);
   }
   SDL_WM_SetCaption("4DTris", "4dtris");
-  TTF_Init();
+
+  if (TTF_Init() != 0)
+  {
+    fprintf(stderr, "Couldn't initialise SDL_ttf!\n");
+    SDL_Quit();
+    exit(3);
+  }
 
   /*  initialise 3D drawing modul */
   g3dInit();
@@ -163,12 +200,12 @@ int main(int argc, char *argv[])
 
   /* Initialize menu */
   menuInit(&engGame, &scnSet);
+  menuSetOnActivate(eMenuQuit, &terminate);
 
   /*  start autoplayer */
   aiSetActive(1, &engGame);
 
-  g3dResize(screen->w, screen->h);
-  gtxtResize(screen->w, screen->h);
+  resize(screen->w, screen->h);
   done = 0;
 
   while ( ! done )
@@ -188,10 +225,9 @@ int main(int argc, char *argv[])
         {
           screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 16,
                                     SDL_OPENGL|SDL_RESIZABLE);
-          if ( screen )
+          if (screen)
           {
-            g3dResize(screen->w, screen->h);
-            gtxtResize(screen->w, screen->h);
+            resize(screen->w, screen->h);
           }
           break;
         }
@@ -251,9 +287,8 @@ int main(int argc, char *argv[])
     }
     SDL_Delay(delay);
   }
-  TTF_Quit();
-  SDL_Quit();
+  terminate();
 
   /*  Return with successed exit constant. */
-  return EXIT_SUCCESS;
+  return 0;
 }

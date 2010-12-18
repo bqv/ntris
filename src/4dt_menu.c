@@ -67,7 +67,6 @@ static void menuHelp(void);
 static void menuScores(void);
 static void menuAbout(void);
 static void menuBack(void);
-static void menuQuit(void);
 static void menuAnimation(void);
 static void menuGameOver(void);
 static void menuGameOverOff(void);
@@ -106,7 +105,7 @@ static tMenuItem menuItems[eMenuItemNum] =
   {1, "High Scores",    menuScores,    NULL,   eMenuHelp,         {eMenuNull}  },
   {1, "About",          menuAbout,     NULL,   eMenuHelp,         {eMenuNull}  },
   {0, "Back To Game",   menuBack,      NULL,   eMenuRoot,         {eMenuNull}  },
-  {1, "Quit",           menuQuit,      NULL,   eMenuRoot,         {eMenuNull}  },
+  {1, "Quit",           NULL,          NULL,   eMenuRoot,         {eMenuNull}  },
   {1, "",               menuGameOver, menuGameOverOff, eMenuRoot, {eMenuNewGame, eMenuHighScores, eMenuRoot, eMenuNull}  },
 };
 
@@ -319,6 +318,16 @@ void menuDraw(void)
   return;
 }
 
+void menuSetOnActivate(eMenuItem menuItem, void(*activate)(void))
+{
+  menuItems[menuItem].activate = activate;
+}
+
+void menuSetOnDeactivate(eMenuItem menuItem, void(*deactivate)(void))
+{
+  menuItems[menuItem].deactivate = deactivate;
+}
+
 /*------------------------------------------------------------------------------
    MENUITEM CALLBACK FUNCTIONS
 ------------------------------------------------------------------------------*/
@@ -462,11 +471,6 @@ static void menuBack(void)
 {
   menuNavigate(eMenuBack);
   menuNavigate(eMenuBack);
-}
-
-static void menuQuit(void)
-{
-  exit(EXIT_SUCCESS);
 }
 
 static void menuAnimation(void)
