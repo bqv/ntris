@@ -21,6 +21,14 @@ typedef enum
 }
 tG4dViewType;
 
+typedef enum
+{
+  eG4dWireNone = 0,
+  eG4dWireLine = 1,
+  eG4dWireTube = 2
+}
+tG4dWireType;
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
@@ -38,7 +46,8 @@ extern void g4dDraw4DCube(tM4dVector center,
                           tM4dMatrix orientation,
                           float color[4],
                           int dimension,
-                          tG3dFillMode mode,
+                          tG4dWireType wireMode,
+                          int fill,
                           int sideVisible[eM4dDimNum][2]);
 
 extern void g4dDrawLine(tM4dVector point0,

@@ -37,7 +37,7 @@
 const static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.35};
 const static float scn4DWireColor[4] = {0.8, 0.8, 0.9, 1.00};
 /** Color of the 4D grid. */
-const static float scn4DGridColor[4] = {1.0, 1.0, 1.0, 0.03};
+const static float scn4DGridColor[4] = {0.8, 0.8, 0.9, 0.35};
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -289,13 +289,7 @@ static void scnDrawGamespace(tEngGame *pEngGame,
                         m4dUnitMatrix(),
                         scnLevelColors[l],
                         pScnSet->enableHypercubeDraw ? 4 : 3,
-                        eG3dFillAndWire, NULL);
-
-          g4dDraw4DCube(scnPosToCoord(x, y, z, l, pEngGame),
-                        m4dUnitMatrix(),
-                        scnLevelColors[l],
-                        pScnSet->enableHypercubeDraw ? 4 : 3,
-                        eG3dWireTube, NULL);
+                        eG4dWireTube, 1, NULL);
 
           mask[x][y][z] = 1;
         }
@@ -317,7 +311,7 @@ static void scnDrawGrid(int enableGridDraw, tEngGame *pEngGame)
                     m4dMultiplyVM(m4dMultiplySV(2.0, scnCenter(pEngGame)),
                                   m4dUnitMatrix()),
                     scn4DGridColor, 4,
-                    eG3dWire, NULL);
+                    eG4dWireLine, 0, NULL);
     }
   }
 }
@@ -340,7 +334,8 @@ static void scnDrawBottomLevel(int mask[SPACESIZE][SPACESIZE][SPACESIZE],
       g4dDraw4DCube(scnPosToCoord(x, y, z, 0, pEngGame),
                     m4dUnitMatrix(),
                     scn4DCubeColor, 3,
-                    wire ? eG3dWireTube : eG3dFillAndWire, NULL);
+                    wire ? eG4dWireTube : eG4dWireNone,
+                    wire ? 0 : 1, NULL);
     }
   }
 }
@@ -370,7 +365,8 @@ static void scnDrawObject(tEngGame *pEngGame,
                   pEngGame->object.axices,
                   wire ? scn4DWireColor : scn4DCubeColor,
                   pScnSet->enableHypercubeDraw ? 4 : 3,
-                  wire ? eG3dWireTube : eG3dFillAndWire,
+                  wire ? eG4dWireTube : eG4dWireNone,
+                  wire ? 0 : 1,
                   pScnSet->enableSeparateBlockDraw ? NULL : visibleSides);
   }
 }
@@ -420,17 +416,21 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 
     scnDrawGamespace(pEngGame, pScnSet, mask);
 
-    scnDrawGrid(pScnSet->enableGridDraw, pEngGame);
-
     scnDrawBottomLevel(mask, 1, pEngGame);
 
     scnDrawObject(pEngGame, pScnSet, 1);
+
+    g3dSetTransparentMode(1);
+
+    scnDrawGrid(pScnSet->enableGridDraw, pEngGame);
 
     scnDrawBottomLevel(mask, 0, pEngGame);
 
     scnDrawObject(pEngGame, pScnSet, 0);
 
     scnDrawRotAxis(pScnSet->axle, pEngGame);
+
+    g3dSetTransparentMode(0);
 
     if ((pic == maxpic-1)
         || (pScnSet->viewMode == eScnViewAnaglyph))

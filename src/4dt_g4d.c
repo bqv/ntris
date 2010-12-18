@@ -74,7 +74,8 @@ static double g4dPerspFact(double w);
 
 static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
-                        tG3dFillMode mode,
+                        tG4dWireType wireMode,
+                        int fill,
                         int sideVisible[4]);
 
 static tM3dVector g4dProject(tM4dVector vector);
@@ -341,7 +342,8 @@ void g4dDrawLine(tM4dVector point0,
 /** \brief Draws 4D polygon */
 static void g4dDrawPoly(tM4dVector points[4],
                         float color[4],
-                        tG3dFillMode mode,
+                        tG4dWireType wireMode,
+                        int fill,
                         int sideVisible[4])
 {
   tM3dVector points3D[4];
@@ -352,7 +354,18 @@ static void g4dDrawPoly(tM4dVector points[4],
     points3D[i] = g4dProject(points[i]);
   }
 
-  g3dDrawPoly(points3D, color, mode, sideVisible);
+  if (fill)
+  {
+    g3dDrawPolyFill(points3D, color, sideVisible);
+  }
+
+  switch(wireMode)
+  {
+  case eG4dWireLine:    g3dDrawPolyWire(points3D, color, sideVisible); break;
+  case eG4dWireTube:    g3dDrawPolyTube(points3D, color, sideVisible); break;
+  case eG4dWireNone:
+  default:              break;
+  }
 }
 
 
@@ -361,7 +374,8 @@ void g4dDraw4DCube(tM4dVector center,
                    tM4dMatrix orientation,
                    float color[4],
                    int dimension,
-                   tG3dFillMode mode,
+                   tG4dWireType wireMode,
+                   int fill,
                    int sideVisible[eM4dDimNum][2])
 {
   /*  Array contains the points of a 4D hypercube. */
@@ -451,7 +465,7 @@ void g4dDraw4DCube(tM4dVector center,
 
     if (facetVisible)
     {
-      g4dDrawPoly(pointlist, color, mode, sideVisible);
+      g4dDrawPoly(pointlist, color, wireMode, fill, sideVisible);
     }
   }
 }

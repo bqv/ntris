@@ -68,7 +68,7 @@ sub printdot()
     $data->{$_}->{num} = $n++;
     my $label = $_."|".join("\\n",sort(keys(%{$data->{$_}->{fields}})));
     my $url   = '';
-    print OUT "a$data->{$_}->{num} [shape=record,label = \"$label\", href=\"$url\"];\n";
+    print OUT "$_ [shape=record,label = \"$label\", href=\"$url\"];\n";
   }
 
   for (sort(keys(%{$data})))
@@ -81,7 +81,7 @@ sub printdot()
     {
       #print "print include $_\n";
 
-      print OUT "a$data->{$_}->{num} -> a$data->{$file}->{num} ;\n";
+      print OUT "$_ -> $file;\n";
     }
   }
 

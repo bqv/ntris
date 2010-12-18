@@ -6,3 +6,5 @@ src/4dtris
 .project
 Debug
 Debug
+doc/gen/4dtris-sw-struct.dot
+doc/gen/4dtris-sw-struct.png

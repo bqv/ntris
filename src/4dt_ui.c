@@ -15,7 +15,6 @@
 #include "4dt_eng.h"
 #include "4dt_ai.h"
 #include "4dt_scn.h"
-#include "4dt_g3d.h"
 #include "4dt_g4d.h"
 #include "4dt_menu.h"
 #include "4dt_timer.h"

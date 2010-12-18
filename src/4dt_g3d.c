@@ -65,7 +65,22 @@ static void g3dDrawSphere(tM3dVector o, double radius);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-/* TODO: do not use viewmode, or export type from here. */
+/** Sets/unsets transparent mode: Blend + no Depthmask */
+void g3dSetTransparentMode(int enable)
+{
+  if (enable)
+  {
+    glDepthMask(GL_FALSE);
+    glEnable(GL_BLEND);
+  }
+  else
+  {
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
+  }
+}
+
+
 /** \brief Starts the actual frame drawing */
 void g3dBeginDraw(int x, int y, int z, int picnum, int anaglyph)
 {
@@ -257,106 +272,89 @@ static void g3dDrawSphere(tM3dVector o, double radius)
   gluDeleteQuadric(quadric);
 }
 
-/** \brief Draw quad with given coordinates, color, style. */
-void g3dDrawPoly(tM3dVector points[4],
+/** \brief Draw quadratic polygon wire with given coordinates, color. */
+void g3dDrawPolyWire(tM3dVector points[4],
                  float color[4],
-                 tG3dFillMode mode,
                  int sideVisible[4])
 {
-  const double lineWidth = 0.04;
-
-  /*  loop counters */
   int k;
-  int transparent;
-  /*  Normal vector of the actual facet. */
-  tM3dVector norm;
-  /*  Vectors of two edge of the facet. */
-  tM3dVector v1;
-  tM3dVector v2;
-
-  /*  calculate two vector of two edge from the points. */
-  v1 = m3dSub(points[1], points[0]);
-  v2 = m3dSub(points[3], points[0]);
-
-  /*  Calculate normal vector. */
-  norm = m3dCalcNormal(v1, v2);
 
   /*  Set the color of the facet. */
   glColor4d(color[0], color[1], color[2], color[3]);
 
-  transparent = (color[3] < 1.0);
-
-  if (transparent)
+  /*  For each point of the facet */
+  for (k = 0; k < 4; k++)
   {
-    glDepthMask(GL_FALSE);
-    glEnable(GL_BLEND);
-  }
-
-  if (mode < eG3dWire)
-  {
-    /*  Start draw a quad. */
-    glBegin(GL_QUADS);
-    /*  Set the normal vector. */
-    glNormal3d(norm.c[0], norm.c[1], norm.c[2]);
-
-    /*  For each point of the facet */
-    for (k = 0; k < 4; k++)
+    if ((sideVisible == NULL) || (sideVisible[k] == 1))
     {
-      /*  set the points of the quad. */
+      glBegin(GL_LINE);
+
       glVertex3d(points[k].c[0],
                  points[k].c[1],
                  points[k].c[2]);
-    }
-    /*  Finish drawing. */
-    glEnd();
-  }
 
-  /*  if enabled wire draw */
-  if (mode > eG3dFill)
+      glVertex3d(points[(k+1) % 4].c[0],
+                 points[(k+1) % 4].c[1],
+                 points[(k+1) % 4].c[2]);
+      glEnd();
+    }
+  }
+}
+
+/** Draw quadratic polygon wire from tubes with given coordinates, color. */
+void g3dDrawPolyTube(tM3dVector points[4],
+                     float color[4],
+                     int sideVisible[4])
+{
+  const double lineWidth = 0.04;
+
+  int k;
+
+  /*  Set the color of the facet. */
+  glColor4d(color[0], color[1], color[2], color[3]);
+
+  /*  For each point of the facet */
+  for (k = 0; k < 4; k++)
   {
-    /*  For each point of the facet */
-    for (k = 0; k < 4; k++)
+    if ((sideVisible == NULL) || (sideVisible[k] == 1))
     {
-      if ((sideVisible == NULL) || (sideVisible[k] == 1))
-      {
-        if(mode == eG3dWireTube)
-        {
-          glDepthMask(GL_TRUE);
-          glDisable(GL_BLEND);
+      g3dDrawSphere(points[k], lineWidth/2.0);
 
-          g3dDrawSphere(points[k], lineWidth/2.0);
-
-          g3dDrawCylinder(points[k],
-                          points[(k+1) % 4],
-                          lineWidth/2.0);
-        }
-        else
-        {
-          if (mode == eG3dWire)
-          {
-            glDisable(GL_LIGHTING);
-          }
-          glBegin(GL_LINE);
-
-          glVertex3d(points[k].c[0],
-                     points[k].c[1],
-                     points[k].c[2]);
-
-          glVertex3d(points[(k+1) % 4].c[0],
-                     points[(k+1) % 4].c[1],
-                     points[(k+1) % 4].c[2]);
-          glEnd();
-        }
-      }
+      g3dDrawCylinder(points[k],
+                      points[(k+1) % 4],
+                      lineWidth/2.0);
     }
   }
+}
 
-  if (transparent)
+/** \brief Draw filled quadratic polygon with given coordinates, color. */
+void g3dDrawPolyFill(tM3dVector points[4],
+                     float color[4],
+                     int sideVisible[4])
+{
+  int vertex;
+
+  /*  calculate two vector of two edge from the points. */
+  tM3dVector v1 = m3dSub(points[1], points[0]);
+  tM3dVector v2 = m3dSub(points[3], points[0]);
+
+  /*  Calculate normal vector. */
+  tM3dVector norm = m3dCalcNormal(v1, v2);
+
+  glColor4d(color[0], color[1], color[2], color[3]);
+
+  glBegin(GL_QUADS);
+
+  glNormal3d(norm.c[0], norm.c[1], norm.c[2]);
+
+  for (vertex = 0; vertex < 4; vertex++)
   {
-    glEnable(GL_LIGHTING);
-    glDepthMask(GL_TRUE);
-    glDisable(GL_BLEND);
+    glVertex3d(points[vertex].c[0],
+               points[vertex].c[1],
+               points[vertex].c[2]);
   }
+
+  glEnd();
 }
 
 /** \brief Resize function. */
