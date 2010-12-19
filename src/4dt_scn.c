@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "4dt_m.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
@@ -18,6 +19,7 @@
 #include "4dt_g3d.h"
 #include "4dt_gtxt.h"
 #include "4dt_g4d.h"
+#include "4dt_menu.h"
 #include "4dt_timer.h"
 
 
@@ -34,10 +36,10 @@
 ------------------------------------------------------------------------------*/
 
 /** Color of the 4D cube. */
-const static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.35};
-const static float scn4DWireColor[4] = {0.8, 0.8, 0.9, 1.00};
+static float scn4DCubeColor[4] = {0.4, 0.4, 0.6, 0.35};
+static float scn4DWireColor[4] = {0.8, 0.8, 0.9, 1.00};
 /** Color of the 4D grid. */
-const static float scn4DGridColor[4] = {0.8, 0.8, 0.9, 0.35};
+static float scn4DGridColor[4] = {0.8, 0.8, 0.9, 0.35};
 
 /*------------------------------------------------------------------------------
    GLOBAL VARIABLES
@@ -77,11 +79,10 @@ static void scnDrawGrid(int enableGridDraw, tEngGame *pEngGame);
 /** Returns with the coordinates of the center of the gamespace */
 static tM4dVector scnCenter(tEngGame *pEngGame)
 {
-  tM4dVector center = {{pEngGame->size[0]/2.0,
-                        pEngGame->size[1]/2.0,
-                        pEngGame->size[2]/2.0,
-                        0.0}};
-
+  tM4dVector center = m4dVector(pEngGame->size[0]/2.0,
+                                pEngGame->size[1]/2.0,
+                                pEngGame->size[2]/2.0,
+                                0.0);
   return(center);
 }
 
@@ -248,7 +249,7 @@ static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2],
       if (abs(sub.c[axis]) >= 0.5)
       {
         orientation = (orientation == -1)
-                      ? axis
+                      ? (int)axis
                       : -2;
       }
     }
@@ -375,7 +376,7 @@ static void scnDrawObject(tEngGame *pEngGame,
 void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 {
   /*  Local variables: */
-  int n, l, x, y, z;        /*  loop counter; */
+  int n, x, y, z;        /*  loop counter; */
 
   /*  mask indicates which block space */
   /*  hidden by upper blocks */

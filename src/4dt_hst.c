@@ -31,8 +31,8 @@
 /** Length of filename string */
 #define FILENAMELEN 32
 
-// I hate to do this, but
-/* creates char array initialiser from macro */
+/* I hate to do this, but
+   creates char array initialiser from macro */
 #define stringize(s)  #s
 #define string(s) stringize(s)
 
@@ -100,9 +100,10 @@ void hstGetScoreTab(char ***textTab, int scoreNum)
     }
     else
     {
-      length = sprintf(str,  "");
+      str[0] = '\0';
+      length = 0;
     }
-    // TODO: mem free missing
+    /* TODO: mem free missing */
     (*textTab)[n] = malloc(length+1);
     strcpy((*textTab)[n], str);
   }

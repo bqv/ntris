@@ -61,6 +61,7 @@
 #include "4dt_menu.h"
 #include "4dt_hst.h"
 #include "4dt_conf.h"
+#include "4dt_mou.h"
 
 /*
 --------------------------------------------------------------------------------
@@ -154,7 +155,6 @@ int main(int argc, char *argv[])
   processARGV(argc, argv);
 
   confLoad(confUserFilename("4dtris"));
-  printf("Loaded\n");
 
   /* Initialize localization */
   setlocale(LC_ALL, "");
@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
     SDL_Event event;
     Uint32 startFrame;
     Uint32 endFrame;
-    Uint32 delay;
+    int delay;
 
     startFrame = SDL_GetTicks();
 
@@ -292,6 +292,21 @@ int main(int argc, char *argv[])
           if(keys[SDLK_2])         { uiKey = '2';             }
           if(keys[SDLK_3])         { uiKey = '3';             }
           if(uiKey != 0) { uiKeyPress(uiKey, &engGame, &scnSet); }
+        }
+        case SDL_MOUSEMOTION:
+        {
+          mouMove(event.motion.x, event.motion.y);
+          break;
+        }
+        case SDL_MOUSEBUTTONDOWN:
+        {
+          mouDown(event.button.x, event.button.y);
+          break;
+        }
+        case SDL_MOUSEBUTTONUP:
+        {
+          mouUp(event.button.x, event.button.y);
+          break;
         }
       }
     }

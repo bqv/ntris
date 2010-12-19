@@ -58,7 +58,7 @@ void confLoad(char *filename)
   FILE *file = NULL;
   char name[256];
   char line[256];
-  double value;
+  float value;
 
   file = fopen(filename, "r");
 
@@ -66,7 +66,7 @@ void confLoad(char *filename)
   {
     while(fgets(line, sizeof(line), file) != NULL)
     {
-      if (sscanf(line, "%s = %lf", name, &value) == 2)
+      if (sscanf(line, "%s = %f", name, &value) == 2)
       {
         confSetVar((char *)name, value);
       }
@@ -143,7 +143,7 @@ void confSave(char *filename)
   {
     for(i = 0; i < confNum; i++)
     {
-      fprintf(file, "%s = %lf\n",confKeys[i], confVals[i]);
+      fprintf(file, "%s = %g\n",confKeys[i], confVals[i]);
     }
     fclose(file);
   }

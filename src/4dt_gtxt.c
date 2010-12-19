@@ -36,7 +36,7 @@ static int gtxtHeight;
 int nextpoweroftwo(int x)
 {
   double logbase2 = log(x) / log(2);
-  return round(pow(2,ceil(logbase2)));
+  return((int)pow(2,ceil(logbase2)));
 }
 
 void gtxtResize(int width, int height)
@@ -53,9 +53,8 @@ void SDL_GL_RenderText(char *text,
 {
   SDL_Surface *initial;
   SDL_Surface *intermediary;
-  SDL_Rect rect;
   int w,h;
-  int texture;
+  GLuint texture;
 
   /* Use SDL_TTF to render our text */
   initial = TTF_RenderUTF8_Blended(font, gettext(text), color);

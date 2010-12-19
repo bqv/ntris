@@ -15,6 +15,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
+#include "4dt_m.h"
 #include "4dt_m3d.h"
 #include "4dt_g3d.h"
 
@@ -329,8 +330,7 @@ void g3dDrawPolyTube(tM3dVector points[4],
 
 /** \brief Draw filled quadratic polygon with given coordinates, color. */
 void g3dDrawPolyFill(tM3dVector points[4],
-                     float color[4],
-                     int sideVisible[4])
+                     float color[4])
 {
   int vertex;
 

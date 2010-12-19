@@ -32,16 +32,16 @@
 
 /** Sets a timer to call back the function passed after given time (msec) */
 int *setTimerCallback(int time,
-                      int (*callback)(int interval, void *param),
+                      tTimerCallback callback,
                       void *param)
 {
-  return(SDL_AddTimer(time, callback, param));
+  return((int *)SDL_AddTimer(time, (SDL_NewTimerCallback)callback, param));
 }
 
 /** Remove the previously set timer */
 void clearTimerCallback(int *id)
 {
-  SDL_RemoveTimer(id);
+  SDL_RemoveTimer((SDL_TimerID)id);
 
   return;
 }

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <math.h>
 
 #include "4dt_timer.h"
 #include "4dt_m4d.h"
@@ -65,19 +66,21 @@ void aiSetActive(int active, tEngGame *pEngGame)
 
   if (timerMustStarted)
   {
-    setTimerCallback(0, aiTimer, pEngGame);
+    setTimerCallback(0, (tTimerCallback)aiTimer, pEngGame);
   }
 }
 
 /** Timer function for Autoplayer. */
 static int aiTimer(int interval, tEngGame *pEngGame)
 {
+  interval = aiTimeStepTurn;
+
   if (aiAutoGamerON)
   {
     if (pEngGame->gameOver == 0)
     {
       aiDoStep(pEngGame);
-      return(aiTimeStepTurn);
+      return(interval);
     }
     else
     {
@@ -287,9 +290,12 @@ static int aiSearchBestSitu(double CoG[],
   /*  Local variables: */
   int i,       /*  loop counter; */
       cntCog,  /*  counter for; */
-      cntTurn; /*  counter for turns; */
-  int bestSitusCog[situNum];  /*  best situation container array; */
-  int bestSitusTurn[situNum]; /*  best situation container array; */
+      cntTurn, /*  counter for turns; */
+      bestSitu;/*  selected best situation */
+  /*  best situation container array; */
+  int *bestSitusCog  = malloc(situNum * sizeof(int));
+  /*  best situation container array; */
+  int *bestSitusTurn = malloc(situNum * sizeof(int));
 
   /*  lowest value of Cog; */
   double lowerCog = INT_MAX;
@@ -359,7 +365,12 @@ static int aiSearchBestSitu(double CoG[],
     }
   }
 
+  bestSitu = bestSitusTurn[rand() % cntTurn];
+
+  free(bestSitusCog);
+  free(bestSitusTurn);
+
   /*  Select one from the best situations and return */
-  return bestSitusTurn[rand() % cntTurn];
+  return(bestSitu);
 
 }  /*  End of function. */

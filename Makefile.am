@@ -12,7 +12,9 @@ bin_PROGRAMS = 4dtris
                   src/4dt_hst.c   \
                   src/4dt_ui.c    \
                   src/4dt_conf.c  \
+                  src/4dt_mou.c   \
                   src/4dt_timer.c \
+                  src/4dt_m.h     \
                   src/4dt_ai.h    \
                   src/4dt_eng.h   \
                   src/4dt_menu.h  \
@@ -25,6 +27,7 @@ bin_PROGRAMS = 4dtris
                   src/4dt_hst.h   \
                   src/4dt_ui.h    \
                   src/4dt_conf.h  \
+                  src/4dt_mou.h   \
                   src/4dt_timer.h
 4dtris_LDADD = $(LIBOBJS)
 

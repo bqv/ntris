@@ -15,6 +15,7 @@
 #include <math.h>
 
 #include "4dt_timer.h"
+#include "4dt_m.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
@@ -128,7 +129,8 @@ static int engGetTimestep(tEngGame *pEngGame)
 /** Drop object */
 void engDropSolid(tEngGame *pEngGame)
 {
-  pEngGame->fnID_dropdown = setTimerCallback(1, engDropSolidTimer, pEngGame);
+  pEngGame->fnID_dropdown =
+      setTimerCallback(1, (tTimerCallback)engDropSolidTimer, pEngGame);
 }
 
 /** Timer for drop object */
@@ -136,13 +138,15 @@ static int engDropSolidTimer(int interval, tEngGame *pEngGame)
 {
   if (engLowerSolid(pEngGame))
   {
-    return(engDropSolidTimeStep);
+    interval = engDropSolidTimeStep;
   }
   else
   {
     pEngGame->fnID_dropdown = NULL;
-    return(0);
+    interval = 0;
   }
+
+  return(interval);
 }
 
 /** Timer function for Game engine. */
@@ -155,12 +159,14 @@ static int engTimer(int interval, tEngGame *pEngGame)
       engLowerSolid(pEngGame);
     }
 
-    return(engGetTimestep(pEngGame));
+    interval = engGetTimestep(pEngGame);
   }
   else
   {
-    return(0);
+    interval = 0;
   }
+
+  return(interval);
 }
 
 /** Game over handling */
@@ -219,10 +225,10 @@ static tEngSolid engObject2Solid(tEngObject object,
     vec = m4dMultiplyMV(object.axices, object.block.c[i]);
     vec = m4dAddVectors(object.pos, vec);
 
-    w = floorl(vec.c[eM4dAxisW]);
-    x = floorl(vec.c[eM4dAxisX]);
-    y = floorl(vec.c[eM4dAxisY]);
-    z = floorl(vec.c[eM4dAxisZ]);
+    w = (int)floor(vec.c[eM4dAxisW]);
+    x = (int)floor(vec.c[eM4dAxisX]);
+    y = (int)floor(vec.c[eM4dAxisY]);
+    z = (int)floor(vec.c[eM4dAxisZ]);
 
     if (    (x >= 0) && (x < pEngGame->size[0])
          && (y >= 0) && (y < pEngGame->size[1])
@@ -319,8 +325,9 @@ void engResetGame(tEngGame *pEngGame)
   clearTimerCallback(pEngGame->fnID_lower);
   clearTimerCallback(pEngGame->fnID_dropdown);
 
-  pEngGame->fnID_lower =
-    setTimerCallback(engGetTimestep(pEngGame), engTimer, pEngGame);
+  pEngGame->fnID_lower = setTimerCallback(engGetTimestep(pEngGame),
+                                          (tTimerCallback)engTimer,
+                                          pEngGame);
 }
 
 
@@ -488,7 +495,9 @@ int engLowerSolid(tEngGame *pEngGame)
                                                 -1.0 / pEngGame->animation.num);
         pEngGame->animation.transform   = m4dUnitMatrix();
 
-        setTimerCallback(engAnimationTimeStep, engAnimation, pEngGame);
+        setTimerCallback(engAnimationTimeStep,
+                         (tTimerCallback)engAnimation,
+                         pEngGame);
       }
     }
 
@@ -564,7 +573,9 @@ int engTurn(char ax1, char ax2, tEngGame *pEngGame)
         pEngGame->animation.transform   = m4dRotMatrix(ax1, ax2, M_PI / 2.0
                                                      / pEngGame->animation.num);
 
-        setTimerCallback(engAnimationTimeStep, engAnimation, pEngGame);
+        setTimerCallback(engAnimationTimeStep,
+                         (tTimerCallback)engAnimation,
+                         pEngGame);
       }
     }
   }
@@ -597,7 +608,9 @@ int engMove(char axle, int direction, tEngGame *pEngGame)
                                                         moveVector);
         pEngGame->animation.transform   = m4dUnitMatrix();
 
-        setTimerCallback(engAnimationTimeStep, engAnimation, pEngGame);
+        setTimerCallback(engAnimationTimeStep,
+                         (tTimerCallback)engAnimation,
+                         pEngGame);
       }
     }
   }

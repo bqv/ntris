@@ -1,17 +1,27 @@
-# Project: 4dtris
-# Makefile created by Dev-C++ 4.9.9.2
-
-CPP  = g++.exe
+SRCS = src/4dt_cptr.c \
+       src/4dt_ai.c   \
+       src/4dt_eng.c  \
+       src/4dt_main.c \
+       src/4dt_menu.c \
+       src/4dt_scn.c  \
+       src/4dt_m3d.c  \
+       src/4dt_m4d.c  \
+       src/4dt_g3d.c  \
+       src/4dt_gtxt.c \
+       src/4dt_g4d.c  \
+       src/4dt_hst.c  \
+       src/4dt_ui.c   \
+       src/4dt_conf.c \
+       src/4dt_mou.c  \
+       src/4dt_timer.c
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 4dtris_private.res
-OBJ  = src/4dt_ai.o src/4dt_eng.o src/4dt_g3d.o src/4dt_g4d.o src/4dt_gtxt.o src/4dt_timer.o src/4dt_hst.o src/4dt_m3d.o src/4dt_m4d.o src/4dt_main.o src/4dt_menu.o src/4dt_scn.o src/4dt_ui.o src/4dt_conf.o $(RES)
-LINKOBJ  = src/4dt_ai.o src/4dt_eng.o src/4dt_g3d.o src/4dt_g4d.o src/4dt_gtxt.o src/4dt_timer.o src/4dt_hst.o src/4dt_m3d.o src/4dt_m4d.o src/4dt_main.o src/4dt_menu.o src/4dt_scn.o src/4dt_ui.o src/4dt_conf.o $(RES)
+OBJ  = $(SRCS:.c=.o) $(RES)
+LINKOBJ  = $(SRCS:.c=.o) $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/Dev-Cpp/SDL/SDL-1.2.14/lib" -mwindows -lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -lSDL_ttf -lintl
 INCS =  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/SDL/SDL-1.2.14/include"
-CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/SDL/SDL-1.2.14/include"
 BIN  = 4dtris.exe
-CXXFLAGS = $(CXXINCS)
 CFLAGS = $(INCS)
 RM = rm -f
 
@@ -19,54 +29,14 @@ RM = rm -f
 
 all: all-before 4dtris.exe all-after
 
-
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
 	$(CC) $(LINKOBJ) -o "4dtris.exe" $(LIBS)
 
-src/4dt_ai.o: src/4dt_ai.c
-	$(CC) -c src/4dt_ai.c -o src/4dt_ai.o $(CFLAGS)
-
-src/4dt_eng.o: src/4dt_eng.c
-	$(CC) -c src/4dt_eng.c -o src/4dt_eng.o $(CFLAGS)
-
-src/4dt_g3d.o: src/4dt_g3d.c
-	$(CC) -c src/4dt_g3d.c -o src/4dt_g3d.o $(CFLAGS)
-
-src/4dt_g4d.o: src/4dt_g4d.c
-	$(CC) -c src/4dt_g4d.c -o src/4dt_g4d.o $(CFLAGS)
-
-src/4dt_gtxt.o: src/4dt_gtxt.c
-	$(CC) -c src/4dt_gtxt.c -o src/4dt_gtxt.o $(CFLAGS)
-
-src/4dt_hst.o: src/4dt_hst.c
-	$(CC) -c src/4dt_hst.c -o src/4dt_hst.o $(CFLAGS)
-
-src/4dt_m3d.o: src/4dt_m3d.c
-	$(CC) -c src/4dt_m3d.c -o src/4dt_m3d.o $(CFLAGS)
-
-src/4dt_m4d.o: src/4dt_m4d.c
-	$(CC) -c src/4dt_m4d.c -o src/4dt_m4d.o $(CFLAGS)
-
-src/4dt_main.o: src/4dt_main.c
-	$(CC) -c src/4dt_main.c -o src/4dt_main.o $(CFLAGS)
-
-src/4dt_menu.o: src/4dt_menu.c
-	$(CC) -c src/4dt_menu.c -o src/4dt_menu.o $(CFLAGS)
-
-src/4dt_conf.o: src/4dt_conf.c
-  $(CC) -c src/4dt_conf.c -o src/4dt_conf.o $(CFLAGS)
-
-src/4dt_timer.o: src/4dt_timer.c
-  $(CC) -c src/4dt_timer.c -o src/4dt_timer.o $(CFLAGS)
-
-src/4dt_scn.o: src/4dt_scn.c
-	$(CC) -c src/4dt_scn.c -o src/4dt_scn.o $(CFLAGS)
-
-src/4dt_ui.o: src/4dt_ui.c
-	$(CC) -c src/4dt_ui.c -o src/4dt_ui.o $(CFLAGS)
+%.o : %.c
+  $(CC) -c $< -o $@ $(CFLAGS)
 
 4dtris_private.res: 4dtris_private.rc
 	$(WINDRES) -i 4dtris_private.rc --input-format=rc -o 4dtris_private.res -O coff

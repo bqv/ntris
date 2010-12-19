@@ -8,10 +8,10 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
-#include <math.h>
 #include <limits.h>
 
 #include "4dt_timer.h"
+#include "4dt_m.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_g3d.h"
@@ -140,13 +140,15 @@ int g4dRotateViewportAngle(int interval, void *param)
                                              anglestep * M_PI / 180),
                                 g4dViewport);
 
-    return(g4dRotationTimeStep);
+    interval = g4dRotationTimeStep;
   }
   else
   {
     angle = INT_MIN;
-    return(0);
+    interval = 0;
   }
+
+  return(interval);
 }
 
 /** View rotation procedure. Should be triggered. */
@@ -356,7 +358,7 @@ static void g4dDrawPoly(tM4dVector points[4],
 
   if (fill)
   {
-    g3dDrawPolyFill(points3D, color, sideVisible);
+    g3dDrawPolyFill(points3D, color);
   }
 
   switch(wireMode)

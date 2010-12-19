@@ -27,8 +27,7 @@ extern void g3dDrawPolyWire(tM3dVector points[4],
                             float color[4],
                             int sideVisible[4]);
 extern void g3dDrawPolyFill(tM3dVector points[4],
-                            float color[4],
-                            int sideVisible[4]);
+                            float color[4]);
 extern void g3dDrawPolyTube(tM3dVector points[4],
                             float color[4],
                             int sideVisible[4]);

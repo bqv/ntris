@@ -8,8 +8,8 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
-#include <math.h>
 
+#include "4dt_m.h"
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
