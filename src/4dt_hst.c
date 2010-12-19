@@ -79,10 +79,10 @@ static tHstScore hstCreateScore(int score);
    FUNCTIONS
 ------------------------------------------------------------------------------*/
 
-/** Print score table to string array. */
+/** Print score table to string array. First row empty! */
 void hstGetScoreTab(char ***textTab, int scoreNum)
 {
-  int n;
+  int n, iScore;
   char str[256];
   int  length;
 
@@ -90,13 +90,18 @@ void hstGetScoreTab(char ***textTab, int scoreNum)
 
   for (n = 0; n < scoreNum; n++)
   {
-    if (n < SCORENUM)
+    iScore = n-1;
+
+    if (    (n > 0) /* Leave first row empty */
+         && ((iScore) < SCORENUM) /* not run out of scores */
+       )
     {
       length = sprintf(str,
                "%6d - %-8s - %04d % 4s %2d, %2d:%02d",
-               hstScores[n].score, hstScores[n].user,
-               hstScores[n].year, hstScores[n].month, hstScores[n].day,
-               hstScores[n].hour, hstScores[n].minu);
+               hstScores[iScore].score, hstScores[iScore].user,
+               hstScores[iScore].year, hstScores[iScore].month,
+               hstScores[iScore].day,
+               hstScores[iScore].hour, hstScores[iScore].minu);
     }
     else
     {

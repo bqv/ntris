@@ -14,6 +14,9 @@
    MACROS
 ------------------------------------------------------------------------------*/
 
+/** Maximal number of submenu items per menu item. */
+#define MENUMAXITEM 10
+
 /*------------------------------------------------------------------------------
    TYPES
 ------------------------------------------------------------------------------*/
@@ -32,18 +35,26 @@ eMenuOFF,
         eMenuDrawmode,
         eMenuGrid,
         eMenuStereo,
+        eMenuVideoOptionsBack,
       eMenuAudioOptions,
         eMenuSound,
         eMenuMusic,
+        eMenuAudioOptionsBack,
       eMenuGameOptions,
         eMenuAutoPlayer,
         eMenuDiffLevel,
         eMenuGameSpace,
         eMenuControls,
+        eMenuGameOptionsBack,
+      eMenuOptionsBack,
     eMenuHelp,
       eMenuHelppage,
+        eMenuHelppageBack,
       eMenuHighScores,
+        eMenuHighScoresBack,
       eMenuAbout,
+        eMenuAboutBack,
+      eMenuHelpBack,
     eMenuBackToGame,
     eMenuQuit,
     eMenuGameOver,
@@ -70,6 +81,7 @@ extern void menuInit(tEngGame *pEngGame, tScnSet *pScnSet);
 extern int  menuIsActived(void);
 extern void menuDraw(void);
 extern void menuNavigate(eMenuEvent event);
+extern void menuNavigateTo(int subMenuNum);
 extern void menuGotoItem(eMenuItem menuItem);
 extern void menuSetOnActivate(eMenuItem menuItem, void(*activate)(void));
 extern void menuSetOnDeactivate(eMenuItem menuItem, void(*deactivate)(void));

@@ -25,8 +25,6 @@
    MACROS
 ------------------------------------------------------------------------------*/
 
-/** Maximal number of submenu items per menu item. */
-#define MENUMAXITEM 10
 /** Number of lines in some menu's multiline text */
 #define TEXTLINENUM 8
 
@@ -53,6 +51,8 @@ typedef struct
 /*------------------------------------------------------------------------------
    PROTOTYPES
 ------------------------------------------------------------------------------*/
+
+static void menuGeneralBack(void);
 
 static void menuOn(void);
 static void menuOff(void);
@@ -82,37 +82,45 @@ static void menuStereo(void);
 static tMenuItem menuItems[eMenuItemNum] =
 {
 /* en, caption,         activate,      deact., parent,            submenus */
-  {0, "",               NULL,          NULL,   eMenuNull,         {eMenuNull}},
-  {0, "",               menuOff,       menuOn, eMenuOFF,          {eMenuRoot, eMenuNull}},
-  {1, "Main menu",      NULL,          NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
-  {1, "New Game",       menuNew,       NULL,   eMenuRoot,         {eMenuNull} },
-  {1, "Options",        NULL,          NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuNull} },
-  {1, "Video Options",  NULL,          NULL,   eMenuOptions,      {eMenuAnimation, eMenuDrawmode, eMenuGrid, eMenuStereo, eMenuNull} },
-  {1, "Animation - ON", menuAnimation, NULL,   eMenuVideoOptions, {eMenuNull} },
+  {0, "",               NULL,            NULL,   eMenuNull,         {eMenuNull}},
+  {0, "",               menuOff,         menuOn, eMenuOFF,          {eMenuRoot, eMenuNull}},
+  {1, "Main menu",      NULL,            NULL,   eMenuOFF,          {eMenuNewGame, eMenuOptions, eMenuHelp, eMenuBackToGame, eMenuQuit, eMenuNull}},
+  {1, "New Game",       menuNew,         NULL,   eMenuRoot,         {eMenuNull} },
+  {1, "Options",        NULL,            NULL,   eMenuRoot,         {eMenuVideoOptions, eMenuAudioOptions, eMenuGameOptions, eMenuOptionsBack, eMenuNull} },
+  {1, "Video Options",  NULL,            NULL,   eMenuOptions,      {eMenuAnimation, eMenuDrawmode, eMenuGrid, eMenuStereo, eMenuVideoOptionsBack, eMenuNull} },
+  {1, "Animation - ON", menuAnimation,   NULL,   eMenuVideoOptions, {eMenuNull} },
   {1, "Draw connected hypercubes",menuDrawmode,NULL,eMenuVideoOptions,{eMenuNull} },
-  {1, "Grid - OFF",     menuGrid,      NULL,   eMenuVideoOptions, {eMenuNull} },
-  {1, "View mode - Mono", menuStereo,  NULL,   eMenuVideoOptions, {eMenuNull} },
-  {0, "Audio Options",  NULL,          NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuNull} },
-  {0, "Sound",          menuSound,     NULL,   eMenuAudioOptions, {eMenuNull}  },
-  {0, "Music",          menuMusic,     NULL,   eMenuAudioOptions, {eMenuNull}  },
-  {1, "Game Options",   NULL,          NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuGameSpace, eMenuControls, eMenuNull} },
-  {1, "Auto Player - ON", menuAuto,    NULL,   eMenuGameOptions,  {eMenuNull}  },
-  {1, "Diff. Level - Hard", menuLevel, NULL,   eMenuGameOptions,  {eMenuNull}  },
-  {1, "Space size 2x2x2", menuSize,    NULL,   eMenuGameOptions,  {eMenuNull}  },
-  {0, "Controls",       menuControls,  NULL,   eMenuGameOptions,  {eMenuNull}  },
-  {1, "Help",           NULL,          NULL,   eMenuRoot,         {eMenuHelppage, eMenuHighScores, eMenuAbout, eMenuNull} },
-  {1, "Help Page",      menuHelp,      NULL,   eMenuHelp,         {eMenuNull}  },
-  {1, "High Scores",    menuScores,    NULL,   eMenuHelp,         {eMenuNull}  },
-  {1, "About",          menuAbout,     NULL,   eMenuHelp,         {eMenuNull}  },
-  {0, "Back To Game",   menuBack,      NULL,   eMenuRoot,         {eMenuNull}  },
-  {1, "Quit",           NULL,          NULL,   eMenuRoot,         {eMenuNull}  },
-  {1, "",               menuGameOver, menuGameOverOff, eMenuRoot, {eMenuNewGame, eMenuHighScores, eMenuRoot, eMenuNull}  },
+  {1, "Grid - OFF",     menuGrid,        NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "View mode - Mono", menuStereo,    NULL,   eMenuVideoOptions, {eMenuNull} },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuVideoOptions, {eMenuNull}  },
+  {0, "Audio Options",  NULL,            NULL,   eMenuOptions,      {eMenuSound, eMenuMusic, eMenuAudioOptionsBack, eMenuNull} },
+  {0, "Sound",          menuSound,       NULL,   eMenuAudioOptions, {eMenuNull}  },
+  {0, "Music",          menuMusic,       NULL,   eMenuAudioOptions, {eMenuNull}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuAudioOptions, {eMenuNull}  },
+  {1, "Game Options",   NULL,            NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuGameSpace, eMenuControls, eMenuGameOptionsBack, eMenuNull} },
+  {1, "Auto Player - ON", menuAuto,      NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Diff. Level - Hard", menuLevel,   NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Space size 2x2x2", menuSize,      NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {0, "Controls",       menuControls,    NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuGameOptions,  {eMenuNull}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuOptions,      {eMenuNull}  },
+  {1, "Help",           NULL,            NULL,   eMenuRoot,         {eMenuHelppage, eMenuHighScores, eMenuAbout, eMenuHelpBack, eMenuNull} },
+  {1, "Controls",       menuHelp,        NULL,   eMenuHelp,         {eMenuHelppageBack}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuHelppage,     {eMenuNull}  },
+  {1, "High Scores",    menuScores,      NULL,   eMenuHelp,         {eMenuHighScoresBack}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuHighScores,   {eMenuNull}  },
+  {1, "About",          menuAbout,       NULL,   eMenuHelp,         {eMenuAboutBack}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuAbout,        {eMenuNull}  },
+  {1, "Back",           menuGeneralBack, NULL,   eMenuHelp,         {eMenuNull}  },
+  {0, "Back To Game",   menuBack,        NULL,   eMenuRoot,         {eMenuNull}  },
+  {1, "Quit",           NULL,            NULL,   eMenuRoot,         {eMenuNull}  },
+  {1, "",               menuGameOver,   menuGameOverOff, eMenuRoot, {eMenuNewGame, eMenuHighScores, eMenuRoot, eMenuNull}  },
 };
 
 /** Text of help page */
 static tMenuString menuHelpText[TEXTLINENUM] =
 {
-  "Game Controls:",
+  "",
   " - arrow keys, backspace - rotate/turn the view port",
   " - 1, 2, 3 - select rotation axles",
   " - +, -, pgdn, pgup - rotate around selected axle",
@@ -125,13 +133,13 @@ static tMenuString menuHelpText[TEXTLINENUM] =
 /** Text of help page */
 static tMenuString menuAboutText[TEXTLINENUM] =
 {
+  "",
   "4DTRIS",
   "Tetris like game in four dimension",
   "Copyright (C) 2008-2010 Simon, Laszlo",
   "<laszlo.simon@gmail.com>",
   "http://dtris.sourceforge.net/",
   "https://launchpad.net/4dtris",
-  "",
   ""
 };
 
@@ -201,6 +209,17 @@ void menuGotoItem(eMenuItem menuItem)
     {
       (*menuItems[menuActItem].activate)();
     }
+  }
+}
+
+/** Go to the 'subMenuNum'th submenu item on the actual menu */
+void menuNavigateTo(int subMenuNum)
+{
+  if (    (subMenuNum >= 0)
+       && (subMenuNum < menuSubNum(menuActItem))
+     )
+  {
+    menuSelItems[menuActItem] = subMenuNum;
   }
 }
 
@@ -331,6 +350,12 @@ void menuSetOnDeactivate(eMenuItem menuItem, void(*deactivate)(void))
 /*------------------------------------------------------------------------------
    MENUITEM CALLBACK FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+static void menuGeneralBack(void)
+{
+  menuNavigate(eMenuBack);
+  menuNavigate(eMenuBack);
+}
 
 static void menuOn(void)
 {
