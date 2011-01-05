@@ -16,7 +16,7 @@ SRCS = src/4dt_cptr.c \
        src/4dt_timer.c
 CC   = gcc.exe
 WINDRES = windres.exe
-RES  = 4dtris_private.res
+RES  = 4dtris.res
 OBJ  = $(SRCS:.c=.o) $(RES)
 LINKOBJ  = $(SRCS:.c=.o) $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/Dev-Cpp/SDL/SDL-1.2.14/lib" -mwindows -lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -lSDL_ttf -lintl
@@ -38,5 +38,5 @@ $(BIN): $(OBJ)
 %.o : %.c
   $(CC) -c $< -o $@ $(CFLAGS)
 
-4dtris_private.res: 4dtris_private.rc
-	$(WINDRES) -i 4dtris_private.rc --input-format=rc -o 4dtris_private.res -O coff
+4dtris.res: 4dtris.rc
+	$(WINDRES) -i 4dtris.rc --input-format=rc -o 4dtris.res -O coff
