@@ -122,8 +122,14 @@ void g3dRenderString(double x, double y,
   font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-liberation/"
                       "LiberationSans-BoldItalic.ttf",
                       ((SDL_Surface *)getSDLScreen())->h / 24);
-  if (font == NULL) {
-     printf("Unable to load font: %s \n", TTF_GetError());
+  if (font == NULL)
+  {
+    font = TTF_OpenFont("LiberationSans-BoldItalic.ttf",
+                        ((SDL_Surface *)getSDLScreen())->h / 24);
+
+    if (font == NULL) {
+      printf("Unable to load font: %s \n", TTF_GetError());
+    }
   }
 
   glDisable(GL_LIGHTING);
