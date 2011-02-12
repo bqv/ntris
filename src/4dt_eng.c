@@ -172,12 +172,15 @@ static int engTimer(int interval, tEngGame *pEngGame)
 /** Game over handling */
 static void engGameOver(tEngGame *pEngGame)
 {
-  pEngGame->gameOver = 1;
-  pEngGame->activeUser = 0;
-
-  if (pEngGame->onGameOver != NULL)
+  if (pEngGame->gameOver != 1)
   {
-    pEngGame->onGameOver(pEngGame);
+    pEngGame->gameOver = 1;
+    pEngGame->activeUser = 0;
+
+    if (pEngGame->onGameOver != NULL)
+    {
+      pEngGame->onGameOver(pEngGame);
+    }
   }
 }
 
@@ -525,8 +528,6 @@ int engLowerSolid(tEngGame *pEngGame)
       {
         engGameOver(pEngGame);
       }
-
-      return (pEngGame->gameOver);
     }
   }
   else
@@ -534,7 +535,7 @@ int engLowerSolid(tEngGame *pEngGame)
     /** \todo should be lowered also in case of locked*/
   }
 
-  return(!onFloor);
+  return( (onFloor || pEngGame->gameOver) ? 0 : 1);
 }
 
 /** turns the solid from axis 1 to axis 2
