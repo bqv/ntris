@@ -122,7 +122,7 @@ extern void engResetGame(tEngGame *pEngGame);
 extern void engInitGame(tEngGame *pEngGame, tEngGameEvent onGameOver);
 extern int engLowerSolid(tEngGame *pEngGame);
 extern void engDropSolid(tEngGame *pEngGame);
-extern int engTurn(char ax1, char ax2, tEngGame *pEngGame);
+extern int engTurn(char ax1, char ax2, char sign1, char sign2, tEngGame *pEngGame);
 extern int engMove(char axle, int direction, tEngGame *pEngGame);
 extern void engPrintSpace(tEngGame *pEngGame);
 extern int engGetSpaceCell(int w, int x, int y, int z, tEngGame *pEngGame);

@@ -121,28 +121,28 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       case 'z':
         /*  turn the solid */
         /*  around axis 2. */
-        engTurn(0, 1, pEngGame);
+        engTurn(0, 1, 1, 1, pEngGame);
       break;
 
       /*  If 'x' then */
       case 'x':
         /*  turn the solid */
         /*  around axis 0. */
-        engTurn(1, 2, pEngGame);
+        engTurn(1, 2, 1, 1, pEngGame);
       break;
 
       /*  If 'c' then */
       case 'c':
         /*  turn the solid */
         /*  around axis 1. */
-        engTurn(2, 0, pEngGame);
+        engTurn(2, 0, 1, 1, pEngGame);
       break;
 
       /*  If 'v' then */
       case 'v':
         /*  turn the solid */
         /*  around axis 4. */
-        engTurn(0, 3, pEngGame);
+        engTurn(0, 3, 1, 1, pEngGame);
       break;
 
       /*  If space then */
@@ -168,7 +168,8 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       {
         /*  turn around selected axle clockwise */
         engTurn((pScnSet->axle == 0) ? 1 : 0,
-                (pScnSet->axle == 2) ? 1 : 2, pEngGame);
+                (pScnSet->axle == 2) ? 1 : 2,
+                1, 1, pEngGame);
       }
       break;
 
@@ -177,7 +178,8 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       {
         /*  turn around selected axle counterclockwise */
         engTurn((pScnSet->axle == 2) ? 1 : 2,
-                (pScnSet->axle == 0) ? 1 : 0, pEngGame);
+                (pScnSet->axle == 0) ? 1 : 0,
+                1, 1, pEngGame);
       }
       break;
 
@@ -191,12 +193,14 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
 
       case UI_KEY_HOME:
         /*  turn around selected axle clockwise */
-        engTurn(pScnSet->axle, 3, pEngGame);
+        engTurn(pScnSet->axle, 3,
+                1, 1, pEngGame);
       break;
 
       case UI_KEY_END:
         /*  turn around selected axle counterclockwise */
-        engTurn(3, pScnSet->axle, pEngGame);
+        engTurn(3, pScnSet->axle,
+                1, 1, pEngGame);
       break;
 
       case 'a':

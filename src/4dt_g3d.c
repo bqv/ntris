@@ -57,14 +57,43 @@ static const GLfloat g3dBgColor[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 static void g3dSwitchTo2D(void);
 static void g3dSwitchTo3D(void);
-static void g3dDrawCylinder(tM3dVector v1,
-                            tM3dVector v2,
-                            float radius);
-static void g3dDrawSphere(tM3dVector o, double radius);
 
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Converts 2D window coordinates to 3D object coordinates or vice versa*/
+tM3dVector g3dTransformTo(tG3dSystem target, tM3dVector v)
+{
+  int   viewport[4];
+  double modelview[16];
+  double projection[16];
+  double x, y, z;
+
+  glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+  glGetDoublev(GL_PROJECTION_MATRIX, projection);
+  glGetIntegerv(GL_VIEWPORT, viewport);
+
+  v.c[eM3dAxisY] = (float)viewport[3] - (float)v.c[eM3dAxisY];
+
+  if (target == eG3dWorld3D)
+  {
+    glReadPixels((int)v.c[eM3dAxisX], (int)v.c[eM3dAxisY],
+                 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &(v.c[eM3dAxisZ]));
+
+    gluUnProject(v.c[eM3dAxisX], v.c[eM3dAxisY], v.c[eM3dAxisZ],
+                 modelview, projection, viewport,
+                 &x, &y, &z);
+  }
+  else
+  {
+    gluProject(v.c[eM3dAxisX], v.c[eM3dAxisY], v.c[eM3dAxisZ],
+               modelview, projection, viewport,
+               &x, &y, &z);
+  }
+
+  return(m3dVector(x, y, z));
+}
 
 /** Sets/unsets transparent mode: Blend + no Depthmask */
 void g3dSetTransparentMode(int enable)
@@ -106,7 +135,7 @@ void g3dBeginDraw(int x, int y, int z, int picnum, int anaglyph)
   glLoadIdentity();
 
   /*  Place and orient the viewport. */
-  glTranslated(x, y, z);
+  glTranslated(-x, -y, -z);
 
   glRotated(-75.0, 1, 0, 0);
   glRotated(20.0, 0, 0, 1);
@@ -227,11 +256,11 @@ void g3dDrawLine(tM3dVector point0,
 }
 
 /** Draws a cylinder */
-static void g3dDrawCylinder(tM3dVector v1,
+void g3dDrawCylinder(tM3dVector v1,
                             tM3dVector v2,
                             float radius)
 {
-  int resolution = 4;
+  int resolution = 5;
   GLUquadricObj *quadric = gluNewQuadric();
   tM3dVector v12, z0, z1, rotaxle;
   double angle, length, sin, cos;
@@ -259,9 +288,9 @@ static void g3dDrawCylinder(tM3dVector v1,
 }
 
 /** Draws a sphere */
-static void g3dDrawSphere(tM3dVector o, double radius)
+void g3dDrawSphere(tM3dVector o, double radius)
 {
-  int resolution = 4;
+  int resolution = 5;
 
   GLUquadricObj *quadric=gluNewQuadric();
 

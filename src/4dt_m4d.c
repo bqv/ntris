@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "4dt_m3d.h"
 #include "4dt_m4d.h"
 
 /*------------------------------------------------------------------------------
@@ -37,6 +38,31 @@
 /*------------------------------------------------------------------------------
    FUNCTIONS
 ------------------------------------------------------------------------------*/
+
+/** Creates a 4D vector from 3D. */
+tM4dVector m4dVector3DTo4D(tM3dVector vector3d, double w)
+{
+  tM4dVector vector4d;
+
+  vector4d.c[eM4dAxisX] = vector3d.c[eM4dAxisX];
+  vector4d.c[eM4dAxisY] = vector3d.c[eM4dAxisY];
+  vector4d.c[eM4dAxisZ] = vector3d.c[eM4dAxisZ];
+  vector4d.c[eM4dAxisW] = w;
+
+  return vector4d;
+}
+
+/** Creates a 3D vector from 4D. */
+tM3dVector m4dVector4DTo3D(tM4dVector vector4d)
+{
+  tM3dVector vector3d;
+
+  vector3d.c[eM4dAxisX] = vector4d.c[eM4dAxisX];
+  vector3d.c[eM4dAxisY] = vector4d.c[eM4dAxisY];
+  vector3d.c[eM4dAxisZ] = vector4d.c[eM4dAxisZ];
+
+  return vector3d;
+}
 
 /** Creates a null vector. */
 tM4dVector m4dNullVector()
@@ -217,6 +243,21 @@ tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR)
   return result;
 }
 
+/** Transpose a matrix */
+tM4dMatrix m4dTransposeM(tM4dMatrix matrix)
+{
+  eM4dAxis row, col;
+  tM4dMatrix result = m4dNullMatrix();
+
+  for (row = eM4dAxisX; row < eM4dDimNum; row++)
+  for (col = eM4dAxisX; col < eM4dDimNum; col++)
+  {
+    result.c[row][col] = matrix.c[col][row];
+  }
+
+  return result;
+}
+
 /** Multiplies scalar with matrix */
 tM4dMatrix m4dMultiplySM(double scalar, tM4dMatrix matrix)
 {
@@ -231,7 +272,6 @@ tM4dMatrix m4dMultiplySM(double scalar, tM4dMatrix matrix)
 
   return result;
 }
-
 
 void m4dPrintVector(tM4dVector vector)
 {

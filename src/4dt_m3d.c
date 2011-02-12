@@ -7,8 +7,10 @@
    INCLUDE FILES
 ------------------------------------------------------------------------------*/
 
+#include <stdlib.h>
 #include <math.h>
 
+#include "4dt_m.h"
 #include "4dt_m3d.h"
 
 /*------------------------------------------------------------------------------
@@ -57,6 +59,79 @@ tM3dVector m3dVector(double x, double y, double z)
   vector.c[eM3dAxisZ] = z;
 
   return(vector);
+}
+
+/** Creates a sphere from the center vector and radius */
+tM3dSphere m3dSphere(tM3dVector o, double r)
+{
+  tM3dSphere sphere;
+
+  sphere.o = o;
+  sphere.r = r;
+
+  return(sphere);
+}
+
+/** Creates a plane from a point and a normal vector */
+tM3dPlane m3dPlane(tM3dVector point, tM3dVector normal)
+{
+
+  tM3dPlane plane;
+
+  plane.point  = point;
+  plane.normal = normal;
+
+  return(plane);
+}
+
+/** Intersection points betwenn line and plane */
+void m3dSectPlaneLine(tM3dPlane plane, tM3dLine line, tM3dVector *section)
+{
+  double n;
+
+  tM3dVector orient = m3dSub(line.p1, line.p0);
+  tM3dVector shift  = m3dSub(line.p0, plane.point);
+
+  /* (shift + n * orient) * norm = 0 =>
+   * n = - shift * norm / (orient * norm) */
+  n = - m3dMultiplyVV(shift, plane.normal) / m3dMultiplyVV(orient, plane.normal);
+
+  *section = m3dAdd(line.p0,m3dMultiplySV(n, orient));
+}
+
+/** Intersections points betwenn line and sphere */
+void m3dSectSphereLine(tM3dSphere sphere,
+                       tM3dLine line,
+                       tM3dVector *section0,
+                       tM3dVector *section1)
+{
+  double a, b, c, n0, n1;
+
+  tM3dVector orient = m3dSub(line.p1, line.p0);
+  tM3dVector shift  = m3dSub(line.p0, sphere.o);
+  /* line shifted to get sphere center to origo */
+
+  /* (shift + n * orient)^2 = r^2  =>
+   * n^2 * orient^2 + n * 2 * orient * shift + shift^2 - r^2 = 0*/
+  a = m3dMultiplyVV(orient, orient);
+  b = 2.0 * m3dMultiplyVV(orient, shift);
+  c = m3dMultiplyVV(shift, shift) - sphere.r*sphere.r;
+
+  mSolveSqrEq(a, b, c, &n0, &n1);
+
+  *section0 = m3dAdd(line.p0,m3dMultiplySV(n0, orient));
+  *section1 = m3dAdd(line.p0,m3dMultiplySV(n1, orient));
+}
+
+/** Creates a line from the two given vector */
+tM3dLine m3dLine(tM3dVector p0, tM3dVector p1)
+{
+  tM3dLine line;
+
+  line.p0 = p0;
+  line.p1 = p1;
+
+  return(line);
 }
 
 /** Calculates the transformation matrix which rotates Z axis to base vector */
@@ -200,4 +275,14 @@ tM3dVector m3dInterpolate(tM3dVector vector1, tM3dVector vector2,
                   m3dMultiplySV(factor, vector2));
 
   return(result);
+}
+
+/** Returns the main orthogonal axis (longest coordinate) */
+eM3dAxis m3dOrtho(tM3dVector vector)
+{
+  return(     (fabs(vector.c[0]) > fabs(vector.c[1]))
+           && (fabs(vector.c[0]) > fabs(vector.c[2])) ? eM3dAxisX :
+              (fabs(vector.c[1]) > fabs(vector.c[0]))
+           && (fabs(vector.c[1]) > fabs(vector.c[2])) ? eM3dAxisY :
+                                                        eM3dAxisZ );
 }

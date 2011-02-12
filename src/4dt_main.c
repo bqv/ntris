@@ -101,6 +101,7 @@ static void resize(int w, int h)
 {
   g3dResize(w, h);
   gtxtResize(w, h);
+  mouResize(w, h);
   confSetVar("WindowWidth", (double)w);
   confSetVar("WindowHeight", (double)h);
 }
@@ -295,7 +296,7 @@ int main(int argc, char *argv[])
         }
         case SDL_MOUSEMOTION:
         {
-          mouMove(event.motion.x, event.motion.y);
+          mouMove(event.motion.x, event.motion.y, &engGame);
           break;
         }
         case SDL_MOUSEBUTTONDOWN:
@@ -305,7 +306,7 @@ int main(int argc, char *argv[])
         }
         case SDL_MOUSEBUTTONUP:
         {
-          mouUp(event.button.x, event.button.y);
+          mouUp(event.button.x, event.button.y, &engGame);
           break;
         }
       }
