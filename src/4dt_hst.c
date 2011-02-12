@@ -113,6 +113,7 @@ void hstGetScoreTab(char ***textTab, int scoreNum)
 void hstAddScore(int score)
 {
   int n;
+  int tempIsNewScore = 1;
   tHstScore temp;
   tHstScore line;
 
@@ -120,11 +121,14 @@ void hstAddScore(int score)
   
   for (n = 0; n < SCORENUM; n++)
   {
-    if (line.score > hstScores[n].score)
+    if ( tempIsNewScore
+         ? (line.score > hstScores[n].score)
+         : (line.score >= hstScores[n].score) )
     {
       temp = hstScores[n];
       hstScores[n] = line;
       line = temp;
+      tempIsNewScore = 0;
     }
   }
   
