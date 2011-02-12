@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "4dt_timer.h"
+#include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
 #include "4dt_ai.h"
@@ -128,7 +129,7 @@ static void aiDoStep(tEngGame *pEngGame)
         /*  turn around the axis, */
         engTurn(aiTurnAxices[i][0],
                 aiTurnAxices[i][1],
-                pEngGame);
+                1, 1, pEngGame);
         /*  decrease the turns needed, and */
         neededTurns[i]--;
         /*  indicate it. */
@@ -195,7 +196,7 @@ static int aiFindBestSolution(int neededTurns[4],
       {
         engTurn(aiTurnAxices[j][0],
                 aiTurnAxices[j][1],
-                &engGE);
+                1, 1, &engGE);
       }
     }
 

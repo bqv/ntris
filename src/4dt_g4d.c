@@ -340,6 +340,15 @@ void g4dDrawLine(tM4dVector point0,
               linewidth);
 }
 
+/** \brief Draws 4D Sphere */
+void g4dDrawSphere(tM4dVector center, double radius)
+{
+  tM3dVector center3D;
+
+  center3D = g4dProject(center);
+
+  g3dDrawSphere(center3D, radius);
+}
 
 /** \brief Draws 4D polygon */
 static void g4dDrawPoly(tM4dVector points[4],

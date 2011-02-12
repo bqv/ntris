@@ -40,6 +40,9 @@ typedef struct
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
+extern tM3dVector m4dVector4DTo3D(tM4dVector vector4d);
+extern tM4dVector m4dVector3DTo4D(tM3dVector vector3d, double w);
+
 extern tM4dVector m4dNullVector();
 extern tM4dVector m4dUnitVector(eM4dAxis axis);
 extern tM4dVector m4dVector(double x, double y, double z, double w);
@@ -56,6 +59,7 @@ extern tM4dMatrix m4dMultiplySM(double scalar, tM4dMatrix matrix);
 extern tM4dVector m4dMultiplyMV(tM4dMatrix matrix, tM4dVector vector);
 extern tM4dMatrix m4dMultiplyVM(tM4dVector vector, tM4dMatrix matrix);
 extern tM4dMatrix m4dMultiplyMM(tM4dMatrix matrixL, tM4dMatrix matrixR);
+extern tM4dMatrix m4dTransposeM(tM4dMatrix matrix);
 
 extern void m4dPrintVector(tM4dVector vector);
 extern void m4dPrintMatrix(tM4dMatrix matrix);

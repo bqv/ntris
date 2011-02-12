@@ -538,18 +538,21 @@ int engLowerSolid(tEngGame *pEngGame)
 }
 
 /** turns the solid from axis 1 to axis 2
+ * (sign represent psitive/negative half of the axle)
    \return indicator of turn availability */
-int engTurn(char ax1, char ax2, tEngGame *pEngGame)
+int engTurn(char ax1, char ax2, char sign1, char sign2, tEngGame *pEngGame)
 {
   tEngObject obj;
   int result;
+  double angle;
 
   /*  store object */
   obj = pEngGame->object;
 
   /*  turn it */
-  pEngGame->object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, M_PI / 2.0),
-                                      pEngGame->object.axices);
+  angle = sign1 * sign2 * M_PI / 2.0;
+  pEngGame->object.axices = m4dMultiplyMM(m4dRotMatrix(ax1, ax2, angle),
+                                          pEngGame->object.axices);
 
   /*  if overlapped, invalid turn */
   /*  get back the original */
@@ -570,7 +573,7 @@ int engTurn(char ax1, char ax2, tEngGame *pEngGame)
         pEngGame->lock = 1;
         pEngGame->animation.num  = 5;
         pEngGame->animation.translation = m4dNullVector();
-        pEngGame->animation.transform   = m4dRotMatrix(ax1, ax2, M_PI / 2.0
+        pEngGame->animation.transform   = m4dRotMatrix(ax1, ax2, angle
                                                      / pEngGame->animation.num);
 
         setTimerCallback(engAnimationTimeStep,

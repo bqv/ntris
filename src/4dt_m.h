@@ -15,4 +15,6 @@
 #define M_PI 3.1415926535897932384626433832795029L
 #endif
 
+extern void mSolveSqrEq(double a, double b, double c, double *n1, double *n2);
+
 #endif

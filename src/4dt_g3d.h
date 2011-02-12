@@ -17,12 +17,23 @@
    TYPES
 ------------------------------------------------------------------------------*/
 
+typedef enum
+{
+  eG3dWorld3D, /**< 3D world coordinate system */
+  eG3dWindow2D /**< 2D window coordinate system */
+}
+tG3dSystem;
+
 /*------------------------------------------------------------------------------
    DECLARATIONS
 ------------------------------------------------------------------------------*/
 
 extern void g3dInit(void);
 extern void g3dSetTransparentMode(int enable);
+extern void g3dDrawCylinder(tM3dVector v1,
+                            tM3dVector v2,
+                            float radius);
+extern void g3dDrawSphere(tM3dVector o, double radius);
 extern void g3dDrawPolyWire(tM3dVector points[4],
                             float color[4],
                             int sideVisible[4]);
@@ -42,5 +53,6 @@ extern void g3dBeginDraw(int x, int y, int z, int picnum, int anaglyph);
 extern void g3dEndDrawPic(void);
 extern void g3dEndDraw(void);
 extern void g3dResize(int width, int height);
+extern tM3dVector g3dTransformTo(tG3dSystem target, tM3dVector v);
 
 #endif /* _4DT_G3D_H_ */
