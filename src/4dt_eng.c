@@ -179,14 +179,17 @@ static int engTimer(int interval, tEngGame *pEngGame)
 /** Game over handling */
 static void engGameOver(tEngGame *pEngGame)
 {
-  pEngGame->gameOver = 1;
-  pEngGame->activeUser = 0;
+  if (pEngGame->gameOver != 1)
+  {
+    pEngGame->gameOver = 1;
+    pEngGame->activeUser = 0;
 
-  aiSetActive(0, pEngGame);
+    aiSetActive(0, pEngGame);
 
-  hstAddScore(pEngGame->score);
+    hstAddScore(pEngGame->score);
 
-  menuGotoItem(eMenuGameOver);
+    menuGotoItem(eMenuGameOver);
+  }
 }
 
 /** Performing the queued transformation, return flag indicates if more
@@ -525,12 +528,10 @@ int engLowerSolid(tEngGame *pEngGame)
       {
         engGameOver(pEngGame);
       }
-
-      return (pEngGame->gameOver);
     }
   }
 
-  return(!onFloor);
+  return( (onFloor || pEngGame->gameOver) ? 0 : 1);
 }
 
 /** turns the solid from axis 1 to axis 2
