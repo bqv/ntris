@@ -6,185 +6,146 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 4dtris\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-27 14:41+0200\n"
+"Report-Msgid-Bugs-To: launchpad.net/4dtris\n"
+"POT-Creation-Date: 2011-02-13 11:10+0100\n"
 "PO-Revision-Date: 2010-09-16 08:25+0000\n"
 "Last-Translator: luojie-dune <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-13 13:00+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-02-13 09:24+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
-#: src/4dt_hst.c:155
+#: src/4dt_hst.c:160
 #, c-format
 msgid ":info: No %s found, it will be created.\n"
 msgstr ":info:没有找到 %s ，将会创建。\n"
 
-#: src/4dt_hst.c:188
+#: src/4dt_hst.c:193
 #, c-format
 msgid ":warning: Can not read file %s\n"
 msgstr ":warning:不能读取文件%s\n"
 
-#: src/4dt_hst.c:216
+#: src/4dt_hst.c:221
 #, c-format
 msgid ":Warning: Can not write file %s, data won't be stored.\n"
 msgstr ":Warning:  无法写入文件 %s，不会储存数据。\n"
 
-#: src/4dt_hst.c:242
+#: src/4dt_hst.c:247
 msgid "Me"
 msgstr "我"
 
-#: src/4dt_menu.c:84
-msgid "Main menu"
-msgstr "主菜单"
+#~ msgid "Main menu"
+#~ msgstr "主菜单"
 
-#: src/4dt_menu.c:85
-msgid "New Game"
-msgstr "新游戏"
+#~ msgid "New Game"
+#~ msgstr "新游戏"
 
-#: src/4dt_menu.c:86
-msgid "Options"
-msgstr "选项"
+#~ msgid "Options"
+#~ msgstr "选项"
 
-#: src/4dt_menu.c:87
-msgid "Video Options"
-msgstr "视频选项"
+#~ msgid "Video Options"
+#~ msgstr "视频选项"
 
-#: src/4dt_menu.c:88 src/4dt_menu.c:392
-msgid "Animation - ON"
-msgstr "动画 - 开启"
+#~ msgid "Animation - ON"
+#~ msgstr "动画 - 开启"
 
-#: src/4dt_menu.c:89 src/4dt_menu.c:407
-msgid "Draw connected hypercubes"
-msgstr "描绘连接的超正方体"
+#~ msgid "Draw connected hypercubes"
+#~ msgstr "描绘连接的超正方体"
 
-#: src/4dt_menu.c:90 src/4dt_menu.c:429
-msgid "Grid - OFF"
-msgstr "分格 - 关闭"
+#~ msgid "Grid - OFF"
+#~ msgstr "分格 - 关闭"
 
-#: src/4dt_menu.c:91
-msgid "Audio Options"
-msgstr "声音选项"
+#~ msgid "Audio Options"
+#~ msgstr "声音选项"
 
-#: src/4dt_menu.c:92
-msgid "Sound"
-msgstr "音频"
+#~ msgid "Sound"
+#~ msgstr "音频"
 
-#: src/4dt_menu.c:93
-msgid "Music"
-msgstr "音乐"
+#~ msgid "Music"
+#~ msgstr "音乐"
 
-#: src/4dt_menu.c:94
-msgid "Game Options"
-msgstr "游戏选项"
+#~ msgid "Game Options"
+#~ msgstr "游戏选项"
 
-#: src/4dt_menu.c:95 src/4dt_menu.c:335
-msgid "Auto Player - ON"
-msgstr "自动玩家 - 开启"
+#~ msgid "Auto Player - ON"
+#~ msgstr "自动玩家 - 开启"
 
-#: src/4dt_menu.c:96 src/4dt_menu.c:346
-msgid "Diff. Level - Hard"
-msgstr "难度 - 高"
+#~ msgid "Diff. Level - Hard"
+#~ msgstr "难度 - 高"
 
-#: src/4dt_menu.c:97
-msgid "Controls"
-msgstr "控制"
+#~ msgid "Controls"
+#~ msgstr "控制"
 
-#: src/4dt_menu.c:98
-msgid "Help"
-msgstr "帮助"
+#~ msgid "Help"
+#~ msgstr "帮助"
 
-#: src/4dt_menu.c:99
-msgid "Help Page"
-msgstr "帮助页"
+#~ msgid "Help Page"
+#~ msgstr "帮助页"
 
-#: src/4dt_menu.c:100
-msgid "High Scores"
-msgstr "高分"
+#~ msgid "High Scores"
+#~ msgstr "高分"
 
-#: src/4dt_menu.c:101
-msgid "About"
-msgstr "关于"
+#~ msgid "About"
+#~ msgstr "关于"
 
-#: src/4dt_menu.c:102
-msgid "Back To Game"
-msgstr "返回游戏"
+#~ msgid "Back To Game"
+#~ msgstr "返回游戏"
 
-#: src/4dt_menu.c:103
-msgid "Quit"
-msgstr "退出"
+#~ msgid "Quit"
+#~ msgstr "退出"
 
-#: src/4dt_menu.c:110
-msgid "Game Controls:"
-msgstr "游戏控制："
+#~ msgid "Game Controls:"
+#~ msgstr "游戏控制："
 
-#: src/4dt_menu.c:111
-msgid " - arrow keys, backspace - rotate/turn the view port"
-msgstr " - 方向键，退格键 - 旋转/改变视角"
+#~ msgid " - arrow keys, backspace - rotate/turn the view port"
+#~ msgstr " - 方向键，退格键 - 旋转/改变视角"
 
-#: src/4dt_menu.c:112
-msgid " - z, x, c, v - turn the blocks around the 4 axis"
-msgstr " - z, x, c, v - 砖块围绕4轴"
+#~ msgid " - z, x, c, v - turn the blocks around the 4 axis"
+#~ msgstr " - z, x, c, v - 砖块围绕4轴"
 
-#: src/4dt_menu.c:113
-msgid " - 1, 2, 3 - select rotation axles"
-msgstr " - 1, 2, 3 - 选择旋转轴"
+#~ msgid " - 1, 2, 3 - select rotation axles"
+#~ msgstr " - 1, 2, 3 - 选择旋转轴"
 
-#: src/4dt_menu.c:114
-msgid " - +, -, pgdn, pgup - rotate around selected axle"
-msgstr " - +, -, pgdn, pgup - 绕着选中的轴旋转"
+#~ msgid " - +, -, pgdn, pgup - rotate around selected axle"
+#~ msgstr " - +, -, pgdn, pgup - 绕着选中的轴旋转"
 
-#: src/4dt_menu.c:115
-msgid " - home, end - rot. around selected and 4th axle"
-msgstr " - home, end - 绕着选中的和第四个轴旋转"
+#~ msgid " - home, end - rot. around selected and 4th axle"
+#~ msgstr " - home, end - 绕着选中的和第四个轴旋转"
 
-#: src/4dt_menu.c:116
-msgid " - space, enter - step down/drop the object"
-msgstr " - space, enter - 放下物体"
+#~ msgid " - space, enter - step down/drop the object"
+#~ msgstr " - space, enter - 放下物体"
 
-#: src/4dt_menu.c:117
-msgid " - F1 - F2 - switch view mode"
-msgstr " - F1 - F2 - 切换视角模式"
+#~ msgid " - F1 - F2 - switch view mode"
+#~ msgstr " - F1 - F2 - 切换视角模式"
 
-#: src/4dt_menu.c:124
-msgid "Tetris like game in four dimension"
-msgstr "俄罗斯方块类的游戏——4纬空间"
+#~ msgid "Tetris like game in four dimension"
+#~ msgstr "俄罗斯方块类的游戏——4纬空间"
 
-#: src/4dt_menu.c:137
-msgid "Game over."
-msgstr "游戏结束。"
+#~ msgid "Game over."
+#~ msgstr "游戏结束。"
 
-#: src/4dt_menu.c:308 src/4dt_menu.c:336
-msgid "Auto Player - OFF"
-msgstr "自动玩家 - 关闭"
+#~ msgid "Auto Player - OFF"
+#~ msgstr "自动玩家 - 关闭"
 
-#: src/4dt_menu.c:344
-msgid "Diff. Level - Easy"
-msgstr "难度级别 - 简单"
+#~ msgid "Diff. Level - Easy"
+#~ msgstr "难度级别 - 简单"
 
-#: src/4dt_menu.c:345
-msgid "Diff. Level - Medium"
-msgstr "难度级别 - 中等"
+#~ msgid "Diff. Level - Medium"
+#~ msgstr "难度级别 - 中等"
 
-#: src/4dt_menu.c:393
-msgid "Animation - OFF"
-msgstr "动画 - 关闭"
+#~ msgid "Animation - OFF"
+#~ msgstr "动画 - 关闭"
 
-#: src/4dt_menu.c:408
-msgid "Draw separate hypercubes"
-msgstr "绘制分类的超正方体"
+#~ msgid "Draw separate hypercubes"
+#~ msgstr "绘制分类的超正方体"
 
-#: src/4dt_menu.c:409
-msgid "Draw separate cubes"
-msgstr "绘制不同的方块"
+#~ msgid "Draw separate cubes"
+#~ msgstr "绘制不同的方块"
 
-#: src/4dt_menu.c:428
-msgid "Grid - ON"
-msgstr "分格 - 开启"
+#~ msgid "Grid - ON"
+#~ msgstr "分格 - 开启"
 
-#: src/4dt_scn.c:115
-#, c-format
-msgid "Score: %i"
-msgstr "分数：%i"
+#~ msgid "Score: %i"
+#~ msgstr "分数：%i"
