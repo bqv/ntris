@@ -119,6 +119,7 @@ void mouDown(int x, int y)
   if (mouState == eMouStateNone)
   {
     mouState  = eMouStateObjRotate;
+    /*mouState  = eMouStateViewChange;*/
   }
 
   mouLastX  = mouDownX = x;
