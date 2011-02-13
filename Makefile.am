@@ -37,6 +37,10 @@ EXTRA_DIST = config.rpath m4/ChangeLog mkinstalldirs m4/Makefile.in 4dtris.deskt
 Applicationsdir = /usr/share/applications
 Applications_DATA = 4dtris.desktop
 
+bindir = /usr/games
+
+man_MANS = 4dtris.6
+
 icondir = /usr/share/games/4dtris
 icon_DATA = doc/icon/4dtris.png
 

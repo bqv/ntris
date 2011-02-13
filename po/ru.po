@@ -6,186 +6,146 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 4dtris\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-27 14:41+0200\n"
+"Report-Msgid-Bugs-To: launchpad.net/4dtris\n"
+"POT-Creation-Date: 2011-02-13 11:10+0100\n"
 "PO-Revision-Date: 2010-11-27 12:53+0000\n"
 "Last-Translator: Colix <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 13:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-02-13 09:24+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
-#: src/4dt_hst.c:155
+#: src/4dt_hst.c:160
 #, c-format
 msgid ":info: No %s found, it will be created.\n"
 msgstr ":info: Не найден %s , он будет создан.\n"
 
-#: src/4dt_hst.c:188
+#: src/4dt_hst.c:193
 #, c-format
 msgid ":warning: Can not read file %s\n"
 msgstr ":warning: Невозможно прочесть файл %s\n"
 
-#: src/4dt_hst.c:216
+#: src/4dt_hst.c:221
 #, c-format
 msgid ":Warning: Can not write file %s, data won't be stored.\n"
-msgstr ""
-": Предупреждение: Не удается записать файл %s, данные не сохраннены\n"
+msgstr ": Предупреждение: Не удается записать файл %s, данные не сохраннены\n"
 
-#: src/4dt_hst.c:242
+#: src/4dt_hst.c:247
 msgid "Me"
 msgstr "Я"
 
-#: src/4dt_menu.c:84
-msgid "Main menu"
-msgstr "Главное меню"
+#~ msgid "Main menu"
+#~ msgstr "Главное меню"
 
-#: src/4dt_menu.c:85
-msgid "New Game"
-msgstr "Новая игра"
+#~ msgid "New Game"
+#~ msgstr "Новая игра"
 
-#: src/4dt_menu.c:86
-msgid "Options"
-msgstr "Настройки"
+#~ msgid "Options"
+#~ msgstr "Настройки"
 
-#: src/4dt_menu.c:87
-msgid "Video Options"
-msgstr "Параметры видео"
+#~ msgid "Video Options"
+#~ msgstr "Параметры видео"
 
-#: src/4dt_menu.c:88 src/4dt_menu.c:392
-msgid "Animation - ON"
-msgstr "Анимация - ВКЛ"
+#~ msgid "Animation - ON"
+#~ msgstr "Анимация - ВКЛ"
 
-#: src/4dt_menu.c:89 src/4dt_menu.c:407
-msgid "Draw connected hypercubes"
-msgstr "Отображать соединенные гиперкубы"
+#~ msgid "Draw connected hypercubes"
+#~ msgstr "Отображать соединенные гиперкубы"
 
-#: src/4dt_menu.c:90 src/4dt_menu.c:429
-msgid "Grid - OFF"
-msgstr "Сетка - ВЫКЛ"
+#~ msgid "Grid - OFF"
+#~ msgstr "Сетка - ВЫКЛ"
 
-#: src/4dt_menu.c:91
-msgid "Audio Options"
-msgstr "Параметры звука"
+#~ msgid "Audio Options"
+#~ msgstr "Параметры звука"
 
-#: src/4dt_menu.c:92
-msgid "Sound"
-msgstr "Звук"
+#~ msgid "Sound"
+#~ msgstr "Звук"
 
-#: src/4dt_menu.c:93
-msgid "Music"
-msgstr "Музыка"
+#~ msgid "Music"
+#~ msgstr "Музыка"
 
-#: src/4dt_menu.c:94
-msgid "Game Options"
-msgstr "Параметры игры"
+#~ msgid "Game Options"
+#~ msgstr "Параметры игры"
 
-#: src/4dt_menu.c:95 src/4dt_menu.c:335
-msgid "Auto Player - ON"
-msgstr "Auto Player - ВКЛ"
+#~ msgid "Auto Player - ON"
+#~ msgstr "Auto Player - ВКЛ"
 
-#: src/4dt_menu.c:96 src/4dt_menu.c:346
-msgid "Diff. Level - Hard"
-msgstr "Уровень сложности - Тяжелый"
+#~ msgid "Diff. Level - Hard"
+#~ msgstr "Уровень сложности - Тяжелый"
 
-#: src/4dt_menu.c:97
-msgid "Controls"
-msgstr "Управление"
+#~ msgid "Controls"
+#~ msgstr "Управление"
 
-#: src/4dt_menu.c:98
-msgid "Help"
-msgstr "Помощь"
+#~ msgid "Help"
+#~ msgstr "Помощь"
 
-#: src/4dt_menu.c:99
-msgid "Help Page"
-msgstr "Страница помощи"
+#~ msgid "Help Page"
+#~ msgstr "Страница помощи"
 
-#: src/4dt_menu.c:100
-msgid "High Scores"
-msgstr "Таблица рекордов"
+#~ msgid "High Scores"
+#~ msgstr "Таблица рекордов"
 
-#: src/4dt_menu.c:101
-msgid "About"
-msgstr "О программе"
+#~ msgid "About"
+#~ msgstr "О программе"
 
-#: src/4dt_menu.c:102
-msgid "Back To Game"
-msgstr "Вернуться к игре"
+#~ msgid "Back To Game"
+#~ msgstr "Вернуться к игре"
 
-#: src/4dt_menu.c:103
-msgid "Quit"
-msgstr "Выйти"
+#~ msgid "Quit"
+#~ msgstr "Выйти"
 
-#: src/4dt_menu.c:110
-msgid "Game Controls:"
-msgstr "Контроль игры:"
+#~ msgid "Game Controls:"
+#~ msgstr "Контроль игры:"
 
-#: src/4dt_menu.c:111
-msgid " - arrow keys, backspace - rotate/turn the view port"
-msgstr " - стрелки, backspace - вращение/изменение точки обзора"
+#~ msgid " - arrow keys, backspace - rotate/turn the view port"
+#~ msgstr " - стрелки, backspace - вращение/изменение точки обзора"
 
-#: src/4dt_menu.c:112
-msgid " - z, x, c, v - turn the blocks around the 4 axis"
-msgstr " - z, x, c, v - вращение блоков вокруг 4 осей"
+#~ msgid " - z, x, c, v - turn the blocks around the 4 axis"
+#~ msgstr " - z, x, c, v - вращение блоков вокруг 4 осей"
 
-#: src/4dt_menu.c:113
-msgid " - 1, 2, 3 - select rotation axles"
-msgstr " - 1, 2, 3 - выбор оси вращения"
+#~ msgid " - 1, 2, 3 - select rotation axles"
+#~ msgstr " - 1, 2, 3 - выбор оси вращения"
 
-#: src/4dt_menu.c:114
-msgid " - +, -, pgdn, pgup - rotate around selected axle"
-msgstr " - +, -, pgdn, pgup - вращение вокруг выбранной оси"
+#~ msgid " - +, -, pgdn, pgup - rotate around selected axle"
+#~ msgstr " - +, -, pgdn, pgup - вращение вокруг выбранной оси"
 
-#: src/4dt_menu.c:115
-msgid " - home, end - rot. around selected and 4th axle"
-msgstr " - home, end - вращение вокруг выбранной и 4-й осей"
+#~ msgid " - home, end - rot. around selected and 4th axle"
+#~ msgstr " - home, end - вращение вокруг выбранной и 4-й осей"
 
-#: src/4dt_menu.c:116
-msgid " - space, enter - step down/drop the object"
-msgstr " - space, enter - шаг назад/отпустить объект"
+#~ msgid " - space, enter - step down/drop the object"
+#~ msgstr " - space, enter - шаг назад/отпустить объект"
 
-#: src/4dt_menu.c:117
-msgid " - F1 - F2 - switch view mode"
-msgstr " - F1 - F2 - Сменить вид"
+#~ msgid " - F1 - F2 - switch view mode"
+#~ msgstr " - F1 - F2 - Сменить вид"
 
-#: src/4dt_menu.c:124
-msgid "Tetris like game in four dimension"
-msgstr "Игра-тетрис в четырёх измерениях"
+#~ msgid "Tetris like game in four dimension"
+#~ msgstr "Игра-тетрис в четырёх измерениях"
 
-#: src/4dt_menu.c:137
-msgid "Game over."
-msgstr "Игра окончена."
+#~ msgid "Game over."
+#~ msgstr "Игра окончена."
 
-#: src/4dt_menu.c:308 src/4dt_menu.c:336
-msgid "Auto Player - OFF"
-msgstr "Auto Player - ВЫКЛ"
+#~ msgid "Auto Player - OFF"
+#~ msgstr "Auto Player - ВЫКЛ"
 
-#: src/4dt_menu.c:344
-msgid "Diff. Level - Easy"
-msgstr "Уровень сложности - Лёгкий"
+#~ msgid "Diff. Level - Easy"
+#~ msgstr "Уровень сложности - Лёгкий"
 
-#: src/4dt_menu.c:345
-msgid "Diff. Level - Medium"
-msgstr "Уровень сложности - Средний"
+#~ msgid "Diff. Level - Medium"
+#~ msgstr "Уровень сложности - Средний"
 
-#: src/4dt_menu.c:393
-msgid "Animation - OFF"
-msgstr "Анимация - ВЫКЛ"
+#~ msgid "Animation - OFF"
+#~ msgstr "Анимация - ВЫКЛ"
 
-#: src/4dt_menu.c:408
-msgid "Draw separate hypercubes"
-msgstr "Отображать изолированные гиперкубы"
+#~ msgid "Draw separate hypercubes"
+#~ msgstr "Отображать изолированные гиперкубы"
 
-#: src/4dt_menu.c:409
-msgid "Draw separate cubes"
-msgstr "Отображать изолированные кубы"
+#~ msgid "Draw separate cubes"
+#~ msgstr "Отображать изолированные кубы"
 
-#: src/4dt_menu.c:428
-msgid "Grid - ON"
-msgstr "Сетка - ВКЛ"
+#~ msgid "Grid - ON"
+#~ msgstr "Сетка - ВКЛ"
 
-#: src/4dt_scn.c:115
-#, c-format
-msgid "Score: %i"
-msgstr "Очки: %i"
+#~ msgid "Score: %i"
+#~ msgstr "Очки: %i"

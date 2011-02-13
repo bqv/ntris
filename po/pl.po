@@ -6,186 +6,147 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 4dtris\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-27 14:41+0200\n"
+"Report-Msgid-Bugs-To: launchpad.net/4dtris\n"
+"POT-Creation-Date: 2011-02-13 11:10+0100\n"
 "PO-Revision-Date: 2010-10-24 16:57+0000\n"
 "Last-Translator: Adam Czabara <kolofaza@o2.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-13 13:00+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-02-13 09:24+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
-#: src/4dt_hst.c:155
+#: src/4dt_hst.c:160
 #, c-format
 msgid ":info: No %s found, it will be created.\n"
 msgstr ":info: Nie odnaleziono %s, zostanie on utworzony.\n"
 
-#: src/4dt_hst.c:188
+#: src/4dt_hst.c:193
 #, c-format
 msgid ":warning: Can not read file %s\n"
 msgstr ":ostrzeżenie: Nie udało się odczytać pliku %s\n"
 
-#: src/4dt_hst.c:216
+#: src/4dt_hst.c:221
 #, c-format
 msgid ":Warning: Can not write file %s, data won't be stored.\n"
 msgstr ""
 ":ostrzeżenie: Nie udało się zapisać pliku %s, dane nie będą zapisywane.\n"
 
-#: src/4dt_hst.c:242
+#: src/4dt_hst.c:247
 msgid "Me"
 msgstr "Ja"
 
-#: src/4dt_menu.c:84
-msgid "Main menu"
-msgstr "Menu główne"
+#~ msgid "Main menu"
+#~ msgstr "Menu główne"
 
-#: src/4dt_menu.c:85
-msgid "New Game"
-msgstr "Nowa gra"
+#~ msgid "New Game"
+#~ msgstr "Nowa gra"
 
-#: src/4dt_menu.c:86
-msgid "Options"
-msgstr "Opcje"
+#~ msgid "Options"
+#~ msgstr "Opcje"
 
-#: src/4dt_menu.c:87
-msgid "Video Options"
-msgstr "Opcje wyświetlania obrazu"
+#~ msgid "Video Options"
+#~ msgstr "Opcje wyświetlania obrazu"
 
-#: src/4dt_menu.c:88 src/4dt_menu.c:392
-msgid "Animation - ON"
-msgstr "Animacja - Włączona"
+#~ msgid "Animation - ON"
+#~ msgstr "Animacja - Włączona"
 
-#: src/4dt_menu.c:89 src/4dt_menu.c:407
-msgid "Draw connected hypercubes"
-msgstr "Rysuj połączone hipersześciany"
+#~ msgid "Draw connected hypercubes"
+#~ msgstr "Rysuj połączone hipersześciany"
 
-#: src/4dt_menu.c:90 src/4dt_menu.c:429
-msgid "Grid - OFF"
-msgstr "Siatka - Wyłączona"
+#~ msgid "Grid - OFF"
+#~ msgstr "Siatka - Wyłączona"
 
-#: src/4dt_menu.c:91
-msgid "Audio Options"
-msgstr "Opcje dźwięku"
+#~ msgid "Audio Options"
+#~ msgstr "Opcje dźwięku"
 
-#: src/4dt_menu.c:92
-msgid "Sound"
-msgstr "Dźwięk"
+#~ msgid "Sound"
+#~ msgstr "Dźwięk"
 
-#: src/4dt_menu.c:93
-msgid "Music"
-msgstr "Muzyka"
+#~ msgid "Music"
+#~ msgstr "Muzyka"
 
-#: src/4dt_menu.c:94
-msgid "Game Options"
-msgstr "Opcje gry"
+#~ msgid "Game Options"
+#~ msgstr "Opcje gry"
 
-#: src/4dt_menu.c:95 src/4dt_menu.c:335
-msgid "Auto Player - ON"
-msgstr "Auto Player - Włączony"
+#~ msgid "Auto Player - ON"
+#~ msgstr "Auto Player - Włączony"
 
-#: src/4dt_menu.c:96 src/4dt_menu.c:346
-msgid "Diff. Level - Hard"
-msgstr "Poziom - Trudny"
+#~ msgid "Diff. Level - Hard"
+#~ msgstr "Poziom - Trudny"
 
-#: src/4dt_menu.c:97
-msgid "Controls"
-msgstr "Sterowanie"
+#~ msgid "Controls"
+#~ msgstr "Sterowanie"
 
-#: src/4dt_menu.c:98
-msgid "Help"
-msgstr "Pomoc"
+#~ msgid "Help"
+#~ msgstr "Pomoc"
 
-#: src/4dt_menu.c:99
-msgid "Help Page"
-msgstr "Strona pomocy"
+#~ msgid "Help Page"
+#~ msgstr "Strona pomocy"
 
-#: src/4dt_menu.c:100
-msgid "High Scores"
-msgstr "Rekordy"
+#~ msgid "High Scores"
+#~ msgstr "Rekordy"
 
-#: src/4dt_menu.c:101
-msgid "About"
-msgstr "O programie"
+#~ msgid "About"
+#~ msgstr "O programie"
 
-#: src/4dt_menu.c:102
-msgid "Back To Game"
-msgstr "Powrót do gry"
+#~ msgid "Back To Game"
+#~ msgstr "Powrót do gry"
 
-#: src/4dt_menu.c:103
-msgid "Quit"
-msgstr "Zakończ"
+#~ msgid "Quit"
+#~ msgstr "Zakończ"
 
-#: src/4dt_menu.c:110
-msgid "Game Controls:"
-msgstr "Sterowanie:"
+#~ msgid "Game Controls:"
+#~ msgstr "Sterowanie:"
 
-#: src/4dt_menu.c:111
-msgid " - arrow keys, backspace - rotate/turn the view port"
-msgstr " - strzałki, backspace - obracanie/przekręcanie widoku"
+#~ msgid " - arrow keys, backspace - rotate/turn the view port"
+#~ msgstr " - strzałki, backspace - obracanie/przekręcanie widoku"
 
-#: src/4dt_menu.c:112
-msgid " - z, x, c, v - turn the blocks around the 4 axis"
-msgstr " - z, x, c, v - obracanie bloków wokół 4 osi"
+#~ msgid " - z, x, c, v - turn the blocks around the 4 axis"
+#~ msgstr " - z, x, c, v - obracanie bloków wokół 4 osi"
 
-#: src/4dt_menu.c:113
-msgid " - 1, 2, 3 - select rotation axles"
-msgstr " - 1, 2, 3 - wybór osi obrotu"
+#~ msgid " - 1, 2, 3 - select rotation axles"
+#~ msgstr " - 1, 2, 3 - wybór osi obrotu"
 
-#: src/4dt_menu.c:114
-msgid " - +, -, pgdn, pgup - rotate around selected axle"
-msgstr " - +, -, pgdn, pgup - obrót wokół wybranej osi"
+#~ msgid " - +, -, pgdn, pgup - rotate around selected axle"
+#~ msgstr " - +, -, pgdn, pgup - obrót wokół wybranej osi"
 
-#: src/4dt_menu.c:115
-msgid " - home, end - rot. around selected and 4th axle"
-msgstr " - home, end - obrót wokół wybranej i 4. osi"
+#~ msgid " - home, end - rot. around selected and 4th axle"
+#~ msgstr " - home, end - obrót wokół wybranej i 4. osi"
 
-#: src/4dt_menu.c:116
-msgid " - space, enter - step down/drop the object"
-msgstr " - spacja, enter - opuszczenie/zrzucenie przedmiotu"
+#~ msgid " - space, enter - step down/drop the object"
+#~ msgstr " - spacja, enter - opuszczenie/zrzucenie przedmiotu"
 
-#: src/4dt_menu.c:117
-msgid " - F1 - F2 - switch view mode"
-msgstr " - F1 - F2 - przełączanie widoku"
+#~ msgid " - F1 - F2 - switch view mode"
+#~ msgstr " - F1 - F2 - przełączanie widoku"
 
-#: src/4dt_menu.c:124
-msgid "Tetris like game in four dimension"
-msgstr "Gra w rodzaju Tetris w czterech wymiarach"
+#~ msgid "Tetris like game in four dimension"
+#~ msgstr "Gra w rodzaju Tetris w czterech wymiarach"
 
-#: src/4dt_menu.c:137
-msgid "Game over."
-msgstr "Koniec gry."
+#~ msgid "Game over."
+#~ msgstr "Koniec gry."
 
-#: src/4dt_menu.c:308 src/4dt_menu.c:336
-msgid "Auto Player - OFF"
-msgstr "Auto Player - Wyłączony"
+#~ msgid "Auto Player - OFF"
+#~ msgstr "Auto Player - Wyłączony"
 
-#: src/4dt_menu.c:344
-msgid "Diff. Level - Easy"
-msgstr "Poziom - Łatwy"
+#~ msgid "Diff. Level - Easy"
+#~ msgstr "Poziom - Łatwy"
 
-#: src/4dt_menu.c:345
-msgid "Diff. Level - Medium"
-msgstr "Poziom - Średni"
+#~ msgid "Diff. Level - Medium"
+#~ msgstr "Poziom - Średni"
 
-#: src/4dt_menu.c:393
-msgid "Animation - OFF"
-msgstr "Animacja - Wyłączona"
+#~ msgid "Animation - OFF"
+#~ msgstr "Animacja - Wyłączona"
 
-#: src/4dt_menu.c:408
-msgid "Draw separate hypercubes"
-msgstr "Rysuj oddzielne hipersześciany"
+#~ msgid "Draw separate hypercubes"
+#~ msgstr "Rysuj oddzielne hipersześciany"
 
-#: src/4dt_menu.c:409
-msgid "Draw separate cubes"
-msgstr "Rysuj oddzielne sześciany"
+#~ msgid "Draw separate cubes"
+#~ msgstr "Rysuj oddzielne sześciany"
 
-#: src/4dt_menu.c:428
-msgid "Grid - ON"
-msgstr "Siatka - Włączona"
+#~ msgid "Grid - ON"
+#~ msgstr "Siatka - Włączona"
 
-#: src/4dt_scn.c:115
-#, c-format
-msgid "Score: %i"
-msgstr "Wynik: %i"
+#~ msgid "Score: %i"
+#~ msgstr "Wynik: %i"

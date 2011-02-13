@@ -1,0 +1,13 @@
+Source: 4dtris
+Section: games
+Priority: extra
+Maintainer: Simon Laszlo <laszlo.simon@gmail.com>
+Build-Depends: debhelper (>= 7), autotools-dev, libtool, gettext, libsdl1.2-dev, libsdl-ttf2.0-dev, libgl1-mesa-dev, libglu1-mesa-dev
+Standards-Version: 3.8.4
+Homepage: https://launchpad.net/4dtris
+
+Package: 4dtris
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Tetris like game in 4D
+ This Application is a Tetris game extended to 4 dimension using OpenGL and SDL.
