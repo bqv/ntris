@@ -1,7 +1,12 @@
 #!/bin/bash
-VER="0.4.0"
-wget -O - https://launchpad.net/~4dtris-dev/+members | html2text >AUTHORS 
-wget -O - http://sourceforge.net/apps/wordpress/dtris | html2text >NEWS 
+VER=`echo $PWD | perl -ne '/(\d+\.\d+\.\d+)$/; print $1'`
+wget -O - http://sourceforge.net/apps/wordpress/dtris/credits | \
+  html2text | \
+  awk '/=+/,/ Pages /' >AUTHORS 
+wget -O - http://sourceforge.net/apps/wordpress/dtris | \
+  html2text | \
+  awk '/=+/,/ Pages /' | \
+  perl -pe 's/\*{5}/\n/g' >NEWS 
 wget -O - http://www.gnu.org/licenses/gpl-3.0.txt >COPYING 
 bzr log >ChangeLog 
 echo "see README" >INSTALL
