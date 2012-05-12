@@ -27,7 +27,7 @@ function create_debian_dir {
   rm -rf debian/*.ex
   rm -rf debian/*.EX
   rm -rf debian/README.*
-
+  perl -i -pe "s/unstable/$DISTRO/; s/$VER/$VER-$DEBVER/" debian/changelog
   perl -i -pe 's/^#.*//; \
                s/<years>/2012/g; \
                s/<url:\/\/example\.com>/https:\/\/launchpad.net\/4dtris/; \
@@ -47,12 +47,18 @@ cd ..
 prepare_source_pack
 VER=$(ls 4dtris_*.orig.tar.gz | perl -pe 's/.*_(\d+\.\d+\.\d+)\..*/$1/' )
 cd 4dtris-$VER
+echo "Distribution:"
+read DISTRO
+echo "Deb version:"
+read DEBVER
 create_debian_dir
 
 fakeroot debian/rules clean
 fakeroot debian/rules build
 fakeroot debian/rules binary
-#debuild -us -uc
-debuild -F
+# debuild -us -uc # without PGP signature
+# debuild -B # build binary package
+debuild -S
 cd ..
-echo "upload: dput ppa:4dtris-dev/all-releases 4dtris_0.4.3_source.changes"
+echo "upload: dput ppa:4dtris-dev/all-releases 4dtris_..._source.changes"
+# dput mentors 4dtris....changes
