@@ -1,2 +1,0 @@
-?package(4dtris):needs="X11" section="Games/Puzzles"\
-  title="4dtris" command="/usr/games/4dtris"
