@@ -22,7 +22,7 @@ objects = $(sources:.c=.o)
 
 cflags = -Wall -Wextra --pedantic -g
 
-libs = -lGLU -lGL -lSDL -lSDL_ttf
+libs = -lGLU -lGL -lSDL -lSDL_ttf -lfontconfig
 
 all : $(bin)
 

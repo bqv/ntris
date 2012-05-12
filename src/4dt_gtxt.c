@@ -12,6 +12,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <libintl.h>
+#include <fontconfig/fontconfig.h>
 
 #include "4dt_main.h"
 
@@ -111,25 +112,32 @@ void g3dRenderString(double x, double y,
                     float color[4],
                     char *string)
 {
+  const char *font_full_name = "Liberation Sans Bold Italic";
   SDL_Color colorf;
   SDL_Rect position;
   int vPort[4];
+  FcPattern *pat = NULL;
+  FcObjectSet *os = NULL;
+  FcFontSet *fs = NULL;
 
   /* Go in HUD-drawing mode */
 
   TTF_Font* font;
 
-  font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-liberation/"
-                      "LiberationSans-BoldItalic.ttf",
-                      ((SDL_Surface *)getSDLScreen())->h / 24);
+  pat = FcPatternBuild (0, FC_FULLNAME, FcTypeString, font_full_name, NULL);
+  fs = FcFontList(NULL, pat, os);
+  if (fs && (fs->nfont > 0)) {
+    char* fontname;
+    FcPatternGetString(fs->fonts[0], FC_FILE, 0, (FcChar8 **) &fontname);
+    font = TTF_OpenFont(fontname, ((SDL_Surface *)getSDLScreen())->h / 24);
+  } else {
+    printf("Unable to find font: %s\n", font_full_name);
+    exit(1);
+  }
   if (font == NULL)
   {
-    font = TTF_OpenFont("LiberationSans-BoldItalic.ttf",
-                        ((SDL_Surface *)getSDLScreen())->h / 24);
-
-    if (font == NULL) {
-      printf("Unable to load font: %s \n", TTF_GetError());
-    }
+    printf("Unable to load font: %s \n", TTF_GetError());
+    exit(1);
   }
 
   glDisable(GL_LIGHTING);
