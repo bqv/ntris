@@ -42,8 +42,9 @@ DEBEMAIL="laszlo.simon@gmail.com"
 EMAIL=$DEBEMAIL
 DEBFULLNAME="Laszlo Simon"
 NAME=$DEBFULLNAME
+./gen-src-release.sh
 cd ..
-#prepare_source_pack
+prepare_source_pack
 VER=$(ls 4dtris_*.orig.tar.gz | perl -pe 's/.*_(\d+\.\d+\.\d+)\..*/$1/' )
 cd 4dtris-$VER
 create_debian_dir
@@ -51,5 +52,7 @@ create_debian_dir
 fakeroot debian/rules clean
 fakeroot debian/rules build
 fakeroot debian/rules binary
-debuild -us -uc
-
+#debuild -us -uc
+debuild -F
+cd ..
+echo "upload: dput ppa:4dtris-dev/all-releases 4dtris_0.4.3_source.changes"
