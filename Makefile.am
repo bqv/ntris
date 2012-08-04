@@ -4,7 +4,7 @@ bin_PROGRAMS = 4dtris
                   src/4dt_main.c  \
                   src/4dt_menu.c  \
                   src/4dt_scn.c   \
-                  erc/4dt_m.c     \
+                  src/4dt_m.c     \
                   src/4dt_m3d.c   \
                   src/4dt_m4d.c   \
                   src/4dt_g3d.c   \

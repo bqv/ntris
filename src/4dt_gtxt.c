@@ -135,7 +135,7 @@ void g3dRenderString(double x, double y,
   if (fs && (fs->nfont > 0)) {
     char* fontname;
     FcPatternGetString(fs->fonts[0], FC_FILE, 0, (FcChar8 **) &fontname);
-    font = TTF_OpenFont(fontname, ((SDL_Surface *)getSDLScreen())->h / 24);
+    font = TTF_OpenFont(fontname, gtxtHeight / 24);
   } else {
     printf("Unable to find font: %s\n", font_full_name);
     exit(1);
