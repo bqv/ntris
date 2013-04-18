@@ -22,7 +22,6 @@ Section ""
   File COPYING
   File ChangeLog
   File README
-  File po/*.gmo
 
   CreateDirectory "$SMPROGRAMS\4dtris"
   CreateShortCut "$SMPROGRAMS\4dtris\4dtris.lnk" "$INSTDIR\4dtris.exe" "" "$INSTDIR\4dtris.exe" 0
