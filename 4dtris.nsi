@@ -1,5 +1,5 @@
 Name "4dtris"
-OutFile "4dtris-0.5.0.exe"
+OutFile "4dtris-1.0.0.exe"
 InstallDir $PROGRAMFILES\4dtris
 RequestExecutionLevel user
 
