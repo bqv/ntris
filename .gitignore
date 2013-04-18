@@ -5,6 +5,5 @@ src/4dtris
 .cproject
 .project
 Debug
-Debug
 doc/gen/4dtris-sw-struct.dot
 doc/gen/4dtris-sw-struct.png
