@@ -10,7 +10,6 @@ doc/gen/4dtris-sw-struct.png
 .deps
 ABOUT-NLS
 AUTHORS
-COPYING
 ChangeLog
 INSTALL
 Makefile
@@ -26,6 +25,4 @@ config.sub
 configure
 depcomp
 install-sh
-m4/
 missing
-po/
