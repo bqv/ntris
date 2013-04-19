@@ -22,7 +22,7 @@ AC_CHECK_LIB([m], [sqrt])
 
 # Checks for header files.
 
-AC_CHECK_HEADERS([stdlib.h string.h math.h stdio.h limits.h GL/gl.h GL/glu.h SDL/SDL.h SDL/SDL_ttf.h libintl.h locale.h fontconfig/fontconfig.h])
+AC_CHECK_HEADERS([stdlib.h string.h math.h stdio.h limits.h GL/gl.h GL/glu.h SDL/SDL.h SDL/SDL_ttf.h locale.h fontconfig/fontconfig.h]
 
 # Checks for typedefs, structures, and compiler characteristics.
 
