@@ -117,6 +117,7 @@ int main(int argc, char *argv[])
 {
   int done;
   Uint8 *keys;
+  SDLMod mods;
   int uiKey;
   int w, h, ok, temp;
 
@@ -236,6 +237,7 @@ int main(int argc, char *argv[])
         case SDL_KEYDOWN:
         {
           keys = SDL_GetKeyState(NULL);
+          mods = SDL_GetModState();
           uiKey = 0;
           if(keys[SDLK_UP])        { uiKey = UI_KEY_UP;       }
           if(keys[SDLK_LEFT])      { uiKey = UI_KEY_LEFT;     }
@@ -255,10 +257,20 @@ int main(int argc, char *argv[])
           if(keys[SDLK_INSERT])    { uiKey = UI_KEY_INS;      }
           if(keys[SDLK_SPACE])     { uiKey = ' ';             }
           if(keys[SDLK_a])         { uiKey = 'a';             }
-          if(keys[SDLK_z])         { uiKey = 'z';             }
-          if(keys[SDLK_x])         { uiKey = 'x';             }
-          if(keys[SDLK_c])         { uiKey = 'c';             }
-          if(keys[SDLK_v])         { uiKey = 'v';             }
+		  if(mods && KMOD_SHIFT)
+		  {
+			  if(keys[SDLK_z])         { uiKey = 'Z';             }
+			  if(keys[SDLK_x])         { uiKey = 'X';             }
+			  if(keys[SDLK_c])         { uiKey = 'C';             }
+			  if(keys[SDLK_v])         { uiKey = 'V';             }
+		  }
+		  else
+		  {
+			  if(keys[SDLK_z])         { uiKey = 'z';             }
+			  if(keys[SDLK_x])         { uiKey = 'x';             }
+			  if(keys[SDLK_c])         { uiKey = 'c';             }
+			  if(keys[SDLK_v])         { uiKey = 'v';             }
+		  }
           if(keys[SDLK_1])         { uiKey = '1';             }
           if(keys[SDLK_2])         { uiKey = '2';             }
           if(keys[SDLK_3])         { uiKey = '3';             }
