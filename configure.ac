@@ -14,11 +14,24 @@ AC_PROG_CC
 # Checks for libraries.
 
 AC_CHECK_LIB([fontconfig], [FcFontList])
-AC_CHECK_LIB([GL], [glBegin])
-AC_CHECK_LIB([GLU], [gluQuadricNormals])
+AC_CHECK_LIB(GL, glBegin,
+			 OPENGL_LIBS="-lGL",
+			 AC_CHECK_LIB(opengl32, main,
+						  OPENGL_LIBS="-lopengl32",
+						  AC_MSG_ERROR([OpenGL library not found.])))
+AC_CHECK_LIB(GLU, gluQuadricNormals,
+			 OPENGL_LIBS="${OPENGL_LIBS} -lGLU",
+			 AC_CHECK_LIB(glu32, main,
+						  OPENGL_LIBS="${OPENGL_LIBS} -lglu32",
+						  AC_MSG_ERROR([GLU library not found.])))
+LIBS="${LIBS} ${OPENGL_LIBS}"
+AC_CHECK_LIB([mingw32], [main],
+			 LIBDEPS="-lmingw32")
 AC_CHECK_LIB([SDL], [SDL_Init])
+AC_CHECK_LIB([SDLmain], [main])
 AC_CHECK_LIB([SDL_ttf], [TTF_RenderUTF8_Blended])
 AC_CHECK_LIB([m], [sqrt])
+LIBS="${LIBDEPS} ${LIBS}"
 
 # Checks for header files.
 
