@@ -1,34 +1,4 @@
 /**
-   \mainpage 4DTRIS - Tetris like game in four dimension
-   \image html 4DTRIS_icon_128.png
-
-   \section License License
-
-   Copyright (C) 2008 Simon, Laszlo
-
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, version 3 of the License.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   \warning You should have received a copy of the GNU General Public License
-            along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-   \author Simon, Laszlo <laszlo.simon@gmail.com>
-
-   \section Source_diagram Source diagram
-
-   \dotfile 4dtris-sw-struct.dot
-
-   \section Read_me Read me
-
-   \include README
- */
-/**
  * \file 4dt_main.c
  * \brief This file is the main unit of the application.
  */
