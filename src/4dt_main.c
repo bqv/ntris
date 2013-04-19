@@ -129,7 +129,6 @@ int main(int argc, char *argv[])
 
   /* Initialize localization */
   setlocale(LC_ALL, "");
-  textdomain("4dtris");
 
   /*  Initialize the game engine. */
   engInitGame(&engGame, &onGameOver);
