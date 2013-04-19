@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <libintl.h>
 #include <locale.h>
 
 #include <GL/gl.h>

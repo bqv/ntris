@@ -11,7 +11,6 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include <libintl.h>
 #include <fontconfig/fontconfig.h>
 
 /*------------------------------------------------------------------------------

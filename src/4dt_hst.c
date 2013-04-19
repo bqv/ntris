@@ -13,7 +13,6 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
-#include <libintl.h>
 
 #include "4dt_hst.h"
 
