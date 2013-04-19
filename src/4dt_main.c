@@ -254,24 +254,42 @@ int main(int argc, char *argv[])
           if(keys[SDLK_DELETE])    { uiKey = UI_KEY_DEL;      }
           if(keys[SDLK_INSERT])    { uiKey = UI_KEY_INS;      }
           if(keys[SDLK_SPACE])     { uiKey = ' ';             }
-          if(keys[SDLK_a])         { uiKey = 'a';             }
+          if(keys[SDLK_q])         { uiKey = 'q';             }
+          if(keys[SDLK_w])         { uiKey = 'w';             }
 		  if((mods & KMOD_SHIFT) || (mods & KMOD_CAPS))
 		  {
+			  if(keys[SDLK_a])         { uiKey = 'A';             }
+			  if(keys[SDLK_s])         { uiKey = 'S';             }
+			  if(keys[SDLK_d])         { uiKey = 'D';             }
+			  if(keys[SDLK_f])         { uiKey = 'F';             }
+			  if(keys[SDLK_g])         { uiKey = 'G';             }
+			  if(keys[SDLK_h])         { uiKey = 'H';             }
 			  if(keys[SDLK_z])         { uiKey = 'Z';             }
 			  if(keys[SDLK_x])         { uiKey = 'X';             }
 			  if(keys[SDLK_c])         { uiKey = 'C';             }
 			  if(keys[SDLK_v])         { uiKey = 'V';             }
+			  if(keys[SDLK_b])         { uiKey = 'B';             }
+			  if(keys[SDLK_n])         { uiKey = 'N';             }
 		  }
 		  else
 		  {
+			  if(keys[SDLK_a])         { uiKey = 'a';             }
+			  if(keys[SDLK_s])         { uiKey = 's';             }
+			  if(keys[SDLK_d])         { uiKey = 'd';             }
+			  if(keys[SDLK_f])         { uiKey = 'f';             }
+			  if(keys[SDLK_g])         { uiKey = 'g';             }
+			  if(keys[SDLK_h])         { uiKey = 'h';             }
 			  if(keys[SDLK_z])         { uiKey = 'z';             }
 			  if(keys[SDLK_x])         { uiKey = 'x';             }
 			  if(keys[SDLK_c])         { uiKey = 'c';             }
 			  if(keys[SDLK_v])         { uiKey = 'v';             }
+			  if(keys[SDLK_b])         { uiKey = 'b';             }
+			  if(keys[SDLK_n])         { uiKey = 'n';             }
 		  }
           if(keys[SDLK_1])         { uiKey = '1';             }
           if(keys[SDLK_2])         { uiKey = '2';             }
           if(keys[SDLK_3])         { uiKey = '3';             }
+          if(keys[SDLK_4])         { uiKey = '4';             }
           if(uiKey != 0) { uiKeyPress(uiKey, &engGame, &scnSet); }
         }
         case SDL_MOUSEMOTION:

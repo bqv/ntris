@@ -120,11 +120,11 @@ static tMenuItem menuItems[eMenuItemNum] =
 /** Text of help page */
 static tMenuString menuHelpText[TEXTLINENUM] =
 {
-  "",
-  " - arrow keys, backspace - rotate/turn the view port",
-  " - 1, 2, 3 - select rotation axles",
+  " - z, x, c, v, b, n - rotate/turn the object",
+  " - a, s, d - move the object",
+  " - arrow keys, backspace, f, g, h - rotate/turn the view port",
+  " - 1, 2, 3, 4 - select rotation axles",
   " - +, -, pgdn, pgup - rotate around selected axle",
-  " - home, end - rot. around selected and 4th axle",
   " - del, ins - move on selected axis",
   " - space, enter - step down/drop the object",
   " - F1, F2 - switch view mode"
@@ -139,6 +139,7 @@ static tMenuString menuAboutText[TEXTLINENUM] =
   "Licensed under GPLv3 or any later version",
   "<frony0@gmail.com>",
   "https://github.com/frony0/4dtris",
+  "",
   ""
 };
 
