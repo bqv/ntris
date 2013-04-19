@@ -118,9 +118,9 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       break;
 
       /*  If 'z' then */
-      case 'z':
         /*  turn the solid */
         /*  around axis 2. */
+      case 'z':
         engTurn(0, 1, 1, 1, pEngGame);
       break;
       case 'Z':
@@ -128,9 +128,9 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       break;
 
       /*  If 'x' then */
-      case 'x':
         /*  turn the solid */
         /*  around axis 0. */
+      case 'x':
         engTurn(1, 2, 1, 1, pEngGame);
       break;
       case 'X':
@@ -138,9 +138,9 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       break;
 
       /*  If 'c' then */
-      case 'c':
         /*  turn the solid */
         /*  around axis 1. */
+      case 'c':
         engTurn(2, 0, 1, 1, pEngGame);
       break;
       case 'C':
@@ -148,9 +148,9 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       break;
 
       /*  If 'v' then */
-      case 'v':
         /*  turn the solid */
         /*  around axis 4. */
+      case 'v':
         engTurn(0, 3, 1, 1, pEngGame);
       break;
       case 'V':
