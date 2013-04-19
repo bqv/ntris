@@ -134,7 +134,7 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
         engTurn(1, 2, 1, 1, pEngGame);
       break;
       case 'X':
-        engTurn(1, 2, 1, 1, pEngGame);
+        engTurn(1, 2, -1, 1, pEngGame);
       break;
 
       /*  If 'c' then */
