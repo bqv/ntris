@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#touch NEWS AUTHORS COPYING ChangeLog
+#touch NEWS AUTHORS ChangeLog
 aclocal \
 && automake --gnu --add-missing \
 && autoconf
