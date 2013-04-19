@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
           if(keys[SDLK_INSERT])    { uiKey = UI_KEY_INS;      }
           if(keys[SDLK_SPACE])     { uiKey = ' ';             }
           if(keys[SDLK_a])         { uiKey = 'a';             }
-		  if(mods && KMOD_SHIFT)
+		  if((mods & KMOD_SHIFT) || (mods & KMOD_CAPS))
 		  {
 			  if(keys[SDLK_z])         { uiKey = 'Z';             }
 			  if(keys[SDLK_x])         { uiKey = 'X';             }
