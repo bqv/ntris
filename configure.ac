@@ -1,12 +1,11 @@
 
 AC_PREREQ([2.65])
 
-AC_INIT([4dtris], [1.0.0], [https://launchpad.net/4dtris])
-
-AM_INIT_AUTOMAKE(4dtris, 1.0.0)
+AC_INIT([4dtris], [1.0.0], [https://github.org/frony0/4dtris])
 
 AC_CONFIG_SRCDIR([src])
 
+AM_INIT_AUTOMAKE
 
 # Checks for programs.
 
