@@ -136,10 +136,9 @@ static tMenuString menuAboutText[TEXTLINENUM] =
   "",
   "4DTRIS",
   "Tetris like game in four dimension",
-  "Copyright (C) 2008-2010 Simon, Laszlo",
-  "<laszlo.simon@gmail.com>",
-  "http://dtris.sourceforge.net/",
-  "https://launchpad.net/4dtris",
+  "Licensed under GPLv3 or any later version",
+  "<frony0@gmail.com>",
+  "https://github.com/frony0/4dtris",
   ""
 };
 
