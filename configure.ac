@@ -26,7 +26,7 @@ AC_CHECK_LIB(GLU, gluQuadricNormals,
 						  AC_MSG_ERROR([GLU library not found.])))
 LIBS="${LIBS} ${OPENGL_LIBS}"
 AC_CHECK_LIB([mingw32], [main],
-			 LIBDEPS="-lmingw32")
+			 LIBDEPS="4dtris.res -mwindows -lmingw32")
 AC_CHECK_LIB([SDL], [SDL_Init])
 AC_CHECK_LIB([SDLmain], [main])
 AC_CHECK_LIB([SDL_ttf], [TTF_RenderUTF8_Blended])
