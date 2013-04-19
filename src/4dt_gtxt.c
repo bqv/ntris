@@ -154,7 +154,7 @@ void g3dRenderString(double x, double y,
   {
     font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-liberation/"
         "LiberationSans-BoldItalic.ttf",
-        ((SDL_Surface *)getSDLScreen())->h / 24);
+        gtxtHeight / 24);
   }
 #endif
 
