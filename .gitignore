@@ -1,4 +1,22 @@
-obj
+# Object files
+*.o
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.appobj
+
+# Custom
 doc/doxygen
 src/4dtris
 4dtris
