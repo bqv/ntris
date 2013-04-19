@@ -58,7 +58,7 @@ void SDL_GL_RenderText(char *text,
   GLuint texture;
 
   /* Use SDL_TTF to render our text */
-  initial = TTF_RenderUTF8_Blended(font, gettext(text), color);
+  initial = TTF_RenderUTF8_Blended(font, text, color);
 
   /* Convert the rendered text to a known format */
   w = nextpoweroftwo(initial->w);
