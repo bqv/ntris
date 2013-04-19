@@ -44,6 +44,4 @@ man_MANS = 4dtris.6
 icondir = /usr/share/games/4dtris
 icon_DATA = doc/icon/4dtris.png
 
-SUBDIRS = po
-
 ACLOCAL_AMFLAGS = -I m4

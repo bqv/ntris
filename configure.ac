@@ -7,8 +7,6 @@ AM_INIT_AUTOMAKE(4dtris, 1.0.0)
 
 AC_CONFIG_SRCDIR([src])
 
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.18)
 
 # Checks for programs.
 
