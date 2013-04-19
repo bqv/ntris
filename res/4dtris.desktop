@@ -2,7 +2,7 @@
 Name=4dtris
 Comment=Tetris in four dimensions
 Exec=4dtris
-Icon=/usr/share/games/4dtris/4dtris.png
+Icon=/usr/share/4dtris/4dtris.png
 Terminal=0
 Type=Application
 Categories=Game;LogicGame
