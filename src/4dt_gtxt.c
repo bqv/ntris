@@ -152,7 +152,7 @@ void g3dRenderString(double x, double y,
 #else
   if (font == NULL)
   {
-    font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-liberation/"
+    font = TTF_OpenFont("/usr/share/fonts/TTF/ttf-liberation/"
         "LiberationSans-BoldItalic.ttf",
         gtxtHeight / 24);
   }
