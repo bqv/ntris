@@ -1,3 +1,5 @@
+#!/bin/sh -x 
+
 ./autogen.sh
 ./configure
 make
