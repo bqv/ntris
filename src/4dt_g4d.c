@@ -339,13 +339,13 @@ void g4dDrawLine(tM4dVector point0,
 }
 
 /** \brief Draws 4D Sphere */
-void g4dDrawSphere(tM4dVector center, float color[4], double radius)
+void g4dDrawSphere(tM4dVector center, double radius)
 {
   tM3dVector center3D;
 
   center3D = g4dProject(center);
 
-  g3dDrawSphere(center3D, color, radius);
+  g3dDrawSphere(center3D, radius);
 }
 
 /** \brief Draws 4D polygon */
