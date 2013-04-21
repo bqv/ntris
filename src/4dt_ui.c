@@ -239,10 +239,6 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
         pScnSet->axle = 2;
       break;
 
-      case '4':
-        pScnSet->axle = 3;
-      break;
-
       case UI_KEY_PGUP:
       case '+':
       {

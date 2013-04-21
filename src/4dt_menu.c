@@ -123,7 +123,7 @@ static tMenuString menuHelpText[TEXTLINENUM] =
   " - z, x, c, v, b, n - rotate/turn the object",
   " - a, s, d - move the object",
   " - arrow keys, backspace, f, g, h - rotate/turn the view port",
-  " - 1, 2, 3, 4 - select rotation axles",
+  " - 1, 2, 3 - select an axle",
   " - +, -, pgdn, pgup - rotate around selected axle",
   " - del, ins - move on selected axis",
   " - space, enter - step down/drop the object",
