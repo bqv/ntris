@@ -374,41 +374,6 @@ static void scnDrawObject(tEngGame *pEngGame,
   }
 }
 
-/*
-tM3dVector cursor;
-extern int mouLastX;
-extern int mouLastY;
-extern tM4dMatrix g4dViewport;
-static void scnDrawCursor(void)
-{
-  tM3dVector cursor1, cursor2;
-  tM3dVector mouse2D = m3dVector(mouLastX, mouLastY, 0.0);
-  tM3dVector mouse3D = g3dTransformTo(eG3dWorld3D, mouse2D);
-//tM3dVector camera  = m4dVector4DTo3D(m4dMultiplyMV(m4dTransposeM(g4dViewport),
-//                                     m4dVector3DTo4D(scnCamera, 1.0)));
-  tM3dVector camera = scnCamera;
-  tM3dLine   ray     = m3dLine(camera, mouse3D);
-  tM3dSphere sphere  = m3dSphere(m3dVector(0.0,0.0,0.0), 2.0 );
-//tM3dVector normal  = m4dVector4DTo3D(m4dMultiplyMV(m4dTransposeM(g4dViewport),
-//                                     m4dVector3DTo4D(m3dVector(0.0,0.0,1.0),1.0)));
-  tM3dVector normal  = m3dVector(0.0,0.0,1.0);
-  tM3dPlane  plane   = m3dPlane(m3dVector(0.0,0.0,0.0), normal);
-
-  m3dSectSphereLine(sphere, ray, &cursor1, &cursor2);
-  if (cursor1.c[0] != cursor1.c[0])
-  {
-    m3dSectPlaneLine(plane, ray, &cursor);
-  }
-  else
-  {
-    cursor = ( m3dAbs(m3dSub(camera,cursor1)) < m3dAbs(m3dSub(camera,cursor2)) )
-             ? cursor1 : cursor2;
-  }
-
-//  g4dDrawSphere(m4dVector3DTo4D(cursor,0.0), 0.1);
-  g3dDrawSphere(mouse3D, 0.1);
-}
-*/
 /** Main drawing function. */
 void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 {
@@ -467,9 +432,7 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
     scnDrawBottomLevel(mask, 0, pEngGame);
 
     scnDrawObject(pEngGame, pScnSet, 0);
-/*
-    scnDrawCursor();
-*/
+
     scnDrawRotAxis(pScnSet->axle, pEngGame);
 
     g3dSetTransparentMode(0);
