@@ -52,8 +52,8 @@ static int mouDownX  = 0;
 static int mouDownY  = 0;
 static tM3dVector downedV;
 static tMouState mouState = eMouStateNone;
-static int mouLastX  = 0;
-static int mouLastY  = 0;
+int mouLastX  = 0;
+int mouLastY  = 0;
 
 /*------------------------------------------------------------------------------
    PROTOTYPES
