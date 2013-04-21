@@ -122,10 +122,10 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       /*  If 'z' then */
         /*  turn the solid */
       case 'z':
-        engTurn(0, 1, 1, 1, pEngGame);
+        engTurn(1, 2, 1, 1, pEngGame);
       break;
       case 'Z':
-        engTurn(0, 1, -1, 1, pEngGame);
+        engTurn(1, 2, -1, 1, pEngGame);
       break;
       /*  If 'a' then */
         /*  move the solid */
@@ -139,10 +139,10 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       /*  If 'x' then */
         /*  turn the solid */
       case 'x':
-        engTurn(1, 2, 1, 1, pEngGame);
+        engTurn(2, 0, 1, 1, pEngGame);
       break;
       case 'X':
-        engTurn(1, 2, -1, 1, pEngGame);
+        engTurn(2, 0, -1, 1, pEngGame);
       break;
       /*  If 's' then */
         /*  move the solid */
@@ -156,10 +156,10 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
       /*  If 'c' then */
         /*  turn the solid */
       case 'c':
-        engTurn(2, 0, 1, 1, pEngGame);
+        engTurn(0, 1, 1, 1, pEngGame);
       break;
       case 'C':
-        engTurn(2, 0, -1, 1, pEngGame);
+        engTurn(0, 1, -1, 1, pEngGame);
       break;
       /*  If 'd' then */
         /*  move the solid */
