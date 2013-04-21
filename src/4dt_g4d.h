@@ -56,7 +56,7 @@ extern void g4dDrawLine(tM4dVector point0,
                         float color1[4],
                         float linewidth);
 
-extern void g4dDrawSphere(tM4dVector center, double radius);
+extern void g4dDrawSphere(tM4dVector center, float color[4], double radius);
 extern tM3dVector g4dProject(tM4dVector vector);
 
 #endif /* _4DT_G4D_H_ */

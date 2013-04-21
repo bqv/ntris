@@ -288,12 +288,13 @@ void g3dDrawCylinder(tM3dVector v1,
 }
 
 /** Draws a sphere */
-void g3dDrawSphere(tM3dVector o, double radius)
+void g3dDrawSphere(tM3dVector o, float color[4], double radius)
 {
   int resolution = 5;
 
   GLUquadricObj *quadric=gluNewQuadric();
 
+  glColor4d(color[0], color[1], color[2], color[3]);
   gluQuadricNormals(quadric, GLU_SMOOTH);
   glPushMatrix();
   glTranslatef(o.c[0], o.c[1], o.c[2]);
@@ -348,7 +349,7 @@ void g3dDrawPolyTube(tM3dVector points[4],
   {
     if ((sideVisible == NULL) || (sideVisible[k] == 1))
     {
-      g3dDrawSphere(points[k], lineWidth/2.0);
+      g3dDrawSphere(points[k], color, lineWidth/2.0);
 
       g3dDrawCylinder(points[k],
                       points[(k+1) % 4],

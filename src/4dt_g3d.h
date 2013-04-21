@@ -33,7 +33,7 @@ extern void g3dSetTransparentMode(int enable);
 extern void g3dDrawCylinder(tM3dVector v1,
                             tM3dVector v2,
                             float radius);
-extern void g3dDrawSphere(tM3dVector o, double radius);
+extern void g3dDrawSphere(tM3dVector o, float color[4], double radius);
 extern void g3dDrawPolyWire(tM3dVector points[4],
                             float color[4],
                             int sideVisible[4]);
