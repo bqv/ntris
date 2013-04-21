@@ -78,8 +78,6 @@ static void g4dDrawPoly(tM4dVector points[4],
                         int fill,
                         int sideVisible[4]);
 
-static tM3dVector g4dProject(tM4dVector vector);
-
 static tM3dVector g4d2PointProject(tM4dVector vector);
 
 static int g4dAutoRotateViewport(int interval, void *param);
@@ -292,7 +290,7 @@ static tM3dVector g4d2PointProject(tM4dVector vector)
 }
 
 /** Project 4D point to the 3D space. */
-static tM3dVector g4dProject(tM4dVector vector)
+tM3dVector g4dProject(tM4dVector vector)
 {
   tM3dVector result;
 
