@@ -15,6 +15,7 @@
 #include "4dt_m3d.h"
 #include "4dt_m4d.h"
 #include "4dt_eng.h"
+#include "4dt_mou.h"
 #include "4dt_scn.h"
 #include "4dt_g3d.h"
 #include "4dt_gtxt.h"
@@ -214,6 +215,40 @@ static void scnDrawRotAxis(int axle, tEngGame *pEngGame)
   g4dDrawLine(m4dNullVector(),
               m4dMultiplySV(10, m4dUnitVector(eM4dAxisW)),
               color0, color1, 1.0);
+}
+
+/** draws the compass */
+static void scnDrawCompass(tEngGame *pEngGame)
+{
+	int i;
+	tM3dVector origin3D;
+  const double compassSize = 0.5;
+
+  float color0[4][4] = {{1.0, 0.0, 0.0, 0.8},
+										{1.0, 1.0, 0.0, 0.8},
+										{0.0, 1.0, 0.0, 0.8},
+										{0.0, 0.0, 1.0, 0.8}};
+  float color1[4][4] = {{1.0, 0.0, 0.0, 0.0},
+										{1.0, 1.0, 0.0, 0.0},
+										{0.0, 1.0, 0.0, 0.0},
+										{0.0, 0.0, 1.0, 0.0}};
+
+	origin3D = g3dTransformTo(eG3dWorld3D, m3dVector(200.0, 200.0, 0.0));
+	origin3D = g3dTransformTo(eG3dWorld3D, m3dVector(mouLastX, mouLastY, 0.0));
+
+	for (i=0; i < 4; i++)
+  {
+      tM4dVector axis = m4dUnitVector(i);
+      tM3dVector tip = g4dProject(axis);
+      tip = m3dMultiplySV(compassSize, tip);
+      tip = m3dAdd(origin3D, tip);
+      tM3dVector butt = g4dProject(axis);
+      butt = m3dMultiplySV(-1*compassSize, butt);
+      butt = m3dAdd(origin3D, butt);
+
+      g3dDrawLine(origin3D, tip, color0[i], color1[i], 5.0);
+      g3dDrawLine(origin3D, butt, color0[i], color1[i], 5.0);
+  }
 }
 
 /** Initialize the scene */
@@ -432,6 +467,8 @@ void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
     scnDrawBottomLevel(mask, 0, pEngGame);
 
     scnDrawObject(pEngGame, pScnSet, 0);
+
+	scnDrawCompass(pEngGame);
 
     scnDrawRotAxis(pScnSet->axle, pEngGame);
 
