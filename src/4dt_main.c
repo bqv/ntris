@@ -290,6 +290,7 @@ int main(int argc, char *argv[])
           if(keys[SDLK_2])         { uiKey = '2';             }
           if(keys[SDLK_3])         { uiKey = '3';             }
           if(uiKey != 0) { uiKeyPress(uiKey, &engGame, &scnSet); }
+          break;
         }
         case SDL_MOUSEMOTION:
         {
