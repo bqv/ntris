@@ -32,7 +32,7 @@ ntris_SOURCES =  ../src/ai.c    \
                  ../src/timer.h
 ntris_LDADD = $(LIBOBJS)
 
-EXTRA_DIST = config.rpath m4/ChangeLog mkinstalldirs m4/Makefile.in ntris.desktop doc/icon/ntris.png
+EXTRA_DIST = config.rpath m4/ChangeLog mkinstalldirs m4/Makefile.in ntris.desktop res/ntris.png
 
 Applicationsdir = /usr/share/applications
 Applications_DATA = ../res/ntris.desktop
@@ -42,6 +42,6 @@ bindir = /usr/bin/
 man_MANS = ../res/ntris.6
 
 icondir = /usr/share/ntris
-icon_DATA = ../doc/icon/ntris.png
+icon_DATA = ../res/ntris.png
 
 ACLOCAL_AMFLAGS = -I m4
