@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=4dtris
+Name=ntris
 Comment=Tetris in four dimensions
-Exec=4dtris
-Icon=/usr/share/4dtris/4dtris.png
+Exec=ntris
+Icon=/usr/share/ntris/ntris.png
 Terminal=0
 Type=Application
 Categories=Game;LogicGame
-StartupWMClass=4dtris
+StartupWMClass=ntris

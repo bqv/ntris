@@ -1,7 +1,7 @@
 
 AC_PREREQ([2.65])
 
-AC_INIT([4dtris], [1.0.0], [https://github.org/frony0/4dtris])
+AC_INIT([ntris], [1.0.0], [https://github.org/frony0/ntris])
 
 AC_CONFIG_SRCDIR([src])
 
@@ -26,7 +26,7 @@ AC_CHECK_LIB(GLU, gluQuadricNormals,
 						  AC_MSG_ERROR([GLU library not found.])))
 LIBS="${LIBS} ${OPENGL_LIBS}"
 AC_CHECK_LIB([mingw32], [main],
-			 LIBDEPS="../res/4dtris.res -mwindows -lmingw32")
+			 LIBDEPS="../res/ntris.res -mwindows -lmingw32")
 AC_CHECK_LIB([SDL], [SDL_Init])
 AC_CHECK_LIB([SDLmain], [main])
 AC_CHECK_LIB([SDL_ttf], [TTF_RenderUTF8_Blended])

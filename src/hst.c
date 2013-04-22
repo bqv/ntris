@@ -149,7 +149,7 @@ void hstInit(void)
 
     /* concat score table file name */
     strcpy(hstScoreFile, (home != NULL) ? home : ".");
-    strcat(hstScoreFile, "/.4dtris-scores");
+    strcat(hstScoreFile, "/.ntris-scores");
 
     fp = fopen(hstScoreFile,"r");
 

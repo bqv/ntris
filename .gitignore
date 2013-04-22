@@ -18,14 +18,8 @@
 
 # Custom
 .ttf
-doc/doxygen
-src/4dtris
-4dtris
-.cproject
-.project
-Debug
-doc/gen/4dtris-sw-struct.dot
-doc/gen/4dtris-sw-struct.png
+bin/
+build/
 .deps
 ABOUT-NLS
 AUTHORS

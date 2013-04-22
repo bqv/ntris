@@ -2,20 +2,20 @@ SUBDIRS = build
 
 run: all
 	@pushd build; \
-	4dtris; \
+	ntris; \
 	popd;
 
 debug: all
 	@pushd build; \
-	4dtris --debug; \
+	ntris --debug; \
 	popd;
 
 test:
 	@pushd build; \
-	4dtris; \
+	ntris; \
 	popd;
 
 gdb:
 	@pushd bin; \
-	gdb 4dtris; \
+	gdb ntris; \
 	popd;	

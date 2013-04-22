@@ -134,11 +134,11 @@ static tMenuString menuHelpText[TEXTLINENUM] =
 static tMenuString menuAboutText[TEXTLINENUM] =
 {
     "",
-    "4DTRIS",
+    "NTRIS",
     "Tetris like game in four dimension",
     "Licensed under GPLv3 or any later version",
     "<frony0@gmail.com>",
-    "https://github.com/frony0/4dtris",
+    "https://github.com/frony0/ntris",
     "",
     ""
 };

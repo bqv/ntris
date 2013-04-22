@@ -1,0 +1,3 @@
+#define AppIcon 101
+
+AppIcon ICON "doc/icon/ntris.ico"

@@ -116,7 +116,7 @@ static void terminate(void)
     TTF_Quit();
     SDL_Quit();
 
-    confSave(confUserFilename("4dtris"));
+    confSave(confUserFilename("ntris"));
 
     exit(0);
 }
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 
     processARGV(argc, argv);
 
-    confLoad(confUserFilename("4dtris"));
+    confLoad(confUserFilename("ntris"));
 
     /* Initialize localization */
     setlocale(LC_ALL, "");
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
         SDL_Quit();
         exit(2);
     }
-    SDL_WM_SetCaption("4DTris", "4dtris");
+    SDL_WM_SetCaption("NTris", "ntris");
 
     if (TTF_Init() != 0)
     {

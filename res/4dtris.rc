@@ -1,3 +1,0 @@
-#define AppIcon 101
-
-AppIcon ICON "doc/icon/4dtris.ico"

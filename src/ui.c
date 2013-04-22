@@ -286,7 +286,7 @@ void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet)
             /*  Quit. */
             TTF_Quit();
             SDL_Quit();
-            confSave(confUserFilename("4dtris"));
+            confSave(confUserFilename("ntris"));
             exit(0);
             break;
 
