@@ -31,10 +31,10 @@
 
 typedef enum
 {
-  eMouStateNone,
-  eMouStateViewChange,
-  eMouStateObjRotate,
-  eMouStateMenu
+    eMouStateNone,
+    eMouStateViewChange,
+    eMouStateObjRotate,
+    eMouStateMenu
 } tMouState;
 
 /*------------------------------------------------------------------------------
@@ -65,89 +65,93 @@ int mouLastY  = 0;
 
 void mouResize(int width, int height)
 {
-  mouWinWidth = width;
-  mouWinHeight = height;
+    mouWinWidth = width;
+    mouWinHeight = height;
 }
 
 
 void mouMove(int x, int y, tEngGame *pEngGame)
 {
-  switch (mouState)
-  {
+    switch (mouState)
+    {
     case eMouStateViewChange:
     {
-      g4dRotateViewport(eM4dAxisY, eM4dAxisZ, 5.0 * (1.0*y - mouLastY)/mouWinHeight);
-      g4dRotateViewport(eM4dAxisX, eM4dAxisY, 5.0 * (1.0*x - mouLastX)/mouWinWidth);
-      break;
+        g4dRotateViewport(eM4dAxisY, eM4dAxisZ, 5.0 * (1.0*y - mouLastY)/mouWinHeight);
+        g4dRotateViewport(eM4dAxisX, eM4dAxisY, 5.0 * (1.0*x - mouLastX)/mouWinWidth);
+        break;
     }
     case eMouStateMenu:
     {
-      menuNavigateTo( ((1.0 * MENUMAXITEM * y) / mouWinHeight) - 0.5 );
-      break;
+        menuNavigateTo( ((1.0 * MENUMAXITEM * y) / mouWinHeight) - 0.5 );
+        break;
     }
     case eMouStateNone:
     {
-      if (menuIsActived()) { mouState = eMouStateMenu; }
-      break;
+        if (menuIsActived())
+        {
+            mouState = eMouStateMenu;
+        }
+        break;
     }
     case eMouStateObjRotate:
     {
-/*    extern tM3dVector cursor;
-      int ax1 = m3dOrtho(downedV);
-      int ax2 = m3dOrtho(cursor);
+        /*    extern tM3dVector cursor;
+              int ax1 = m3dOrtho(downedV);
+              int ax2 = m3dOrtho(cursor);
 
-      if (ax1 != ax2)
-      {
-        engTurn(ax1, ax2,
-                downedV.c[ax1]>=0 ? 1 : -1,
-                cursor.c[ax2]>=0  ? 1 : -1, pEngGame);
-        downedV = cursor;
-      }
-*/
-      break;
+              if (ax1 != ax2)
+              {
+                engTurn(ax1, ax2,
+                        downedV.c[ax1]>=0 ? 1 : -1,
+                        cursor.c[ax2]>=0  ? 1 : -1, pEngGame);
+                downedV = cursor;
+              }
+        */
+        break;
     }
-    default: break;
-  }
-  mouLastX = x;
-  mouLastY = y;
+    default:
+        break;
+    }
+    mouLastX = x;
+    mouLastY = y;
 }
 
 void mouDown(int x, int y)
 {
-  mouDowned = 1;
+    mouDowned = 1;
 
-  if (mouState == eMouStateNone)
-  {
-    mouState  = eMouStateObjRotate;
-    /*mouState  = eMouStateViewChange;*/
-  }
+    if (mouState == eMouStateNone)
+    {
+        mouState  = eMouStateObjRotate;
+        /*mouState  = eMouStateViewChange;*/
+    }
 
-  mouLastX  = mouDownX = x;
-  mouLastY  = mouDownY = y;
+    mouLastX  = mouDownX = x;
+    mouLastY  = mouDownY = y;
 
-/*  downedV = cursor;*/
+    /*  downedV = cursor;*/
 }
 
 void mouUp(int x, int y, tEngGame *pEngGame)
 {
-  switch (mouState)
-  {
+    switch (mouState)
+    {
     case eMouStateMenu:
     {
-      menuNavigate(eMenuForward);
-      break;
+        menuNavigate(eMenuForward);
+        break;
     }
     case eMouStateViewChange:
     case eMouStateNone:
     default:
     {
-      break;
+        break;
     }
-  }
+    }
 
-  mouDowned = 0;
-  mouState = eMouStateNone;
+    mouDowned = 0;
+    mouState = eMouStateNone;
 
-  mouLastX = x;
-  mouLastY = y;
+    mouLastX = x;
+    mouLastY = y;
 }

@@ -19,8 +19,8 @@
 
 typedef enum
 {
-  eG3dWorld3D, /**< 3D world coordinate system */
-  eG3dWindow2D /**< 2D window coordinate system */
+    eG3dWorld3D, /**< 3D world coordinate system */
+    eG3dWindow2D /**< 2D window coordinate system */
 }
 tG3dSystem;
 

@@ -37,10 +37,10 @@
 
 void mSolveSqrEq(double a, double b, double c, double *n1, double *n2)
 {
-  double D;
+    double D;
 
-  D = b*b - 4.0*a*c;
+    D = b*b - 4.0*a*c;
 
-  *n1 = (-b - sqrt(D)) / (2.0 * a);
-  *n2 = (-b + sqrt(D)) / (2.0 * a);
+    *n1 = (-b - sqrt(D)) / (2.0 * a);
+    *n2 = (-b + sqrt(D)) / (2.0 * a);
 }

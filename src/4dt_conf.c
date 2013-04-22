@@ -39,116 +39,119 @@ static void confAddVar(char *name, double value);
 /** returns the user config file name. parameter: application name */
 char *confUserFilename(char *name)
 {
-  static char *filename;
-  char *home = getenv("HOME");
+    static char *filename;
+    char *home = getenv("HOME");
 
-  if (home == NULL) { home = "."; }
+    if (home == NULL)
+    {
+        home = ".";
+    }
 
-  filename = malloc(strlen(home) + 2 + strlen(name) + 1);
+    filename = malloc(strlen(home) + 2 + strlen(name) + 1);
 
-  strcpy(filename, home);
-  strcat(filename, "/.");
-  strcat(filename, name);
+    strcpy(filename, home);
+    strcat(filename, "/.");
+    strcat(filename, name);
 
-  return(filename);
+    return(filename);
 }
 
 void confLoad(char *filename)
 {
-  FILE *file = NULL;
-  char name[256];
-  char line[256];
-  float value;
+    FILE *file = NULL;
+    char name[256];
+    char line[256];
+    float value;
 
-  file = fopen(filename, "r");
+    file = fopen(filename, "r");
 
-  if (file != NULL)
-  {
-    while(fgets(line, sizeof(line), file) != NULL)
+    if (file != NULL)
     {
-      if (sscanf(line, "%s = %f", name, &value) == 2)
-      {
-        confSetVar((char *)name, value);
-      }
+        while(fgets(line, sizeof(line), file) != NULL)
+        {
+            if (sscanf(line, "%s = %f", name, &value) == 2)
+            {
+                confSetVar((char *)name, value);
+            }
+        }
+        fclose(file);
     }
-    fclose(file);
-  }
 }
 
 double confGetVar(char *name, int *exists)
 {
-  int i;
-  *exists = 0;
+    int i;
+    *exists = 0;
 
-  for(i = 0; i < confNum; i++)
-  {
-    if (strcmp(confKeys[i], name) == 0)
+    for(i = 0; i < confNum; i++)
     {
-      *exists = 1;
-      return(confVals[i]);
+        if (strcmp(confKeys[i], name) == 0)
+        {
+            *exists = 1;
+            return(confVals[i]);
+        }
     }
-  }
-  return(0);
+    return(0);
 }
 
 void confSetVar(char *name, double value)
 {
-  int i;
-  int exists = 0;
+    int i;
+    int exists = 0;
 
-  for(i = 0; i < confNum; i++)
-  {
-    if (strcmp(confKeys[i], name) == 0)
+    for(i = 0; i < confNum; i++)
     {
-      confVals[i] = value;
-      exists = 1;
+        if (strcmp(confKeys[i], name) == 0)
+        {
+            confVals[i] = value;
+            exists = 1;
+        }
     }
-  }
 
-  if (!exists)
-  {
-    confAddVar(name, value);
-  }
+    if (!exists)
+    {
+        confAddVar(name, value);
+    }
 }
 
 static void confAddVar(char *name, double value)
 {
-  char** tempConfKeys = malloc((confNum+1) * sizeof(char*));
-  double* tempConfVals = malloc((confNum+1) * sizeof(double));
+    char** tempConfKeys = malloc((confNum+1) * sizeof(char*));
+    double* tempConfVals = malloc((confNum+1) * sizeof(double));
 
-  if(confNum > 0)
-  {
-    memcpy(tempConfKeys, confKeys, confNum * sizeof(char*));
-    memcpy(tempConfVals, confVals, confNum * sizeof(double));
-    free(confKeys);
-    free(confVals);
-  }
-  confNum++;
+    if(confNum > 0)
+    {
+        memcpy(tempConfKeys, confKeys, confNum * sizeof(char*));
+        memcpy(tempConfVals, confVals, confNum * sizeof(double));
+        free(confKeys);
+        free(confVals);
+    }
+    confNum++;
 
-  confKeys = tempConfKeys;
-  confVals = tempConfVals;
-  confKeys[confNum-1] = malloc(strlen(name)+1);
-  strcpy(confKeys[confNum-1], name);
-  confVals[confNum-1] = value;
+    confKeys = tempConfKeys;
+    confVals = tempConfVals;
+    confKeys[confNum-1] = malloc(strlen(name)+1);
+    strcpy(confKeys[confNum-1], name);
+    confVals[confNum-1] = value;
 }
 
 void confSave(char *filename)
 {
-  FILE *file;
-  int i;
+    FILE *file;
+    int i;
 
-  file = fopen(filename, "w");
+    file = fopen(filename, "w");
 
-  if (file != NULL)
-  {
-    for(i = 0; i < confNum; i++)
+    if (file != NULL)
     {
-      fprintf(file, "%s = %g\n",confKeys[i], confVals[i]);
+        for(i = 0; i < confNum; i++)
+        {
+            fprintf(file, "%s = %g\n",confKeys[i], confVals[i]);
+        }
+        fclose(file);
     }
-    fclose(file);
-  }
-  else
-  {
-    fprintf(stderr, "Error: can not save config file: %s\n", filename);
-  }
+    else
+    {
+        fprintf(stderr, "Error: can not save config file: %s\n", filename);
+    }
 }

@@ -16,25 +16,25 @@
 
 typedef enum
 {
-  eScnViewMono,
-  eScnViewStereogram,
-  eScnViewAnaglyph,
-  eScnViewModeNum
+    eScnViewMono,
+    eScnViewStereogram,
+    eScnViewAnaglyph,
+    eScnViewModeNum
 }
 tScnViewMode;
 
 typedef struct
 {
-  /** Flag indicates if hypercube should be drawn or only the "top side" cube */
-  int enableHypercubeDraw;
-  /** Flag indicates if block should be drawn separated */
-  int enableSeparateBlockDraw;
-  /** Flag indicates if grid has to be drawn */
-  int enableGridDraw;
-  /** selected axle for rotation */
-  int axle;
-  /** switch for stereo view modes */
-  tScnViewMode viewMode;
+    /** Flag indicates if hypercube should be drawn or only the "top side" cube */
+    int enableHypercubeDraw;
+    /** Flag indicates if block should be drawn separated */
+    int enableSeparateBlockDraw;
+    /** Flag indicates if grid has to be drawn */
+    int enableGridDraw;
+    /** selected axle for rotation */
+    int axle;
+    /** switch for stereo view modes */
+    tScnViewMode viewMode;
 }
 tScnSet;
 

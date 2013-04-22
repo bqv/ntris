@@ -17,44 +17,44 @@
 
 typedef enum
 {
-  eM3dAxisX  = 0,
-  eM3dAxisY  = 1,
-  eM3dAxisZ  = 2,
-  eM3dDimNum = 3
+    eM3dAxisX  = 0,
+    eM3dAxisY  = 1,
+    eM3dAxisZ  = 2,
+    eM3dDimNum = 3
 } eM3dAxis;
 
 
 /** 3D vector container */
 typedef struct
 {
-  double c[eM3dDimNum];
+    double c[eM3dDimNum];
 } tM3dVector;
 
 /** 3D line container */
 typedef struct
 {
-  tM3dVector p0;
-  tM3dVector p1;
+    tM3dVector p0;
+    tM3dVector p1;
 } tM3dLine;
 
 /** 3D sphere container */
 typedef struct
 {
-  tM3dVector o;
-  double     r;
+    tM3dVector o;
+    double     r;
 } tM3dSphere;
 
 /** 3D plane container */
 typedef struct
 {
-  tM3dVector point;
-  tM3dVector normal;
+    tM3dVector point;
+    tM3dVector normal;
 } tM3dPlane;
 
 /** 4D matrix container */
 typedef struct
 {
-  double c[eM3dDimNum][eM3dDimNum];
+    double c[eM3dDimNum][eM3dDimNum];
 } tM3dMatrix;
 
 /*------------------------------------------------------------------------------

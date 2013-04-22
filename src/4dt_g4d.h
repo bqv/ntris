@@ -16,16 +16,16 @@
 
 typedef enum
 {
-  eG4d1PointProjection = 0,
-  eG4d2PointProjection = 1
+    eG4d1PointProjection = 0,
+    eG4d2PointProjection = 1
 }
 tG4dViewType;
 
 typedef enum
 {
-  eG4dWireNone = 0,
-  eG4dWireLine = 1,
-  eG4dWireTube = 2
+    eG4dWireNone = 0,
+    eG4dWireLine = 1,
+    eG4dWireTube = 2
 }
 tG4dWireType;
 

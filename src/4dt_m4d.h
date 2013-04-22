@@ -17,23 +17,23 @@
 /** Enums for coordinate axices */
 typedef enum
 {
-  eM4dAxisX  = 0,
-  eM4dAxisY  = 1,
-  eM4dAxisZ  = 2,
-  eM4dAxisW  = 3,
-  eM4dDimNum = 4
+    eM4dAxisX  = 0,
+    eM4dAxisY  = 1,
+    eM4dAxisZ  = 2,
+    eM4dAxisW  = 3,
+    eM4dDimNum = 4
 } eM4dAxis;
 
 /** 4D vector container */
 typedef struct
 {
-  double c[eM4dDimNum];
+    double c[eM4dDimNum];
 } tM4dVector;
 
 /** 4D matrix container */
 typedef struct
 {
-  double c[eM4dDimNum][eM4dDimNum];
+    double c[eM4dDimNum][eM4dDimNum];
 } tM4dMatrix;
 
 /*------------------------------------------------------------------------------

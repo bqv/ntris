@@ -82,179 +82,197 @@ static void scnDrawGrid(int enableGridDraw, tEngGame *pEngGame);
 /** Returns with the coordinates of the center of the gamespace */
 static tM4dVector scnCenter(tEngGame *pEngGame)
 {
-  tM4dVector center = m4dVector(pEngGame->size[0]/2.0,
-                                pEngGame->size[1]/2.0,
-                                pEngGame->size[2]/2.0,
-                                0.0);
-  return(center);
+    tM4dVector center = m4dVector(pEngGame->size[0]/2.0,
+                                  pEngGame->size[1]/2.0,
+                                  pEngGame->size[2]/2.0,
+                                  0.0);
+    return(center);
 }
 
 /** Set function for stereoscope view enable flag */
 void scnSetViewMode(tScnViewMode mode, tScnSet *pScnSet)
-{ pScnSet->viewMode = mode; }
+{
+    pScnSet->viewMode = mode;
+}
 
 /** Get function for stereoscope view draw enable flag */
 tScnViewMode scnGetViewMode(tScnSet *pScnSet)
-{ return(pScnSet->viewMode); }
+{
+    return(pScnSet->viewMode);
+}
 
 /** Set function for hypercube draw enable flag */
 void scnSetEnableHypercubeDraw(int enable, tScnSet *pScnSet)
-{ pScnSet->enableHypercubeDraw = enable; }
+{
+    pScnSet->enableHypercubeDraw = enable;
+}
 
 /** Get function for hypercube draw enable flag */
 int scnGetEnableHypercubeDraw(tScnSet *pScnSet)
-{ return(pScnSet->enableHypercubeDraw); }
+{
+    return(pScnSet->enableHypercubeDraw);
+}
 
 /** Set function for separate block draw enable flag */
 void scnSetEnableSeparateBlockDraw(int enable, tScnSet *pScnSet)
-{ pScnSet->enableSeparateBlockDraw = enable; }
+{
+    pScnSet->enableSeparateBlockDraw = enable;
+}
 
 /** Get function for separate block draw enable flag */
 int scnGetEnableSeparateBlockDraw(tScnSet *pScnSet)
-{ return(pScnSet->enableSeparateBlockDraw); }
+{
+    return(pScnSet->enableSeparateBlockDraw);
+}
 
 /** Set function for grid draw enable flag */
 void scnSetEnableGridDraw(int enable, tScnSet *pScnSet)
-{ pScnSet->enableGridDraw = enable; }
+{
+    pScnSet->enableGridDraw = enable;
+}
 
 /** Get function for grid draw enable flag */
 int scnGetEnableGridDraw(tScnSet *pScnSet)
-{ return(pScnSet->enableGridDraw); }
+{
+    return(pScnSet->enableGridDraw);
+}
 
 /** Returns with the default set of scene parameters */
 tScnSet scnGetDefaultSet(void)
 {
-  tScnSet def = { 1, 0, 0, 0, eScnViewMono };
+    tScnSet def = { 1, 0, 0, 0, eScnViewMono };
 
-  return(def);
+    return(def);
 }
 
 /** Converts cube position in game space to real 4D draw space coordinates */
 static tM4dVector scnPosToCoord(int x, int y, int z, int w,
                                 tEngGame *pEngGame)
 {
-  tM4dVector coords = m4dVector(x + 0.5, y + 0.5, z + 0.5, w + 0.5);
+    tM4dVector coords = m4dVector(x + 0.5, y + 0.5, z + 0.5, w + 0.5);
 
-  coords = m4dSubVectors(coords, scnCenter(pEngGame));
+    coords = m4dSubVectors(coords, scnCenter(pEngGame));
 
-  return (coords);
+    return (coords);
 }
 
 /** \brief Set random colors for game levels */
 static void scnInitLevelColors(void)
 {
-  /*  Loop counters. */
-  int i, j;
+    /*  Loop counters. */
+    int i, j;
 
-  /*  For each level of the game space, */
-  for (i = 0; i < SPACELENGTH; i++)
-  {
-    /*  for each color component */
-    for (j = 0; j < 3; j++)
+    /*  For each level of the game space, */
+    for (i = 0; i < SPACELENGTH; i++)
     {
-      scnLevelColors[i][j] = 0.48 + 0.24 * cos((i-0.2)+2*(2-j)*M_PI/3.0);
-    }
+        /*  for each color component */
+        for (j = 0; j < 3; j++)
+        {
+            scnLevelColors[i][j] = 0.48 + 0.24 * cos((i-0.2)+2*(2-j)*M_PI/3.0);
+        }
 
-    /*  Set the color's alpha component. */
-    scnLevelColors[i][3] = 1.0;
-  }
+        /*  Set the color's alpha component. */
+        scnLevelColors[i][3] = 1.0;
+    }
 }
 
 /** Write out the score to the game window. */
 static void scnWriteScore(int score)
 {
-  /*  Local variables: */
-  char text[30];     /*  buffer for the full text; */
-  float color[4] = {0.8, 0.8, 0.9, 1.0};
+    /*  Local variables: */
+    char text[30];     /*  buffer for the full text; */
+    float color[4] = {0.8, 0.8, 0.9, 1.0};
 
-  /*  Create the score character array. */
-  sprintf(text, "Score: %i", score);
+    /*  Create the score character array. */
+    sprintf(text, "Score: %i", score);
 
-  /*  Render the text. */
-  g3dRenderString(0.1, 0.05, color, text);
+    /*  Render the text. */
+    g3dRenderString(0.1, 0.05, color, text);
 }
 
 /** Draw background for scene */
 static void scnDrawBG(void)
 {
-  float color1[4] = {0.3, 0.3, 0.4, 1.0};
-  float color2[4] = {0.0, 0.0, 0.0, 1.0};
+    float color1[4] = {0.3, 0.3, 0.4, 1.0};
+    float color2[4] = {0.0, 0.0, 0.0, 1.0};
 
-  /*  Draw background */
-  g3dDrawRectangle(0.0, 0.0, 1.0, 0.5, color1, color2);
-  g3dDrawRectangle(0.0, 0.5, 1.0, 1.0, color2, color2);
+    /*  Draw background */
+    g3dDrawRectangle(0.0, 0.0, 1.0, 0.5, color1, color2);
+    g3dDrawRectangle(0.0, 0.5, 1.0, 1.0, color2, color2);
 }
 
 /** draws the rotation axis selected */
 static void scnDrawRotAxis(int axle, tEngGame *pEngGame)
 {
-  int i;
-  const double planeSize = 3.5;
+    int i;
+    const double planeSize = 3.5;
 
-  float color0[4] = {1.0, 1.0, 1.0, 0.8};
-  float color1[4] = {1.0, 1.0, 1.0, 0.0};
+    float color0[4] = {1.0, 1.0, 1.0, 0.8};
+    float color1[4] = {1.0, 1.0, 1.0, 0.0};
 
-  if ((axle <= 2) && (axle >= 0))
-  {
-    for (i = -1; i <= 1; i += 2)
+    if ((axle <= 2) && (axle >= 0))
     {
-      tM4dVector point0 = pEngGame->object.pos;
-      tM4dVector point1 = m4dUnitVector(axle);
-      point1 = m4dMultiplySV(i * planeSize, point1);
+        for (i = -1; i <= 1; i += 2)
+        {
+            tM4dVector point0 = pEngGame->object.pos;
+            tM4dVector point1 = m4dUnitVector(axle);
+            point1 = m4dMultiplySV(i * planeSize, point1);
 
-      point0 = m4dSubVectors(point0, scnCenter(pEngGame));
-      point1 = m4dAddVectors(point0, point1);
+            point0 = m4dSubVectors(point0, scnCenter(pEngGame));
+            point1 = m4dAddVectors(point0, point1);
 
-      point0.c[eM4dAxisW] =
-      point1.c[eM4dAxisW] = pEngGame->object.pos.c[eM4dAxisW];
+            point0.c[eM4dAxisW] =
+                point1.c[eM4dAxisW] = pEngGame->object.pos.c[eM4dAxisW];
 
-      g4dDrawLine(point0, point1, color0, color1, 2.5);
+            g4dDrawLine(point0, point1, color0, color1, 2.5);
+        }
     }
-  }
 
-  g4dDrawLine(m4dNullVector(),
-              m4dMultiplySV(10, m4dUnitVector(eM4dAxisW)),
-              color0, color1, 1.0);
+    g4dDrawLine(m4dNullVector(),
+                m4dMultiplySV(10, m4dUnitVector(eM4dAxisW)),
+                color0, color1, 1.0);
 }
 
 /** draws the compass */
 static void scnDrawCompass(tEngGame *pEngGame)
 {
-	int i;
-	tM3dVector origin3D;
-  const double compassSize = 0.5;
+    int i;
+    tM3dVector origin3D;
+    const double compassSize = 0.5;
 
-  float color0[4][4] = {{1.0, 0.0, 0.0, 0.8},
-										{1.0, 1.0, 0.0, 0.8},
-										{0.0, 1.0, 0.0, 0.8},
-										{0.0, 0.0, 1.0, 0.8}};
-  float color1[4][4] = {{1.0, 0.0, 0.0, 0.0},
-										{1.0, 1.0, 0.0, 0.0},
-										{0.0, 1.0, 0.0, 0.0},
-										{0.0, 0.0, 1.0, 0.0}};
+    float color0[4][4] = {{1.0, 0.0, 0.0, 0.8},
+        {1.0, 1.0, 0.0, 0.8},
+        {0.0, 1.0, 0.0, 0.8},
+        {0.0, 0.0, 1.0, 0.8}
+    };
+    float color1[4][4] = {{1.0, 0.0, 0.0, 0.0},
+        {1.0, 1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0}
+    };
 
-	origin3D = g3dTransformTo(eG3dWorld3D, m3dVector(200.0, 200.0, 0.0));
-	origin3D = g3dTransformTo(eG3dWorld3D, m3dVector(mouLastX, mouLastY, 0.0));
+    origin3D = g3dTransformTo(eG3dWorld3D, m3dVector(200.0, 200.0, 0.0));
+    origin3D = g3dTransformTo(eG3dWorld3D, m3dVector(mouLastX, mouLastY, 0.0));
 
-	for (i=0; i < 4; i++)
-  {
-      tM4dVector axis = m4dUnitVector(i);
-      tM3dVector tip = g4dProject(axis);
-      tip = m3dMultiplySV(compassSize, tip);
-      tip = m3dAdd(origin3D, tip);
-      tM3dVector butt = g4dProject(axis);
-      butt = m3dMultiplySV(-1*compassSize, butt);
-      butt = m3dAdd(origin3D, butt);
+    for (i=0; i < 4; i++)
+    {
+        tM4dVector axis = m4dUnitVector(i);
+        tM3dVector tip = g4dProject(axis);
+        tip = m3dMultiplySV(compassSize, tip);
+        tip = m3dAdd(origin3D, tip);
+        tM3dVector butt = g4dProject(axis);
+        butt = m3dMultiplySV(-1*compassSize, butt);
+        butt = m3dAdd(origin3D, butt);
 
-      g3dDrawLine(origin3D, tip, color0[i], color1[i], 5.0);
-      g3dDrawLine(origin3D, butt, color0[i], color1[i], 5.0);
-  }
+        g3dDrawLine(origin3D, tip, color0[i], color1[i], 5.0);
+        g3dDrawLine(origin3D, butt, color0[i], color1[i], 5.0);
+    }
 }
 
 /** Initialize the scene */
 void scnInit(void)
 {
-  scnInitLevelColors();
+    scnInitLevelColors();
 }
 
 /**  Check, which side of the block should not be drawn because have neighbor.
@@ -263,40 +281,40 @@ void scnInit(void)
 static void scnVisibleSides(int n, int (*visibleSides)[eM4dDimNum][2],
                             tEngBlocks *pEngBlock)
 {
-  int i;
+    int i;
 
-  for (i = eM4dAxisX; i < eM4dDimNum; i++)
-  {
-    (*visibleSides)[i][0] = 1;
-    (*visibleSides)[i][1] = 1;
-  }
-
-  for (i = 0; i < pEngBlock->num; i++)
-  {
-    /* indicates, which orientation 'i' block is neighbor with 'n'
-       -1 = not found, -2 = no neighbor */
-    int orientation = -1;
-    eM4dAxis axis;
-
-    tM4dVector sub =
-      m4dSubVectors(pEngBlock->c[i], pEngBlock->c[n]);
-
-    for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
+    for (i = eM4dAxisX; i < eM4dDimNum; i++)
     {
-      if (abs(sub.c[axis]) >= 0.5)
-      {
-        orientation = (orientation == -1)
-                      ? (int)axis
-                      : -2;
-      }
+        (*visibleSides)[i][0] = 1;
+        (*visibleSides)[i][1] = 1;
     }
 
-    if (orientation >= 0)
+    for (i = 0; i < pEngBlock->num; i++)
     {
-      (*visibleSides)[orientation]
-                     [(sub.c[orientation] > 0) ? 1 : 0] = 0;
+        /* indicates, which orientation 'i' block is neighbor with 'n'
+           -1 = not found, -2 = no neighbor */
+        int orientation = -1;
+        eM4dAxis axis;
+
+        tM4dVector sub =
+            m4dSubVectors(pEngBlock->c[i], pEngBlock->c[n]);
+
+        for (axis = eM4dAxisX; axis < eM4dDimNum; axis++)
+        {
+            if (abs(sub.c[axis]) >= 0.5)
+            {
+                orientation = (orientation == -1)
+                              ? (int)axis
+                              : -2;
+            }
+        }
+
+        if (orientation >= 0)
+        {
+            (*visibleSides)[orientation]
+            [(sub.c[orientation] > 0) ? 1 : 0] = 0;
+        }
     }
-  }
 }
 
 /**  Draw the gamespace. */
@@ -304,54 +322,54 @@ static void scnDrawGamespace(tEngGame *pEngGame,
                              tScnSet *pScnSet,
                              int mask[SPACESIZE][SPACESIZE][SPACESIZE])
 {
-  int l, x, y, z;        /*  loop counter; */
+    int l, x, y, z;        /*  loop counter; */
 
-  /*  For each level from top */
-  for (l = pEngGame->spaceLength - 1; l >= 0; l--)
-  {
-    /*  For each cell of the level */
-    for (x = 0; x < pEngGame->size[0]; x++)
-    for (y = 0; y < pEngGame->size[1]; y++)
-    for (z = 0; z < pEngGame->size[2]; z++)
+    /*  For each level from top */
+    for (l = pEngGame->spaceLength - 1; l >= 0; l--)
     {
-      /*  space which has no cube above (so it is visible) */
-      /*  gets rid of Z-fighting */
-      if (   (mask[x][y][z] == 0)
-          || (g4dGetViewType() == eG4d2PointProjection) )
-      {
-        /*  if the cell is not empty then */
-        if (engGetSpaceCell(l, x, y, z, pEngGame))
-        {
-          /*  draw the cube. */
-          g4dDraw4DCube(scnPosToCoord(x, y, z, l, pEngGame),
-                        m4dUnitMatrix(),
-                        scnLevelColors[l],
-                        pScnSet->enableHypercubeDraw ? 4 : 3,
-                        eG4dWireTube, 1, NULL);
+        /*  For each cell of the level */
+        for (x = 0; x < pEngGame->size[0]; x++)
+            for (y = 0; y < pEngGame->size[1]; y++)
+                for (z = 0; z < pEngGame->size[2]; z++)
+                {
+                    /*  space which has no cube above (so it is visible) */
+                    /*  gets rid of Z-fighting */
+                    if (   (mask[x][y][z] == 0)
+                            || (g4dGetViewType() == eG4d2PointProjection) )
+                    {
+                        /*  if the cell is not empty then */
+                        if (engGetSpaceCell(l, x, y, z, pEngGame))
+                        {
+                            /*  draw the cube. */
+                            g4dDraw4DCube(scnPosToCoord(x, y, z, l, pEngGame),
+                                          m4dUnitMatrix(),
+                                          scnLevelColors[l],
+                                          pScnSet->enableHypercubeDraw ? 4 : 3,
+                                          eG4dWireTube, 1, NULL);
 
-          mask[x][y][z] = 1;
-        }
-      }
+                            mask[x][y][z] = 1;
+                        }
+                    }
+                }
     }
-  }
 }
 
 /** Draws grid of the gamespace */
 static void scnDrawGrid(int enableGridDraw, tEngGame *pEngGame)
 {
-  int l;        /*  loop counter; */
+    int l;        /*  loop counter; */
 
-  for (l = pEngGame->spaceLength - 1; l >= 0; l--)
-  {
-    if (enableGridDraw)
+    for (l = pEngGame->spaceLength - 1; l >= 0; l--)
     {
-      g4dDraw4DCube(m4dVector(0.0, 0.0, 0.0, l),
-                    m4dMultiplyVM(m4dMultiplySV(2.0, scnCenter(pEngGame)),
-                                  m4dUnitMatrix()),
-                    scn4DGridColor, 4,
-                    eG4dWireLine, 0, NULL);
+        if (enableGridDraw)
+        {
+            g4dDraw4DCube(m4dVector(0.0, 0.0, 0.0, l),
+                          m4dMultiplyVM(m4dMultiplySV(2.0, scnCenter(pEngGame)),
+                                        m4dUnitMatrix()),
+                          scn4DGridColor, 4,
+                          eG4dWireLine, 0, NULL);
+        }
     }
-  }
 }
 
 /** Draw the bottom level. */
@@ -359,23 +377,23 @@ static void scnDrawBottomLevel(int mask[SPACESIZE][SPACESIZE][SPACESIZE],
                                int wire,
                                tEngGame *pEngGame)
 {
-  int x, y, z;        /*  loop counter; */
+    int x, y, z;        /*  loop counter; */
 
-  /*  For each cell of the level do: */
-  for (x = 0; x < pEngGame->size[0]; x++)
-  for (y = 0; y < pEngGame->size[1]; y++)
-  for (z = 0; z < pEngGame->size[2]; z++)
-  {
-    /*  space which has no cube above (so it is visible) */
-    if (mask[x][y][z] == 0)
-    {
-      g4dDraw4DCube(scnPosToCoord(x, y, z, 0, pEngGame),
-                    m4dUnitMatrix(),
-                    scn4DCubeColor, 3,
-                    wire ? eG4dWireTube : eG4dWireNone,
-                    wire ? 0 : 1, NULL);
-    }
-  }
+    /*  For each cell of the level do: */
+    for (x = 0; x < pEngGame->size[0]; x++)
+        for (y = 0; y < pEngGame->size[1]; y++)
+            for (z = 0; z < pEngGame->size[2]; z++)
+            {
+                /*  space which has no cube above (so it is visible) */
+                if (mask[x][y][z] == 0)
+                {
+                    g4dDraw4DCube(scnPosToCoord(x, y, z, 0, pEngGame),
+                                  m4dUnitMatrix(),
+                                  scn4DCubeColor, 3,
+                                  wire ? eG4dWireTube : eG4dWireNone,
+                                  wire ? 0 : 1, NULL);
+                }
+            }
 }
 
 
@@ -384,116 +402,116 @@ static void scnDrawObject(tEngGame *pEngGame,
                           tScnSet *pScnSet,
                           int wire)
 {
-  int n;        /*  loop counter; */
-  /*  For each cell */
-  for (n = 0; n < pEngGame->object.block.num; n++)
-  {
-    tM4dVector pos;
-    int visibleSides[eM4dDimNum][2];
+    int n;        /*  loop counter; */
+    /*  For each cell */
+    for (n = 0; n < pEngGame->object.block.num; n++)
+    {
+        tM4dVector pos;
+        int visibleSides[eM4dDimNum][2];
 
-    scnVisibleSides(n, &visibleSides, &pEngGame->object.block);
+        scnVisibleSides(n, &visibleSides, &pEngGame->object.block);
 
-    pos = m4dAddVectors(m4dSubVectors(pEngGame->object.pos,
-                                      scnCenter(pEngGame)),
-                        m4dMultiplyMV(pEngGame->object.axices,
-                                      pEngGame->object.block.c[n]));
+        pos = m4dAddVectors(m4dSubVectors(pEngGame->object.pos,
+                                          scnCenter(pEngGame)),
+                            m4dMultiplyMV(pEngGame->object.axices,
+                                          pEngGame->object.block.c[n]));
 
-    /*  draw the hypercube. */
-    g4dDraw4DCube(pos,
-                  pEngGame->object.axices,
-                  wire ? scn4DWireColor : scn4DCubeColor,
-                  pScnSet->enableHypercubeDraw ? 4 : 3,
-                  wire ? eG4dWireTube : eG4dWireNone,
-                  wire ? 0 : 1,
-                  pScnSet->enableSeparateBlockDraw ? NULL : visibleSides);
-  }
+        /*  draw the hypercube. */
+        g4dDraw4DCube(pos,
+                      pEngGame->object.axices,
+                      wire ? scn4DWireColor : scn4DCubeColor,
+                      pScnSet->enableHypercubeDraw ? 4 : 3,
+                      wire ? eG4dWireTube : eG4dWireNone,
+                      wire ? 0 : 1,
+                      pScnSet->enableSeparateBlockDraw ? NULL : visibleSides);
+    }
 }
 
 /** Main drawing function. */
 void scnDisplay(tEngGame *pEngGame, tScnSet *pScnSet)
 {
-  /*  Local variables: */
-  int n, x, y, z;        /*  loop counter; */
+    /*  Local variables: */
+    int n, x, y, z;        /*  loop counter; */
 
-  /*  mask indicates which block space */
-  /*  hidden by upper blocks */
-  int mask[SPACESIZE][SPACESIZE][SPACESIZE];
+    /*  mask indicates which block space */
+    /*  hidden by upper blocks */
+    int mask[SPACESIZE][SPACESIZE][SPACESIZE];
 
-  double camx, camy, camz;
-  int pic, maxpic;
+    double camx, camy, camz;
+    int pic, maxpic;
 
-  maxpic = (pScnSet->viewMode > eScnViewMono) ? 2 : 1;
+    maxpic = (pScnSet->viewMode > eScnViewMono) ? 2 : 1;
 
-  for (pic = 0; pic < maxpic; pic++)
-  {
-    for (x = 0; x < pEngGame->size[0]; x++)
-    for (y = 0; y < pEngGame->size[1]; y++)
-    for (z = 0; z < pEngGame->size[2]; z++)
+    for (pic = 0; pic < maxpic; pic++)
     {
-      mask[x][y][z] = 0;
+        for (x = 0; x < pEngGame->size[0]; x++)
+            for (y = 0; y < pEngGame->size[1]; y++)
+                for (z = 0; z < pEngGame->size[2]; z++)
+                {
+                    mask[x][y][z] = 0;
+                }
+
+        if (pScnSet->viewMode == eScnViewStereogram)
+        {
+            camx = (pic == 0) ? 2 : -2;
+            camy = scnCamera.c[1];
+            camz = 2.0 * scnCamera.c[2];
+        }
+        else
+        {
+            camx = scnCamera.c[0];
+            camy = scnCamera.c[1];
+            camz = scnCamera.c[2];
+        }
+
+        g3dBeginDraw(camx, 0, camz, pic, pScnSet->viewMode == eScnViewAnaglyph);
+
+        if ((pic == 0)
+                || (pScnSet->viewMode == eScnViewAnaglyph))
+        {
+            scnDrawBG();
+        }
+
+        scnDrawGamespace(pEngGame, pScnSet, mask);
+
+        scnDrawBottomLevel(mask, 1, pEngGame);
+
+        scnDrawObject(pEngGame, pScnSet, 1);
+
+        g3dSetTransparentMode(1);
+
+        scnDrawGrid(pScnSet->enableGridDraw, pEngGame);
+
+        scnDrawBottomLevel(mask, 0, pEngGame);
+
+        scnDrawObject(pEngGame, pScnSet, 0);
+
+        scnDrawCompass(pEngGame);
+
+        scnDrawRotAxis(pScnSet->axle, pEngGame);
+
+        g3dSetTransparentMode(0);
+
+        if ((pic == maxpic-1)
+                || (pScnSet->viewMode == eScnViewAnaglyph))
+        {
+            /*  Write out the game score. */
+            scnWriteScore(pEngGame->score);
+
+            /*  draw the menu */
+            if (menuIsActived())
+            {
+                menuDraw();
+            }
+        }
+
+        if (pic == maxpic-1)
+        {
+            for (n = 0; n < maxpic; n++)
+            {
+                g3dEndDrawPic();
+                g3dEndDraw();
+            }
+        }
     }
-
-    if (pScnSet->viewMode == eScnViewStereogram)
-    {
-      camx = (pic == 0) ? 2 : -2;
-      camy = scnCamera.c[1];
-      camz = 2.0 * scnCamera.c[2];
-    }
-    else
-    {
-      camx = scnCamera.c[0];
-      camy = scnCamera.c[1];
-      camz = scnCamera.c[2];
-    }
-
-    g3dBeginDraw(camx, 0, camz, pic, pScnSet->viewMode == eScnViewAnaglyph);
-
-    if ((pic == 0)
-        || (pScnSet->viewMode == eScnViewAnaglyph))
-    {
-      scnDrawBG();
-    }
-
-    scnDrawGamespace(pEngGame, pScnSet, mask);
-
-    scnDrawBottomLevel(mask, 1, pEngGame);
-
-    scnDrawObject(pEngGame, pScnSet, 1);
-
-    g3dSetTransparentMode(1);
-
-    scnDrawGrid(pScnSet->enableGridDraw, pEngGame);
-
-    scnDrawBottomLevel(mask, 0, pEngGame);
-
-    scnDrawObject(pEngGame, pScnSet, 0);
-
-	scnDrawCompass(pEngGame);
-
-    scnDrawRotAxis(pScnSet->axle, pEngGame);
-
-    g3dSetTransparentMode(0);
-
-    if ((pic == maxpic-1)
-        || (pScnSet->viewMode == eScnViewAnaglyph))
-    {
-      /*  Write out the game score. */
-      scnWriteScore(pEngGame->score);
-
-      /*  draw the menu */
-      if (menuIsActived())
-      {
-        menuDraw();
-      }
-    }
-
-    if (pic == maxpic-1)
-    {
-      for (n = 0; n < maxpic; n++)
-      {
-        g3dEndDrawPic();
-        g3dEndDraw();
-      }
-    }
-  }
 }

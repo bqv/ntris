@@ -35,13 +35,13 @@ int *setTimerCallback(int time,
                       tTimerCallback callback,
                       void *param)
 {
-  return((int *)SDL_AddTimer(time, (SDL_NewTimerCallback)callback, param));
+    return((int *)SDL_AddTimer(time, (SDL_NewTimerCallback)callback, param));
 }
 
 /** Remove the previously set timer */
 void clearTimerCallback(int *id)
 {
-  SDL_RemoveTimer((SDL_TimerID)id);
+    SDL_RemoveTimer((SDL_TimerID)id);
 
-  return;
+    return;
 }
