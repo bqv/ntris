@@ -43,4 +43,4 @@ enum
 
 extern void uiKeyPress(int key, tEngGame *pEngGame, tScnSet *pScnSet);
 
-#endif /* 4DT_UI_H_ */
+#endif /* _UI_H_ */

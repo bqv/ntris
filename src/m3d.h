@@ -84,4 +84,4 @@ extern void m3dSectPlaneLine(tM3dPlane plane, tM3dLine line,
                              tM3dVector *section);
 
 
-#endif /* 4DT_M3D_H_ */
+#endif /* _M3D_H_ */

@@ -1,5 +1,5 @@
 /**
- * \file  4dt-cptr.cpp
+ * \file  cptr.cpp
  * \brief Screenshot capture module
  */
 
