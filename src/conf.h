@@ -3,9 +3,9 @@
     \brief Header of the 4D-TRIS configuration file handling.
  */
 
-#ifndef _4DT_CONF_H
+#ifndef _CONF_H_
 
-#define _4DT_CONF_H
+#define _CONF_H_
 
 /*------------------------------------------------------------------------------
    DECLARATIONS

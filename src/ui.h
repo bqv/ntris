@@ -3,8 +3,8 @@
  * \brief Header for module of user interface event handlers
  */
 
-#ifndef _4DT_UI_H_
-#define _4DT_UI_H_
+#ifndef _UI_H_
+#define _UI_H_
 
 /*------------------------------------------------------------------------------
    MACROS

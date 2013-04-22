@@ -3,8 +3,8 @@
  * \brief Header for 4 dimensional drawing module.
  */
 
-#ifndef _4DT_G4D_H_
-#define _4DT_G4D_H_
+#ifndef _G4D_H_
+#define _G4D_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -59,4 +59,4 @@ extern void g4dDrawLine(tM4dVector point0,
 extern void g4dDrawSphere(tM4dVector center, double radius);
 extern tM3dVector g4dProject(tM4dVector vector);
 
-#endif /* _4DT_G4D_H_ */
+#endif /* _G4D_H_ */

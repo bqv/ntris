@@ -3,8 +3,8 @@
  * \brief Header for 3D math library.
  */
 
-#ifndef _4DT_M3D_H_
-#define _4DT_M3D_H_
+#ifndef _M3D_H_
+#define _M3D_H_
 
 /*------------------------------------------------------------------------------
    MACROS

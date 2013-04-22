@@ -3,9 +3,9 @@
     \brief Header of the 4D-TRIS math module.
  */
 
-#ifndef _4DT_M_H
+#ifndef _M_H_
 
-#define _4DT_M_H
+#define _M_H_
 
 /*------------------------------------------------------------------------------
    DECLARATIONS

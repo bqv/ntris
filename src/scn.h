@@ -3,8 +3,8 @@
  * \brief Header for modul for handling game scene
  */
 
-#ifndef _4DT_SCN_H_
-#define _4DT_SCN_H_
+#ifndef _SCN_H_
+#define _SCN_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -58,4 +58,4 @@ extern int  scnGetEnableSeparateBlockDraw(tScnSet *pScnSet);
 extern void scnSetEnableGridDraw(int enable, tScnSet *pScnSet);
 extern int  scnGetEnableGridDraw(tScnSet *pScnSet);
 
-#endif /* _4DT_SCN_H_ */
+#endif /* _SCN_H_ */

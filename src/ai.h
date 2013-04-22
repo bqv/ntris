@@ -3,9 +3,9 @@
     \brief Header of the 4D-TRIS Computer gamer's logic.
  */
 
-#ifndef _4DT_AI_H
+#ifndef _AI_H_
 
-#define _4DT_AI_H
+#define _AI_H_
 
 /*------------------------------------------------------------------------------
    DECLARATIONS

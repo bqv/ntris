@@ -3,8 +3,8 @@
  * \brief Header for module of mouse event handlers
  */
 
-#ifndef _4DT_MOU_H_
-#define _4DT_MOU_H_
+#ifndef _MOU_H_
+#define _MOU_H_
 
 /*------------------------------------------------------------------------------
    MACROS

@@ -3,8 +3,8 @@
  * \brief Header for main modul.
  */
 
-#ifndef _4DT_MAIN_H_
-#define _4DT_MAIN_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -25,4 +25,4 @@ extern int *setTimerCallback(int time,
                              void *param);
 extern void clearTimerCallback(int *id);
 
-#endif /* _4DT_MAIN_H_ */
+#endif /* _MAIN_H_ */

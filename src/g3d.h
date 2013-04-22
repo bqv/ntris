@@ -3,10 +3,10 @@
  *  \brief Header for 3D OpenGL scene rendering modul.
  */
 
-#ifndef _4DT_G3D_H_
-#define _4DT_G3D_H_
+#ifndef _G3D_H_
+#define _G3D_H_
 
-#ifndef _4DT_M3D_H_
+#ifndef _M3D_H_
 #error "please include 4dt_m3d.h first"
 #endif
 /*------------------------------------------------------------------------------
@@ -55,4 +55,4 @@ extern void g3dEndDraw(void);
 extern void g3dResize(int width, int height);
 extern tM3dVector g3dTransformTo(tG3dSystem target, tM3dVector v);
 
-#endif /* _4DT_G3D_H_ */
+#endif /* _G3D_H_ */

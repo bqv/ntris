@@ -3,8 +3,8 @@
  * \brief Header of text drawing modul.
  */
 
-#ifndef _4DT_GTXT_H_
-#define _4DT_GTXT_H_
+#ifndef _GTXT_H_
+#define _GTXT_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -30,4 +30,4 @@ extern void g3dRenderText(double x, double y,
 
 extern void gtxtResize(int width, int height);
 
-#endif /* _4DT_GTXT_H_ */
+#endif /* _GTXT_H_ */

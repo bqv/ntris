@@ -7,8 +7,8 @@
    Short Description:
 ------------------------------------------------------------------------------*/
 
-#ifndef _4DT_MENU_H_
-#define _4DT_MENU_H_
+#ifndef _MENU_H_
+#define _MENU_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -86,4 +86,4 @@ extern void menuGotoItem(eMenuItem menuItem);
 extern void menuSetOnActivate(eMenuItem menuItem, void(*activate)(void));
 extern void menuSetOnDeactivate(eMenuItem menuItem, void(*deactivate)(void));
 
-#endif /* _4DT_MENU_H_ */
+#endif /* _MENU_H_ */

@@ -3,9 +3,9 @@
  * \brief Header of the 4D-TRIS game engine
  */
 
-#ifndef _4DT_ENG_H
+#ifndef _ENG_H_
 
-#define _4DT_ENG_H
+#define _ENG_H_
 
 /*------------------------------------------------------------------------------
    INCLUDES

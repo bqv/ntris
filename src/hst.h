@@ -3,8 +3,8 @@
  *  \brief Header for High score table handling.
  */
 
-#ifndef _4DT_HST_H_
-#define _4DT_HST_H_
+#ifndef _HST_H_
+#define _HST_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -22,4 +22,4 @@ extern void hstGetScoreTab(char ***textTab, int scoreNum);
 extern void hstAddScore(int score);
 extern void hstInit(void);
 
-#endif /* _4DT_HST_H_ */
+#endif /* _HST_H_ */

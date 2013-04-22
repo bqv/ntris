@@ -3,8 +3,8 @@
  * \brief Header for 4 dimensional math library.
  */
 
-#ifndef _4DT_M4D_H_
-#define _4DT_M4D_H_
+#ifndef _M4D_H_
+#define _M4D_H_
 
 /*------------------------------------------------------------------------------
    MACROS
@@ -64,4 +64,4 @@ extern tM4dMatrix m4dTransposeM(tM4dMatrix matrix);
 extern void m4dPrintVector(tM4dVector vector);
 extern void m4dPrintMatrix(tM4dMatrix matrix);
 
-#endif /* _4DT_M4D_H_ */
+#endif /* _M4D_H_ */
