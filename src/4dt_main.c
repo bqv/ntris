@@ -1,6 +1,17 @@
 /**
  * \file 4dt_main.c
  * \brief This file is the main unit of the application.
+ * Copyright (C) 2008 Simon Laszlo
+ * Copyright (C) 2013 Tony Olagbaiye
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 /*

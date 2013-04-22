@@ -9,7 +9,8 @@ ___________________________________________________________________
 README
 
  4DTRIS
- Maintained by Tony Olagbaiye
+ Created by Simon Laszlo
+ Forked by Tony Olagbaiye
 
  This Application is a Tetris game extended to 4 dimension. The
  visulaization uses OpenGL and GLUT.
