@@ -14,7 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "4dt_hst.h"
+#include "hst.h"
 
 /*------------------------------------------------------------------------------
    MACROES

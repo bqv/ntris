@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "4dt_m.h"
-#include "4dt_m3d.h"
+#include "m.h"
+#include "m3d.h"
 
 /*------------------------------------------------------------------------------
    MACROS

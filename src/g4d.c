@@ -10,12 +10,12 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#include "4dt_timer.h"
-#include "4dt_m.h"
-#include "4dt_m3d.h"
-#include "4dt_m4d.h"
-#include "4dt_g3d.h"
-#include "4dt_g4d.h"
+#include "timer.h"
+#include "m.h"
+#include "m3d.h"
+#include "m4d.h"
+#include "g3d.h"
+#include "g4d.h"
 
 /*------------------------------------------------------------------------------
    MACROS

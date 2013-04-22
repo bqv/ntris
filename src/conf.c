@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "4dt_conf.h"
+#include "conf.h"
 
 /*------------------------------------------------------------------------------
    TYPES

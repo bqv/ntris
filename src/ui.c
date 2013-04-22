@@ -9,19 +9,19 @@
 
 #include <stdlib.h>
 
-#include "4dt_m.h"
-#include "4dt_m3d.h"
-#include "4dt_m4d.h"
-#include "4dt_eng.h"
-#include "4dt_ai.h"
-#include "4dt_scn.h"
-#include "4dt_g4d.h"
-#include "4dt_conf.h"
-#include "4dt_menu.h"
-#include "4dt_menu.h"
-#include "4dt_timer.h"
+#include "m.h"
+#include "m3d.h"
+#include "m4d.h"
+#include "eng.h"
+#include "ai.h"
+#include "scn.h"
+#include "g4d.h"
+#include "conf.h"
+#include "menu.h"
+#include "menu.h"
+#include "timer.h"
 
-#include "4dt_ui.h"
+#include "ui.h"
 
 /*------------------------------------------------------------------------------
    MACROS

@@ -10,16 +10,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "4dt_m3d.h"
-#include "4dt_m4d.h"
-#include "4dt_eng.h"
-#include "4dt_scn.h"
-#include "4dt_gtxt.h"
-#include "4dt_g4d.h"
-#include "4dt_ai.h"
-#include "4dt_hst.h"
-#include "4dt_conf.h"
-#include "4dt_menu.h"
+#include "m3d.h"
+#include "m4d.h"
+#include "eng.h"
+#include "scn.h"
+#include "gtxt.h"
+#include "g4d.h"
+#include "ai.h"
+#include "hst.h"
+#include "conf.h"
+#include "menu.h"
 
 /*------------------------------------------------------------------------------
    MACROS

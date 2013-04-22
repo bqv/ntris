@@ -15,9 +15,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
-#include "4dt_m.h"
-#include "4dt_m3d.h"
-#include "4dt_g3d.h"
+#include "m.h"
+#include "m3d.h"
+#include "g3d.h"
 
 /*------------------------------------------------------------------------------
    MACROS
