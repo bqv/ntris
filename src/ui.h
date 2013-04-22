@@ -1,5 +1,5 @@
 /**
- * \file  4dt_ui.h
+ * \file  ui.h
  * \brief Header for module of user interface event handlers
  */
 

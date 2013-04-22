@@ -1,5 +1,5 @@
 /**
- * \file  4dt_gtxt.h
+ * \file  gtxt.h
  * \brief Header of text drawing modul.
  */
 

@@ -1,5 +1,5 @@
 /**
- *  \file  4dt_g3d.h
+ *  \file  g3d.h
  *  \brief Header for 3D OpenGL scene rendering modul.
  */
 
@@ -7,7 +7,7 @@
 #define _G3D_H_
 
 #ifndef _M3D_H_
-#error "please include 4dt_m3d.h first"
+#error "please include m3d.h first"
 #endif
 /*------------------------------------------------------------------------------
    MACROS

@@ -1,5 +1,5 @@
 /**
- * \file  4dt_mou.h
+ * \file  mou.h
  * \brief Header for module of mouse event handlers
  */
 

@@ -1,5 +1,5 @@
 /**
- * \file  4dt_timer.c
+ * \file  timer.c
  * \brief Wrapper for timers.
  */
 

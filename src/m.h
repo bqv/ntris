@@ -1,5 +1,5 @@
 /**
-    \file  4dt_conf.h
+    \file  conf.h
     \brief Header of the 4D-TRIS math module.
  */
 

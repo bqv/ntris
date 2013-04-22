@@ -1,5 +1,5 @@
 /**
- *  \file 4dt_ai.c
+ *  \file ai.c
  *  \brief This file is the Computer gamer's logic.
  */
 

@@ -1,5 +1,5 @@
 /**
- *  \file 4dt_m.c
+ *  \file m.c
  *  \brief Math module
  */
 

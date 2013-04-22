@@ -1,5 +1,5 @@
 /**
- * \file  4dt_eng.c
+ * \file  eng.c
  * \brief This file is the game engine of the 4D Tetris.
  *
  *  Game space and element storage and handling.

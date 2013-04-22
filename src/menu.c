@@ -1,5 +1,5 @@
 /**
- * \file  4dt_menu.c
+ * \file  menu.c
  * \brief Game menu handling and drawing module.
  */
 

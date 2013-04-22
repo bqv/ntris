@@ -1,5 +1,5 @@
 /**
- * \file 4dt_eng.h
+ * \file eng.h
  * \brief Header of the 4D-TRIS game engine
  */
 

@@ -1,5 +1,5 @@
 /**
- * \file  4dt_scn.c
+ * \file  scn.c
  * \brief Modul for handling game scene
  */
 

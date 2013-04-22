@@ -1,5 +1,5 @@
 /**
- *  \file 4dt_conf.c
+ *  \file conf.c
  *  \brief Configuration file handling
  *
  */

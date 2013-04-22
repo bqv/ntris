@@ -1,5 +1,5 @@
 /**
- * \file  4dt_m4d.h
+ * \file  m4d.h
  * \brief Header for 4 dimensional math library.
  */
 

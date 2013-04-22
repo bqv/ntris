@@ -1,5 +1,5 @@
 /**
- * \file  4dt_ui.c
+ * \file  ui.c
  * \brief Modul of user interface event handlers
  */
 

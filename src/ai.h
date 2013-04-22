@@ -1,5 +1,5 @@
 /**
-    \file  4dt_ai.h
+    \file  ai.h
     \brief Header of the 4D-TRIS Computer gamer's logic.
  */
 

@@ -1,5 +1,5 @@
 /**
- * \file  4dt_menu.h
+ * \file  menu.h
  * \brief Header of game menu handling and drawing module.
  */
 

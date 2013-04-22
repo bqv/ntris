@@ -1,5 +1,5 @@
 /**
- *  \file 4dt_hst.h
+ *  \file hst.h
  *  \brief Header for High score table handling.
  */
 

@@ -1,5 +1,5 @@
 /**
- * \file  4dt_main.h
+ * \file  main.h
  * \brief Header for main modul.
  */
 

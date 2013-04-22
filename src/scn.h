@@ -1,5 +1,5 @@
 /**
- * \file  4dt_scn.h
+ * \file  scn.h
  * \brief Header for modul for handling game scene
  */
 

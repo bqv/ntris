@@ -1,5 +1,5 @@
 /**
- * \file 4dt_main.c
+ * \file main.c
  * \brief This file is the main unit of the application.
  * Copyright (C) 2008 Simon Laszlo
  * Copyright (C) 2013 Tony Olagbaiye

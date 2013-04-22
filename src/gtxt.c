@@ -1,5 +1,5 @@
 /**
- * \file  4dt_gtxt.c
+ * \file  gtxt.c
  * \brief Text drawing modul.
  */
 

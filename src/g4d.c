@@ -1,5 +1,5 @@
 /**
- * \file  4dt_g4d.c
+ * \file  g4d.c
  * \brief 4 dimensional drawing module.
  */
 

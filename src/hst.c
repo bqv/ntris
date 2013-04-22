@@ -1,5 +1,5 @@
 /**
- *  \file 4dt_hst.c
+ *  \file hst.c
  *  \brief High score table handling.
  *
  *  Todo: use dinamic memory allocation for strings.

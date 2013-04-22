@@ -1,5 +1,5 @@
 /**
- * \file  4dt_mou.c
+ * \file  mou.c
  * \brief Module of mouse event handlers
  */
 

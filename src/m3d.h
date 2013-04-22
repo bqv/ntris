@@ -1,5 +1,5 @@
 /**
- * \file  4dt_m3d.h
+ * \file  m3d.h
  * \brief Header for 3D math library.
  */
 

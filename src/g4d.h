@@ -1,5 +1,5 @@
 /**
- * \file  4dt_g4d.h
+ * \file  g4d.h
  * \brief Header for 4 dimensional drawing module.
  */
 

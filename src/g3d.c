@@ -1,5 +1,5 @@
 /**
- * \file 4dt_g3d.c
+ * \file g3d.c
  * \brief 3D OpenGL scene rendering modul.
  */
 

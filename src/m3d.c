@@ -1,5 +1,5 @@
 /**
- * \file  4dt_m3d.c
+ * \file  m3d.c
  * \brief 3D math library.
  */
 

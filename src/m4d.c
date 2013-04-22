@@ -1,5 +1,5 @@
 /**
- * \file  4dt_m4d.c
+ * \file  m4d.c
  * \brief 4 dimensional math library.
  */
 
@@ -339,8 +339,8 @@ int main(void)
     m4dPrintVector(vector2);
 }
 
-/* Embedded perl code to compile and run moduletest. execute: perl -x 4dt_m4d.c
+/* Embedded perl code to compile and run moduletest. execute: perl -x m4d.c
 #!perl
-print `gcc -D TEST=1 -o 4dt_m4d 4dt_m4d.c -lm && ./4dt_m4d`;
+print `gcc -D TEST=1 -o m4d m4d.c -lm && ./m4d`;
 # */
 #endif
