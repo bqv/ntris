@@ -11,9 +11,9 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#ifndef __MINGW32__
+#ifdef HAVE_LIBFONTCONFIG
 #include <fontconfig/fontconfig.h>
-#endif
+#endif /* HAVE_LIBFONTCONFIG */
 
 /*------------------------------------------------------------------------------
    TYPES
@@ -123,17 +123,17 @@ void g3dRenderString(double x, double y,
     SDL_Color colorf;
     SDL_Rect position;
     int vPort[4];
-#ifndef __MINGW32__
+#ifdef HAVE_LIBFONTCONFIG
     FcPattern *pat = NULL;
     FcObjectSet *os = NULL;
     FcFontSet *fs = NULL;
-#endif
+#endif /* HAVE_LIBFONTCONFIG */
 
     /* Go in HUD-drawing mode */
 
     TTF_Font* font;
 
-#ifndef __MINGW32__
+#ifdef HAVE_LIBFONTCONFIG
     pat = FcPatternBuild (0, FC_FULLNAME, FcTypeString, font_full_name, NULL);
     fs = FcFontList(NULL, pat, os);
     if (fs && (fs->nfont > 0))
@@ -152,14 +152,14 @@ void g3dRenderString(double x, double y,
         printf("Unable to load font: %s \n", TTF_GetError());
         exit(1);
     }
-#else
+#else /* HAVE_LIBFONTCONFIG */
     if (font == NULL)
     {
         font = TTF_OpenFont("/usr/share/fonts/TTF/ttf-liberation/"
                             "LiberationSans-BoldItalic.ttf",
                             gtxtHeight / 24);
     }
-#endif
+#endif /* HAVE_LIBFONTCONFIG */
 
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
