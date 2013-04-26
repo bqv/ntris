@@ -1,11 +1,11 @@
 SUBDIRS = build
 
-run: all
+run: style all
 	@pushd build; \
 	ntris; \
 	popd;
 
-debug: all
+dbg: all
 	@pushd build; \
 	ntris --debug; \
 	popd;
@@ -19,3 +19,6 @@ gdb:
 	@pushd bin; \
 	gdb ntris; \
 	popd;	
+
+style:
+	astyle -z2 -c -A1 -s4 -q -n -r '*.c' '*.h'

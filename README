@@ -10,8 +10,11 @@ README
 
  NTRIS
 
- This Application is a Tetris game extended to 4 dimension. The
- visulaization uses OpenGL and GLUT.
+ This application is a Tetris game extended to n dimensions. The
+ visualization uses OpenGL and GLUT.
+
+ Currently only 4 dimensional mode functions, but work is in
+ progress. Slow, slow progress.
 
  Project web page: https://github.com/frony0/ntris
 
