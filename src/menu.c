@@ -62,6 +62,7 @@ static void menuMusic(void);
 static void menuAuto(void);
 static void menuLevel(void);
 static void menuSize(void);
+static void menuDimensions(void);
 static void menuControls(void);
 static void menuHelp(void);
 static void menuScores(void);
@@ -97,10 +98,11 @@ static tMenuItem menuItems[eMenuItemNum] =
     {0, "Sound",          menuSound,       NULL,   eMenuAudioOptions, {eMenuNull}  },
     {0, "Music",          menuMusic,       NULL,   eMenuAudioOptions, {eMenuNull}  },
     {1, "Back",           menuGeneralBack, NULL,   eMenuAudioOptions, {eMenuNull}  },
-    {1, "Game Options",   NULL,            NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuGameSpace, eMenuControls, eMenuGameOptionsBack, eMenuNull} },
+    {1, "Game Options",   NULL,            NULL,   eMenuOptions,      {eMenuAutoPlayer, eMenuDiffLevel, eMenuGameSpace, eMenuDimensions, eMenuControls, eMenuGameOptionsBack, eMenuNull} },
     {1, "Auto Player - ON", menuAuto,      NULL,   eMenuGameOptions,  {eMenuNull}  },
     {1, "Diff. Level - Hard", menuLevel,   NULL,   eMenuGameOptions,  {eMenuNull}  },
     {1, "Space size 2x2x2", menuSize,      NULL,   eMenuGameOptions,  {eMenuNull}  },
+    {1, "Dimensions - 4D", menuDimensions, NULL,   eMenuGameOptions,  {eMenuNull}  },
     {0, "Controls",       menuControls,    NULL,   eMenuGameOptions,  {eMenuNull}  },
     {1, "Back",           menuGeneralBack, NULL,   eMenuGameOptions,  {eMenuNull}  },
     {1, "Back",           menuGeneralBack, NULL,   eMenuOptions,      {eMenuNull}  },
@@ -479,6 +481,31 @@ static void menuSize(void)
     confSetVar("size_X", pMenuEngGame->size[0]);
     confSetVar("size_Y", pMenuEngGame->size[1]);
     confSetVar("size_Z", pMenuEngGame->size[2]);
+
+    engResetGame(pMenuEngGame);
+    g4dReset();
+
+    menuNavigate(eMenuBack);
+}
+
+static void menuDimensions(void)
+{
+    const tMenuString captions[DIMENSIONS] =
+    {
+        "1D", "2D", "3D", "4D", "5D", "6D", "7D"
+    };
+
+    static char template[] = "Dimensions - %s";
+
+    static char caption[sizeof(template)];
+
+    pMenuEngGame->dimensions = (pMenuEngGame->dimensions+1) % 4;//DIFFLEVELS;
+
+    sprintf(caption, template, captions[pMenuEngGame->dimensions]);
+
+    menuItems[eMenuDimensions].caption = caption;
+
+    confSetVar("dimensions", pMenuEngGame->dimensions);
 
     engResetGame(pMenuEngGame);
     g4dReset();

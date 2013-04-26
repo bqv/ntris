@@ -44,6 +44,7 @@ typedef enum
     eMenuAutoPlayer,
     eMenuDiffLevel,
     eMenuGameSpace,
+    eMenuDimensions,
     eMenuControls,
     eMenuGameOptionsBack,
     eMenuOptionsBack,

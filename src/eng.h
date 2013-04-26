@@ -22,6 +22,9 @@
 /** Size of gamespace */
 #define SPACESIZE 4
 
+/** number of dimensions */
+#define DIMENSIONS 7
+
 /** number of difficulty levels */
 #define DIFFLEVELS 3
 
@@ -77,6 +80,8 @@ struct sEngGame
     tEngLevel space[SPACELENGTH];
     /** actual object */
     tEngObject object;
+    /** game dimension */
+    int dimensions;
     /** score collected in the actual game */
     int score;
     /** flag for indicate game over */
@@ -92,7 +97,7 @@ struct sEngGame
     /** levels of gamespace */
     int spaceLength;
     /** game space level sizes (x, y, z) */
-    int size[3];
+    int size[6]; // Upper limit: 7D
     /** animation related variables */
     struct
     {

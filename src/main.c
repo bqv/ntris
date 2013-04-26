@@ -147,11 +147,17 @@ int main(int argc, char *argv[])
     /*  Initialize the game engine. */
     engInitGame(&engGame, &onGameOver);
     {
+        temp = confGetVar("dimensions", &ok);
+        if (ok)
+        {
+            engGame.dimensions = temp;
+        }
         temp = confGetVar("spaceLength", &ok);
         if (ok)
         {
             engGame.spaceLength = temp;
         }
+        //TODO: Make this dynamically resizable
         temp = confGetVar("size_X", &ok);
         if (ok)
         {

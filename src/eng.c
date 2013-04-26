@@ -377,6 +377,7 @@ void engInitGame(tEngGame *pEngGame, tEngGameEvent onGameOver)
     pEngGame->animation.enable = 1;
     pEngGame->activeUser       = 0;
     pEngGame->spaceLength      = 12;
+    pEngGame->dimensions       = 3;
     pEngGame->size[0]          = 2;
     pEngGame->size[1]          = 2;
     pEngGame->size[2]          = 2;
