@@ -1,11 +1,11 @@
 SUBDIRS = build
 
-run: all
+run: style all
 	@pushd build; \
 	ntris; \
 	popd;
 
-debug: all
+dbg: all
 	@pushd build; \
 	ntris --debug; \
 	popd;
