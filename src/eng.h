@@ -70,7 +70,7 @@ typedef struct sEngGame tEngGame;
 
 typedef void (*tEngGameEvent)(tEngGame *pEngGame);
 
-/** sturct of the game variables */
+/** struct of the game variables */
 struct sEngGame
 {
     /** the game space  */
