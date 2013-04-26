@@ -460,27 +460,42 @@ static void menuLevel(void)
 
 static void menuSize(void)
 {
-    static int size = 0;
+    static int i, size = 0;
 
-    const int sizes[4][3] = { {2,2,2}, {2,2,3}, {2,3,3}, {3,3,3} };
+    const char sizes[7][4][2][6] = { {{{0,0,0,0,0,0}, "N/A"}, {{0,0,0,0,0,0}, "N/A"}, {{0,0,0,0,0,0}, "N/A"}, {{0,0,0,0,0,0}, "N/A"}},
+        {{{5,0,0,0,0,0}, "5"}, {{6,0,0,0,0,0}, "6"}, {{7,0,0,0,0,0}, "7"}, {{8,0,0,0,0,0}, "8"}},
+        {{{3,3,0,0,0,0}, "3x3"}, {{4,4,0,0,0,0}, "4x4"}, {{5,5,0,0,0,0}, "5x5"}, {{6,6,0,0,0,0}, "6x6"}},
+        {{{2,2,2,0,0,0}, "2x2x2"}, {{2,3,3,0,0,0}, "2x3x3"}, {{3,3,3,0,0,0}, "3x3x3"}, {{4,4,4,0,0,0}, "4x4x4"}},
+        {{{2,2,2,2,0,0}, "2x2x.."}, {{3,3,3,3,0,0}, "3x3x.."}, {{4,4,4,4,0,0}, "4x4x.."}, {{5,5,5,5,0,0}, "5x5x.."}},
+        {{{2,2,2,2,2,0}, "2x2x.."}, {{3,3,3,3,3,0}, "3x3x.."}, {{4,4,4,4,4,0}, "4x4x.."}, {{6,6,6,6,6,0}, "6x6x.."}},
+        {{{2,2,2,2,2,2}, "2x2x.."}, {{3,3,3,3,3,3}, "3x3x.."}, {{4,4,4,4,4,4}, "4x4x.."}, {{7,7,7,7,7,7}, "7x7x.."}}
+    };
 
-    const char template[] = "Space size %dx%dx%d";
+    const char template[] = "Space size - %s";
 
     static char caption[sizeof(template)];
 
     size = (size + 1) % 4;
 
-    sprintf(caption, template, sizes[size][0], sizes[size][1], sizes[size][2]);
+    sprintf(caption, template, sizes[pMenuEngGame->dimensions][size][1]);
 
     menuItems[eMenuGameSpace].caption = caption;
 
-    pMenuEngGame->size[0] = sizes[size][0];
-    pMenuEngGame->size[1] = sizes[size][1];
-    pMenuEngGame->size[2] = sizes[size][2];
+    pMenuEngGame->size[0] = sizes[pMenuEngGame->dimensions][size][0][0];
+    pMenuEngGame->size[1] = sizes[pMenuEngGame->dimensions][size][0][1];
+    pMenuEngGame->size[2] = sizes[pMenuEngGame->dimensions][size][0][2];
+    pMenuEngGame->size[3] = sizes[pMenuEngGame->dimensions][size][0][3];
+    pMenuEngGame->size[4] = sizes[pMenuEngGame->dimensions][size][0][4];
+    pMenuEngGame->size[5] = sizes[pMenuEngGame->dimensions][size][0][5];
+    pMenuEngGame->size[6] = sizes[pMenuEngGame->dimensions][size][0][6];
 
     confSetVar("size_X", pMenuEngGame->size[0]);
     confSetVar("size_Y", pMenuEngGame->size[1]);
     confSetVar("size_Z", pMenuEngGame->size[2]);
+    confSetVar("size_W", pMenuEngGame->size[3]);
+    confSetVar("size_V", pMenuEngGame->size[4]);
+    confSetVar("size_U", pMenuEngGame->size[5]);
+    confSetVar("size_T", pMenuEngGame->size[6]);
 
     engResetGame(pMenuEngGame);
     g4dReset();
