@@ -7,6 +7,8 @@ AC_CONFIG_SRCDIR([src])
 
 AM_INIT_AUTOMAKE
 
+CFLAGS="-g3 -ggdb"
+
 # Checks for programs.
 
 AC_PROG_CC
